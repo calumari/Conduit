@@ -1,0 +1,53 @@
+From 2e6e14fd78bb543c2bcfdc76211318c496c76e4f Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 25 May 2020 00:36:49 +0100
+Subject: [PATCH] Conduit server config
+
+---
+ pom.xml                              | 2 +-
+ src/main/java/org/bukkit/Server.java | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/pom.xml b/pom.xml
+index 67df61eb..36559017 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -14,7 +14,7 @@
+     <packaging>jar</packaging>
+ 
+     <name>Conduit-API</name>
+-    <url>https://github.com/calumari/Conduit/url>
++    <url>https://github.com/calumari/Conduit</url>
+     <description>An enhanced plugin API for Minecraft servers.</description>
+ 
+     <properties>
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index cc06492f..3e1c79c2 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -25,6 +25,7 @@ import org.bukkit.command.CommandException;
+ import org.bukkit.command.CommandSender;
+ import org.bukkit.command.ConsoleCommandSender;
+ import org.bukkit.command.PluginCommand;
++import org.bukkit.configuration.file.YamlConfiguration;
+ import org.bukkit.entity.Entity;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.inventory.InventoryType;
+@@ -1396,6 +1397,14 @@ public interface Server extends PluginMessageRecipient {
+         }
+         // Paper end
+ 
++        // Conduit start
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getConduitConfig()
++        {
++            throw new UnsupportedOperationException("Not supported yet.");
++        }
++        // Conduit end
++
+         /**
+          * Sends the component to the player
+          *
+-- 
+2.24.1.windows.2
+
