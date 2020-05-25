@@ -1,59 +1,28 @@
-From f87c4b722e76940e0cf7f940375d0234f1aeb390 Mon Sep 17 00:00:00 2001
+From 2711566e8489d747d3447966d164ca95aa5eee3d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:37:32 +0100
 Subject: [PATCH] Allow villager leashing
 
 ---
- .../minecraft/server/EntityInsentient.java    | 22 ++++++++++---------
- .../net/minecraft/server/EntityVillager.java  |  7 ++++++
- .../server/EntityVillagerTrader.java          |  7 ++++++
- 3 files changed, 26 insertions(+), 10 deletions(-)
+ src/main/java/net/minecraft/server/EntityInsentient.java   | 5 +++++
+ src/main/java/net/minecraft/server/EntityVillager.java     | 7 +++++++
+ .../java/net/minecraft/server/EntityVillagerTrader.java    | 7 +++++++
+ .../socialhangover/conduit/config/ConduitWorldConfig.java  | 6 +++++-
+ 4 files changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
-index 5aca7a913..82e3e1b6d 100644
+index 5aca7a913..b88c47f55 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -1,24 +1,23 @@
- package net.minecraft.server;
- 
- import com.google.common.collect.Maps;
-+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-+import org.bukkit.craftbukkit.event.CraftEventFactory;
-+import org.bukkit.event.entity.EntityCombustByEntityEvent;
-+import org.bukkit.event.entity.EntityTargetEvent;
-+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-+import org.bukkit.event.entity.EntityUnleashEvent;
-+import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
-+
-+import javax.annotation.Nullable;
- import java.util.Arrays;
- import java.util.Iterator;
- import java.util.List;
- import java.util.Map;
- import java.util.Random;
- import java.util.UUID;
--import javax.annotation.Nullable;
- 
- // CraftBukkit start
--import org.bukkit.craftbukkit.event.CraftEventFactory;
--import org.bukkit.craftbukkit.entity.CraftLivingEntity;
--import org.bukkit.entity.LivingEntity;
--import org.bukkit.event.entity.EntityCombustByEntityEvent;
--import org.bukkit.event.entity.EntityPickupItemEvent;
--import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
--import org.bukkit.event.entity.EntityTargetEvent;
--import org.bukkit.event.entity.EntityUnleashEvent;
--import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
- // CraftBukkit end
- 
- public abstract class EntityInsentient extends EntityLiving {
-@@ -1054,6 +1053,9 @@ public abstract class EntityInsentient extends EntityLiving {
+@@ -1054,6 +1054,11 @@ public abstract class EntityInsentient extends EntityLiving {
          if (!this.isAlive()) {
              return false;
          } else if (this.getLeashHolder() == entityhuman) {
-+            if (enumhand == EnumHand.OFF_HAND && this instanceof EntityVillagerAbstract) {
++            // Conduit start
++            if (enumhand == EnumHand.OFF_HAND && world.conduitConfig.allowLeashVillager && this instanceof EntityVillagerAbstract) {
 +                return true;
 +            }
++            // Conduit end
              // CraftBukkit start - fire PlayerUnleashEntityEvent
              if (CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman).isCancelled()) {
                  ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(this, this.getLeashHolder()));
@@ -74,7 +43,7 @@ index 1094324d0..3913aa0c3 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityVillagerTrader.java b/src/main/java/net/minecraft/server/EntityVillagerTrader.java
-index 2ad8dba5c..92bc0471c 100644
+index 2ad8dba5c..923c2e29f 100644
 --- a/src/main/java/net/minecraft/server/EntityVillagerTrader.java
 +++ b/src/main/java/net/minecraft/server/EntityVillagerTrader.java
 @@ -264,4 +264,11 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
@@ -85,9 +54,31 @@ index 2ad8dba5c..92bc0471c 100644
 +    // Conduit start
 +    @Override
 +    public boolean a(EntityHuman entityHuman) {
-+        return !this.isLeashed();
++        return world.conduitConfig.allowLeashVillager && !this.isLeashed();
 +    }
 +    // Conduit end
+ }
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index cf4079547..5fc7afffb 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -10,7 +10,6 @@ public class ConduitWorldConfig {
+ 
+     private final String worldName;
+     private final YamlConfiguration config;
+-    ConfigurationSection worldDefaults;
+ 
+     public ConduitWorldConfig(String worldName) {
+         this.worldName = worldName;
+@@ -54,4 +53,9 @@ public class ConduitWorldConfig {
+         return config.getString("world-settings." + worldName + "." + path, config.getString("world-settings.default." + path));
+     }
+ 
++    public boolean allowLeashVillager;
++    private void allowLeashVillager() {
++        allowLeashVillager = getBoolean("villager.allow-leash", false);
++    }
++
  }
 -- 
 2.24.1.windows.2
