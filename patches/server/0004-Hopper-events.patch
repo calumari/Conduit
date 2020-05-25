@@ -1,0 +1,84 @@
+From 9c5fcb813e1b31c775a8f18126e9e088a008d76a Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 25 May 2020 02:08:38 +0100
+Subject: [PATCH] Hopper events
+
+---
+ .../minecraft/server/TileEntityHopper.java    | 41 +++++++++++++++----
+ 1 file changed, 32 insertions(+), 9 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
+index c755faed..9f7eda0d 100644
+--- a/src/main/java/net/minecraft/server/TileEntityHopper.java
++++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
+@@ -1,19 +1,22 @@
+ package net.minecraft.server;
+ 
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.function.Supplier;
+-import java.util.stream.Collectors;
+-import java.util.stream.IntStream;
+-import javax.annotation.Nullable;
+-
+-// CraftBukkit start
++import net.socialhangover.conduit.events.HopperDrainEvent;
++import net.socialhangover.conduit.events.HopperFillEvent;
++import org.bukkit.Bukkit;
+ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+ import org.bukkit.craftbukkit.inventory.CraftItemStack;
+ import org.bukkit.entity.HumanEntity;
+ import org.bukkit.event.inventory.InventoryMoveItemEvent;
+ import org.bukkit.event.inventory.InventoryPickupItemEvent;
+ import org.bukkit.inventory.Inventory;
++
++import javax.annotation.Nullable;
++import java.util.Iterator;
++import java.util.List;
++import java.util.function.Supplier;
++import java.util.stream.IntStream;
++
++// CraftBukkit start
+ // CraftBukkit end
+ 
+ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITickable {
+@@ -330,6 +333,14 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         } else {
+             EnumDirection enumdirection = ((EnumDirection) this.getBlock().get(BlockHopper.FACING)).opposite();
+ 
++            // Conduit start - Hopper fill event
++            HopperFillEvent event = new HopperFillEvent(this.getOwner(false).getInventory(), getInventory(iinventory));
++            Bukkit.getPluginManager().callEvent(event);
++            if (event.isCancelled()) {
++                return false;
++            }
++            // Conduit end
++
+             if (this.b(iinventory, enumdirection)) {
+                 return false;
+             } else {
+@@ -437,8 +448,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+             EnumDirection enumdirection = EnumDirection.DOWN;
+ 
+             // Paper start - optimize hoppers and remove streams
++            // Conduit start - hopper drain event
++            if (c(iinventory, enumdirection)) {
++                return false;
++            }
++
++            HopperDrainEvent event = new HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper));
++            Bukkit.getPluginManager().callEvent(event);
++            if (event.isCancelled()) {
++                return false;
++            }
++
+             skipPullModeEventFire = skipHopperEvents;
+-            return !c(iinventory, enumdirection) && anyMatch(iinventory, enumdirection, (item, i) -> {
++            return anyMatch(iinventory, enumdirection, (item, i) -> {
++                // Conduit end
+                 // Logic copied from below to avoid extra getItem calls
+                 if (!item.isEmpty() && canTakeItem(iinventory, item, i, enumdirection)) {
+                     return hopperPull(ihopper, iinventory, item, i);
+-- 
+2.24.1.windows.2
+
