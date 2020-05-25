@@ -1,4 +1,4 @@
-From 2711566e8489d747d3447966d164ca95aa5eee3d Mon Sep 17 00:00:00 2001
+From 26e9a5084bcdf916cddafc548c5d3a78d2325db5 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:37:32 +0100
 Subject: [PATCH] Allow villager leashing
@@ -7,8 +7,8 @@ Subject: [PATCH] Allow villager leashing
  src/main/java/net/minecraft/server/EntityInsentient.java   | 5 +++++
  src/main/java/net/minecraft/server/EntityVillager.java     | 7 +++++++
  .../java/net/minecraft/server/EntityVillagerTrader.java    | 7 +++++++
- .../socialhangover/conduit/config/ConduitWorldConfig.java  | 6 +++++-
- 4 files changed, 24 insertions(+), 1 deletion(-)
+ .../socialhangover/conduit/config/ConduitWorldConfig.java  | 5 +++++
+ 4 files changed, 24 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
 index 5aca7a913..b88c47f55 100644
@@ -59,18 +59,10 @@ index 2ad8dba5c..923c2e29f 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index cf4079547..5fc7afffb 100644
+index 64f8bf3be..81c7e791a 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -10,7 +10,6 @@ public class ConduitWorldConfig {
- 
-     private final String worldName;
-     private final YamlConfiguration config;
--    ConfigurationSection worldDefaults;
- 
-     public ConduitWorldConfig(String worldName) {
-         this.worldName = worldName;
-@@ -54,4 +53,9 @@ public class ConduitWorldConfig {
+@@ -53,4 +53,9 @@ public class ConduitWorldConfig {
          return config.getString("world-settings." + worldName + "." + path, config.getString("world-settings.default." + path));
      }
  

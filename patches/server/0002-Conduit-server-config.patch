@@ -1,18 +1,18 @@
-From 0e92e281808c54620bee045e3b024977365c0c28 Mon Sep 17 00:00:00 2001
+From accb5155f94b33f3c9535f802d778a74baefe657 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
 
 ---
  .../com/destroystokyo/paper/PaperConfig.java  |  2 +
- .../net/minecraft/server/DedicatedServer.java |  1 +
+ .../net/minecraft/server/DedicatedServer.java |  9 ++
  src/main/java/net/minecraft/server/World.java |  3 +
  .../conduit/command/ConduitCommand.java       | 75 +++++++++++++++
  .../conduit/config/ConduitConfig.java         | 96 +++++++++++++++++++
- .../conduit/config/ConduitWorldConfig.java    | 57 +++++++++++
+ .../conduit/config/ConduitWorldConfig.java    | 56 +++++++++++
  .../org/bukkit/craftbukkit/CraftServer.java   |  9 ++
  .../java/org/bukkit/craftbukkit/Main.java     |  8 ++
- 8 files changed, 251 insertions(+)
+ 8 files changed, 258 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
@@ -38,17 +38,25 @@ index f0284e81d..233b99f2d 100644
  
          version = getInt("config-version", 20);
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index b07c49f1b..8c74a0a74 100644
+index b07c49f1b..f493b710e 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -194,6 +194,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-         com.destroystokyo.paper.PaperConfig.registerCommands();
+@@ -195,6 +195,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end
-+        net.socialhangover.conduit.config.ConduitConfig.init((File) options.valueOf("conduit-settings")); // Conduit - Server config
  
++        // Conduit start
++        try {
++            net.socialhangover.conduit.config.ConduitConfig.init((File) options.valueOf("conduit-settings"));
++        } catch (Exception e) {
++            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
++            return false;
++        }
++        // Conduit end
++
          this.setSpawnAnimals(dedicatedserverproperties.spawnAnimals);
          this.setSpawnNPCs(dedicatedserverproperties.spawnNpcs);
+         this.setPVP(dedicatedserverproperties.pvp);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 index 561b42472..ccfe66a3a 100644
 --- a/src/main/java/net/minecraft/server/World.java
@@ -255,10 +263,10 @@ index 000000000..25ad4252a
 +}
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 new file mode 100644
-index 000000000..cf4079547
+index 000000000..64f8bf3be
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,56 @@
 +package net.socialhangover.conduit.config;
 +
 +import com.destroystokyo.paper.PaperConfig;
@@ -271,11 +279,10 @@ index 000000000..cf4079547
 +
 +    private final String worldName;
 +    private final YamlConfiguration config;
-+    ConfigurationSection worldDefaults;
 +
 +    public ConduitWorldConfig(String worldName) {
 +        this.worldName = worldName;
-+        this.config = PaperConfig.config;
++        this.config = ConduitConfig.config;
 +        init();
 +    }
 +
