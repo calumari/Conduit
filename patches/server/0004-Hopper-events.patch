@@ -1,48 +1,29 @@
-From 9c5fcb813e1b31c775a8f18126e9e088a008d76a Mon Sep 17 00:00:00 2001
+From fcc11fd7a45a0fc37cf08022efa93ea760f1b5c9 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:08:38 +0100
 Subject: [PATCH] Hopper events
 
 ---
- .../minecraft/server/TileEntityHopper.java    | 41 +++++++++++++++----
- 1 file changed, 32 insertions(+), 9 deletions(-)
+ .../minecraft/server/TileEntityHopper.java    | 27 ++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index c755faed..9f7eda0d 100644
+index c755faed4..5ef46222c 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
-@@ -1,19 +1,22 @@
- package net.minecraft.server;
+@@ -7,6 +7,11 @@ import java.util.stream.Collectors;
+ import java.util.stream.IntStream;
+ import javax.annotation.Nullable;
  
--import java.util.Iterator;
--import java.util.List;
--import java.util.function.Supplier;
--import java.util.stream.Collectors;
--import java.util.stream.IntStream;
--import javax.annotation.Nullable;
--
--// CraftBukkit start
++// Conduit start
 +import net.socialhangover.conduit.events.HopperDrainEvent;
 +import net.socialhangover.conduit.events.HopperFillEvent;
 +import org.bukkit.Bukkit;
++// Conduit end
+ // CraftBukkit start
  import org.bukkit.craftbukkit.entity.CraftHumanEntity;
  import org.bukkit.craftbukkit.inventory.CraftItemStack;
- import org.bukkit.entity.HumanEntity;
- import org.bukkit.event.inventory.InventoryMoveItemEvent;
- import org.bukkit.event.inventory.InventoryPickupItemEvent;
- import org.bukkit.inventory.Inventory;
-+
-+import javax.annotation.Nullable;
-+import java.util.Iterator;
-+import java.util.List;
-+import java.util.function.Supplier;
-+import java.util.stream.IntStream;
-+
-+// CraftBukkit start
- // CraftBukkit end
- 
- public class TileEntityHopper extends TileEntityLootable implements IHopper, ITickable {
-@@ -330,6 +333,14 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -330,6 +335,14 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          } else {
              EnumDirection enumdirection = ((EnumDirection) this.getBlock().get(BlockHopper.FACING)).opposite();
  
@@ -57,7 +38,7 @@ index c755faed..9f7eda0d 100644
              if (this.b(iinventory, enumdirection)) {
                  return false;
              } else {
-@@ -437,8 +448,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -437,8 +450,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
              EnumDirection enumdirection = EnumDirection.DOWN;
  
              // Paper start - optimize hoppers and remove streams
