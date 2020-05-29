@@ -1,4 +1,4 @@
-From 8ae966470952d7029b808c93ac8aa85566fd919c Mon Sep 17 00:00:00 2001
+From 46e9efedf8f98b3804d4e1433d58930b8117b7d9 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:59 +0100
 Subject: [PATCH] Conduit POM Changes
@@ -75,7 +75,7 @@ index e4c63bb76..cd1301f70 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096cab..e4f148927 100644
+index 674096cab..184bb0ad0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -83,7 +83,7 @@ index 674096cab..e4f148927 100644
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.destroystokyo.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.socialhangover/conduit-api/pom.properties"); // Conduit
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.socialhangover.conduit/conduit-api/pom.properties"); // Conduit
          Properties properties = new Properties();
  
          if (stream != null) {
