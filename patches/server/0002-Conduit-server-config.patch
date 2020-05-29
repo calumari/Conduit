@@ -1,10 +1,9 @@
-From accb5155f94b33f3c9535f802d778a74baefe657 Mon Sep 17 00:00:00 2001
+From 6b3a4d90c99cbdbf95e39ba19f875b93adad2540 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
 
 ---
- .../com/destroystokyo/paper/PaperConfig.java  |  2 +
  .../net/minecraft/server/DedicatedServer.java |  9 ++
  src/main/java/net/minecraft/server/World.java |  3 +
  .../conduit/command/ConduitCommand.java       | 75 +++++++++++++++
@@ -12,31 +11,11 @@ Subject: [PATCH] Conduit server config
  .../conduit/config/ConduitWorldConfig.java    | 56 +++++++++++
  .../org/bukkit/craftbukkit/CraftServer.java   |  9 ++
  .../java/org/bukkit/craftbukkit/Main.java     |  8 ++
- 8 files changed, 258 insertions(+)
+ 7 files changed, 256 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 
-diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index f0284e81d..233b99f2d 100644
---- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
-+++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
- 
- import com.google.common.collect.Lists;
- import net.minecraft.server.MinecraftServer;
-+import net.socialhangover.conduit.command.ConduitCommand;
- import org.bukkit.Bukkit;
- import org.bukkit.ChatColor;
- import org.bukkit.command.Command;
-@@ -70,6 +71,7 @@ public class PaperConfig {
- 
-         commands = new HashMap<String, Command>();
-         commands.put("paper", new PaperCommand("paper"));
-+        commands.put("conduit", new ConduitCommand("conduit")); // Conduit
-         commands.put("mspt", new MSPTCommand("mspt"));
- 
-         version = getInt("config-version", 20);
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 index b07c49f1b..f493b710e 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
