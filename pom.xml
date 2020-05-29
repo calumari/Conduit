@@ -1,7 +1,7 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.socialhangover</groupId>
+    <groupId>net.socialhangover.conduit</groupId>
     <artifactId>conduit-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
