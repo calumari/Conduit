@@ -1,7 +1,7 @@
-From a686270310b6a877ccef0de6dabe4b714a5d2052 Mon Sep 17 00:00:00 2001
+From e9be74baab2b9487eec246395c754803660f6e80 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 01:46:11 +0100
-Subject: [PATCH] Tunity delay chunk unloads
+Subject: [PATCH] Tuinity delay chunk unloads
 
 ---
  .../java/net/minecraft/server/ChunkMap.java   |  1 +
@@ -107,7 +107,7 @@ index 771d87971..9f954048e 100644
  
          if (arraysetsorted.isEmpty()) {
 diff --git a/src/main/java/net/minecraft/server/Ticket.java b/src/main/java/net/minecraft/server/Ticket.java
-index 0d6e0f2dd..0e73e96ff 100644
+index 0d6e0f2dd..5fbc05b5c 100644
 --- a/src/main/java/net/minecraft/server/Ticket.java
 +++ b/src/main/java/net/minecraft/server/Ticket.java
 @@ -5,10 +5,11 @@ import java.util.Objects;
@@ -118,7 +118,7 @@ index 0d6e0f2dd..0e73e96ff 100644
 +    private int b; public final void setTicketLevel(final int value) { this.b = value; } // Conduit - remove final, add set OBFHELPER
      public final T identifier; public final T getObjectReason() { return this.identifier; } // Paper - OBFHELPER
 -    private long d; public final long getCreationTick() { return this.d; } // Paper - OBFHELPER
-+    private long d; public final long getCreationTick() { return this.d; } public final void setCreationTick(final long value) { this.d = value; }  // Conduit - OBFHELPER // Tuinity - OBFHELPER
++    private long d; public final long getCreationTick() { return this.d; } public final void setCreationTick(final long value) { this.d = value; }  // Paper - OBFHELPER // Conduit - OBFHELPER
      public int priority = 0; // Paper
 +    boolean isCached; // Conduit - delay chunk unloads, this defends against really stupid plugins
  
