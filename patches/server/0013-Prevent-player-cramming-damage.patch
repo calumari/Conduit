@@ -1,0 +1,41 @@
+From 313f2fd861d15eb6586bad357f241bdcf7afd7a7 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Fri, 29 May 2020 14:52:41 +0100
+Subject: [PATCH] Prevent player cramming damage
+
+---
+ src/main/java/net/minecraft/server/EntityPlayer.java            | 2 +-
+ .../net/socialhangover/conduit/config/ConduitWorldConfig.java   | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index d60f659b3..8a21196ff 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -1105,7 +1105,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+     @Override
+     public boolean isInvulnerable(DamageSource damagesource) {
+-        return super.isInvulnerable(damagesource) || this.H() || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER;
++        return super.isInvulnerable(damagesource) || this.H() || (damagesource == DamageSource.CRAMMING && world.conduitConfig.preventPlayerCrammingDamage) || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER;
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index 8bd019dd3..5304d5422 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -54,8 +54,10 @@ public class ConduitWorldConfig {
+     }
+ 
+     public boolean fixClimbingBypassingCrammingRule;
++    public boolean preventPlayerCrammingDamage;
+     private void gameplayMechanics() {
+         fixClimbingBypassingCrammingRule = getBoolean("gameplay-mechanics.fix-climbing-bypassing-cramming-rule", false);
++        preventPlayerCrammingDamage = getBoolean("gameplay-mechanics.prevent-player-cramming-damage", false);
+     }
+ 
+     public boolean allowLeashVillager;
+-- 
+2.24.1.windows.2
+
