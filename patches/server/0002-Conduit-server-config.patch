@@ -1,26 +1,26 @@
-From 6b3a4d90c99cbdbf95e39ba19f875b93adad2540 Mon Sep 17 00:00:00 2001
+From 19529eec765d93b1935f1bd48ecfb2e610fe8a21 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
 
 ---
- .../net/minecraft/server/DedicatedServer.java |  9 ++
- src/main/java/net/minecraft/server/World.java |  3 +
- .../conduit/command/ConduitCommand.java       | 75 +++++++++++++++
- .../conduit/config/ConduitConfig.java         | 96 +++++++++++++++++++
- .../conduit/config/ConduitWorldConfig.java    | 56 +++++++++++
- .../org/bukkit/craftbukkit/CraftServer.java   |  9 ++
- .../java/org/bukkit/craftbukkit/Main.java     |  8 ++
- 7 files changed, 256 insertions(+)
+ .../net/minecraft/server/DedicatedServer.java |  10 ++
+ src/main/java/net/minecraft/server/World.java |   3 +
+ .../conduit/command/ConduitCommand.java       |  75 ++++++++++++
+ .../conduit/config/ConduitConfig.java         | 112 ++++++++++++++++++
+ .../conduit/config/ConduitWorldConfig.java    |  56 +++++++++
+ .../org/bukkit/craftbukkit/CraftServer.java   |  10 ++
+ .../java/org/bukkit/craftbukkit/Main.java     |   8 ++
+ 7 files changed, 274 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index b07c49f1b..f493b710e 100644
+index b07c49f1b..6f1965973 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -195,6 +195,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -195,6 +195,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end
  
@@ -31,6 +31,7 @@ index b07c49f1b..f493b710e 100644
 +            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
 +            return false;
 +        }
++        net.socialhangover.conduit.config.ConduitConfig.registerCommands();
 +        // Conduit end
 +
          this.setSpawnAnimals(dedicatedserverproperties.spawnAnimals);
@@ -140,13 +141,19 @@ index 000000000..a41dd7ede
 +}
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 new file mode 100644
-index 000000000..25ad4252a
+index 000000000..2ef6fe175
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-@@ -0,0 +1,96 @@
+@@ -0,0 +1,112 @@
 +package net.socialhangover.conduit.config;
 +
++import com.destroystokyo.paper.Metrics;
++import java.util.HashMap;
++import java.util.Map;
++import net.minecraft.server.MinecraftServer;
++import net.socialhangover.conduit.command.ConduitCommand;
 +import org.bukkit.Bukkit;
++import org.bukkit.command.Command;
 +import org.bukkit.configuration.InvalidConfigurationException;
 +import org.bukkit.configuration.file.YamlConfiguration;
 +
@@ -167,6 +174,7 @@ index 000000000..25ad4252a
 +    public static YamlConfiguration config;
 +
 +    static int version;
++    static Map<String, Command> commands;
 +
 +    public static void init(File file) {
 +        CONFIG_FILE = file;
@@ -184,7 +192,16 @@ index 000000000..25ad4252a
 +        version = getInt("config-version", CURRENT_CONFIG_VERSION);
 +        set("config-version", CURRENT_CONFIG_VERSION);
 +
++        commands = new HashMap<>();
++        commands.put("conduit", new ConduitCommand("conduit"));
++
 +        readConfig(ConduitConfig.class, null);
++    }
++
++    public static void registerCommands() {
++        for (Map.Entry<String, Command> entry : commands.entrySet()) {
++            MinecraftServer.getServer().server.getCommandMap().register(entry.getKey(), "Conduit", entry.getValue());
++        }
 +    }
 +
 +    static void readConfig(Class<?> clazz, Object instance) {
@@ -303,7 +320,7 @@ index 000000000..64f8bf3be
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 894917c88..2b2c54707 100644
+index 894917c88..21a08dedb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -815,6 +815,7 @@ public final class CraftServer implements Server {
@@ -322,7 +339,15 @@ index 894917c88..2b2c54707 100644
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -2134,6 +2136,13 @@ public final class CraftServer implements Server {
+@@ -861,6 +863,7 @@ public final class CraftServer implements Server {
+         reloadData();
+         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+         com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
++        net.socialhangover.conduit.config.ConduitConfig.registerCommands(); // Conduit
+         overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
+         ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
+ 
+@@ -2134,6 +2137,13 @@ public final class CraftServer implements Server {
              return com.destroystokyo.paper.PaperConfig.config;
          }
  
