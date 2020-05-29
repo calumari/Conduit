@@ -1,4 +1,4 @@
-From 3ef4295cccceb972f2e0ac188b811066cdf09bae Mon Sep 17 00:00:00 2001
+From 158e38243fd8eae1598480671f5bc288d93af20b Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 12:41:41 +0100
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
@@ -22,7 +22,7 @@ index 3fc2360a1..96288224f 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 1fb265cfa..877cf638d 100644
+index 1fb265cfa..ec230d113 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -53,6 +53,11 @@ public class ConduitWorldConfig {
@@ -31,7 +31,7 @@ index 1fb265cfa..877cf638d 100644
  
 +    public boolean fixClimbingBypassingCrammingRule;
 +    private void gameplayMechanics() {
-+        fixClimbingBypassingCrammingRule = getBoolean("gameplay.fix-climbing-bypassing-cramming-rule", false);
++        fixClimbingBypassingCrammingRule = getBoolean("gameplay-mechanics.fix-climbing-bypassing-cramming-rule", false);
 +    }
 +
      public boolean allowLeashVillager;
