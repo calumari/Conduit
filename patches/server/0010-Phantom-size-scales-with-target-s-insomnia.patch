@@ -1,0 +1,67 @@
+From 37a39e2f7f9b0078da93f9206ac7697abc783c4f Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Fri, 29 May 2020 09:20:07 +0100
+Subject: [PATCH] Phantom size scales with target's insomnia
+
+---
+ src/main/java/net/minecraft/server/EntityPhantom.java     | 4 ++--
+ src/main/java/net/minecraft/server/MobSpawnerPhantom.java | 6 ++++++
+ .../socialhangover/conduit/config/ConduitWorldConfig.java | 8 ++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityPhantom.java b/src/main/java/net/minecraft/server/EntityPhantom.java
+index 96b4912c4..7cb3edd6e 100644
+--- a/src/main/java/net/minecraft/server/EntityPhantom.java
++++ b/src/main/java/net/minecraft/server/EntityPhantom.java
+@@ -48,12 +48,12 @@ public class EntityPhantom extends EntityFlying implements IMonster {
+     }
+ 
+     public void setSize(int i) {
+-        this.datawatcher.set(EntityPhantom.b, MathHelper.clamp(i, 0, 64));
++        this.datawatcher.set(EntityPhantom.b, MathHelper.clamp(i, 0, world.conduitConfig.phantomMaxSize)); // Conduit
+     }
+ 
+     private void ep() {
+         this.updateSize();
+-        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (6 + this.getSize()));
++        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (6 + this.getSize() * world.conduitConfig.phantomSizeDamageMultiplier)); // Conduit
+     }
+ 
+     public int getSize() {
+diff --git a/src/main/java/net/minecraft/server/MobSpawnerPhantom.java b/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
+index 0db431cd6..38269158b 100644
+--- a/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
++++ b/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
+@@ -65,6 +65,12 @@ public class MobSpawnerPhantom {
+                                                 entityphantom.spawningEntity = entityhuman.uniqueID; // Paper
+                                                 entityphantom.setPositionRotation(blockposition1, 0.0F, 0.0F);
+                                                 groupdataentity = entityphantom.prepare(worldserver, difficultydamagescaler, EnumMobSpawn.NATURAL, groupdataentity, (NBTTagCompound) null);
++                                                // Conduit start
++                                                if (entityphantom.getWorld().conduitConfig.phantomSizeScalesWithInsomnia) {
++                                                    // todo move to EntityPhantom#prepare? would require a new ref to target entity
++                                                    entityphantom.setSize((j % 24000) - 3); // todo lerp this?
++                                                }
++                                                // Conduit end
+                                                 worldserver.addEntity(entityphantom, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
+                                             }
+ 
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index ce752f9d1..1fb265cfa 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -73,4 +73,12 @@ public class ConduitWorldConfig {
+         giantAggressiveTowardsVillager = getBoolean("giant.aggressive-towards-villager", false);
+     }
+ 
++    public boolean phantomSizeScalesWithInsomnia;
++    public int phantomMaxSize;
++    public double phantomSizeDamageMultiplier;
++    private void phantomSettings() {
++        phantomSizeScalesWithInsomnia = getBoolean("phantom.size-scales-with-insomnia", false);
++        phantomMaxSize = getInt("phantom.max-size", 64);
++        phantomSizeDamageMultiplier = getDouble("phantom.size-damage-multiplier", 0.1D);
++    }
+ }
+-- 
+2.24.1.windows.2
+
