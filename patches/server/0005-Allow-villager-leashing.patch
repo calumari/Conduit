@@ -1,4 +1,4 @@
-From 26e9a5084bcdf916cddafc548c5d3a78d2325db5 Mon Sep 17 00:00:00 2001
+From 7b95ac0ce5576c4571a445d1f0dc2b2655a15ce6 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:37:32 +0100
 Subject: [PATCH] Allow villager leashing
@@ -59,7 +59,7 @@ index 2ad8dba5c..923c2e29f 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 64f8bf3be..81c7e791a 100644
+index 64f8bf3be..f771f08f8 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -53,4 +53,9 @@ public class ConduitWorldConfig {
@@ -67,8 +67,8 @@ index 64f8bf3be..81c7e791a 100644
      }
  
 +    public boolean allowLeashVillager;
-+    private void allowLeashVillager() {
-+        allowLeashVillager = getBoolean("villager.allow-leash", false);
++    private void villagerSettings() {
++        allowLeashVillager = getBoolean("mobs.villager.allow-leash", false);
 +    }
 +
  }

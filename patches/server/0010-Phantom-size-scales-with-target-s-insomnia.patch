@@ -1,4 +1,4 @@
-From 37a39e2f7f9b0078da93f9206ac7697abc783c4f Mon Sep 17 00:00:00 2001
+From c7b15585d9043ac1f9cba3bcac885dff2eba4e36 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 09:20:07 +0100
 Subject: [PATCH] Phantom size scales with target's insomnia
@@ -46,20 +46,20 @@ index 0db431cd6..38269158b 100644
                                              }
  
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index ce752f9d1..1fb265cfa 100644
+index 36cce1dc4..9ffa961e3 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -73,4 +73,12 @@ public class ConduitWorldConfig {
-         giantAggressiveTowardsVillager = getBoolean("giant.aggressive-towards-villager", false);
+         giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
      }
  
 +    public boolean phantomSizeScalesWithInsomnia;
 +    public int phantomMaxSize;
 +    public double phantomSizeDamageMultiplier;
 +    private void phantomSettings() {
-+        phantomSizeScalesWithInsomnia = getBoolean("phantom.size-scales-with-insomnia", false);
-+        phantomMaxSize = getInt("phantom.max-size", 64);
-+        phantomSizeDamageMultiplier = getDouble("phantom.size-damage-multiplier", 0.1D);
++        phantomSizeScalesWithInsomnia = getBoolean("mobs.phantom.size-scales-with-insomnia", false);
++        phantomMaxSize = getInt("mobs.phantom.max-size", 64);
++        phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 0.1D);
 +    }
  }
 -- 

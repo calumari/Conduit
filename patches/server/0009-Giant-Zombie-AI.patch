@@ -1,4 +1,4 @@
-From 7244fc0a3e32fbd63e40576512ae7e311934b70a Mon Sep 17 00:00:00 2001
+From a74774dd51aec730c9cfef6b7afa90c128f2f2dc Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 08:19:37 +0100
 Subject: [PATCH] Giant Zombie AI
@@ -105,11 +105,11 @@ index b88c47f55..34555c93f 100644
          float f = difficultydamagescaler.d();
  
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 81c7e791a..ce752f9d1 100644
+index f771f08f8..36cce1dc4 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -58,4 +58,19 @@ public class ConduitWorldConfig {
-         allowLeashVillager = getBoolean("villager.allow-leash", false);
+         allowLeashVillager = getBoolean("mobs.villager.allow-leash", false);
      }
  
 +    public boolean giantHasAI;
@@ -118,13 +118,13 @@ index 81c7e791a..ce752f9d1 100644
 +    public double giantMovementSpeed;
 +    public double giantAttackDamage;
 +    public boolean giantAggressiveTowardsVillager;
-+    private void giantAI() {
-+        giantHasAI = getBoolean("giant.enable-ai", false);
-+        giantHasHostileAI = getBoolean("giant.enable-hostile-ai", false);
-+        giantMaxHealth = getDouble("giant.max-health", 100.0D);
-+        giantMovementSpeed = getDouble("giant.movements-speed", 0.5D);
-+        giantAttackDamage = getDouble("giant.attack-damage", 50.0);
-+        giantAggressiveTowardsVillager = getBoolean("giant.aggressive-towards-villager", false);
++    private void giantSettings() {
++        giantHasAI = getBoolean("mobs.giant.enable-ai", false);
++        giantHasHostileAI = getBoolean("mobs.giant.enable-hostile-ai", false);
++        giantMaxHealth = getDouble("mobs.giant.max-health", 100.0D);
++        giantMovementSpeed = getDouble("mobs.giant.movements-speed", 0.5D);
++        giantAttackDamage = getDouble("mobs.giant.attack-damage", 50.0);
++        giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
 +    }
 +
  }
