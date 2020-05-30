@@ -1,0 +1,293 @@
+From 9a7cec6a521d170cbb3b5016fd43849a06c26b64 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 30 May 2020 18:06:14 +0100
+Subject: [PATCH] Idle API
+
+---
+ .../java/net/minecraft/server/Entity.java     |  1 +
+ .../net/minecraft/server/EntityHuman.java     | 10 ++++
+ .../net/minecraft/server/EntityPlayer.java    | 38 ++++++++++++
+ .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
+ .../net/minecraft/server/IEntitySelector.java |  2 +
+ .../minecraft/server/PlayerConnection.java    |  6 ++
+ .../net/minecraft/server/WorldServer.java     |  4 +-
+ .../conduit/config/ConduitWorldConfig.java    | 13 ++++
+ .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
+ .../java/org/spigotmc/ActivationRange.java    |  1 +
+ 10 files changed, 123 insertions(+), 24 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index e0ab058bf..4a98601a5 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -1432,6 +1432,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+         return MathHelper.c(f * f + f1 * f1 + f2 * f2);
+     }
+ 
++    public double distanceSquared(double x, double y, double z) { return g(x, y, z); } // Conduit - OBFHELPER
+     public double g(double d0, double d1, double d2) {
+         double d3 = this.locX() - d0;
+         double d4 = this.locY() - d1;
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index 7df24be46..163fa2bb2 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -2238,4 +2238,14 @@ public abstract class EntityHuman extends EntityLiving {
+             return this.g;
+         }
+     }
++
++    // Conduit start
++
++    public boolean isIdle() {
++        return false;
++    }
++
++    public void setIdle(boolean idle) { }
++
++    // Conduit end
+ }
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 5a6cc52bf..034dc233b 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -1623,6 +1623,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+     public void resetIdleTimer() {
+         this.cj = SystemUtils.getMonotonicMillis();
++        setIdle(false); // Conduit
+     }
+ 
+     public ServerStatisticManager getStatisticManager() {
+@@ -1992,4 +1993,41 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         return (CraftPlayer) super.getBukkitEntity();
+     }
+     // CraftBukkit end
++
++    // Conduit start
++
++    private boolean idle;
++
++    public boolean isIdle() {
++        return this.idle;
++    }
++
++    public void setIdle(boolean idle) {
++        if (this.idle == idle) {
++            return;
++        }
++
++        net.socialhangover.conduit.events.PlayerIdleEvent event = new net.socialhangover.conduit.events.PlayerIdleEvent(getBukkitEntity(), idle);
++        if (event.callEvent()) {
++            return;
++        }
++
++        this.idle = event.isIdle();
++        if (!this.idle) {
++            resetIdleTimer();
++        }
++
++        if (event.getMessage() != null && !event.getMessage().isEmpty()) {
++            server.getPlayerList().sendAll(new PacketPlayOutChat(new ChatMessage(event.getMessage(), getScoreboardDisplayName())));
++        }
++
++        ((WorldServer) world).everyoneSleeping();
++    }
++
++    @Override
++    public boolean isCollidable() {
++        return !(this.idle && world.conduitConfig.idleIgnoreCollision) && super.isCollidable();
++    }
++
++    // Conduit end
+ }
+diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
+index 3bc57ef91..82c94af6b 100644
+--- a/src/main/java/net/minecraft/server/IEntityAccess.java
++++ b/src/main/java/net/minecraft/server/IEntityAccess.java
+@@ -149,30 +149,46 @@ public interface IEntityAccess {
+         return entityhuman;
+     }
+ 
+-    default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
+-        Iterator iterator = this.getPlayers().iterator();
+-
+-        double d4;
+-
+-        do {
+-            EntityHuman entityhuman;
+-
+-            do {
+-                do {
+-                    if (!iterator.hasNext()) {
+-                        return false;
+-                    }
+-
+-                    entityhuman = (EntityHuman) iterator.next();
+-                } while (!IEntitySelector.f.test(entityhuman));
+-            } while (!IEntitySelector.b.test(entityhuman));
+-
+-            d4 = entityhuman.g(d0, d1, d2);
+-        } while (d3 >= 0.0D && d4 >= d3 * d3);
+-
+-        return true;
++    // Conduit start - Idle API
++
++//    default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
++//        Iterator iterator = this.getPlayers().iterator();
++//
++//        double d4;
++//
++//        do {
++//            EntityHuman entityhuman;
++//
++//            do {
++//                do {
++//                    if (!iterator.hasNext()) {
++//                        return false;
++//                    }
++//
++//                    entityhuman = (EntityHuman) iterator.next();
++//                } while (!IEntitySelector.f.test(entityhuman));
++//            } while (!IEntitySelector.b.test(entityhuman));
++//
++//            d4 = entityhuman.g(d0, d1, d2);
++//        } while (d3 >= 0.0D && d4 >= d3 * d3);
++//
++//        return true;
++//    }
++
++    default boolean isPlayerNearby(double x, double y, double z, double distance) {
++        double d2 = distance * distance;
++        for (EntityHuman player : this.getPlayers()) {
++            if(IEntitySelector.isAlive().test(player) && IEntitySelector.notSpectator().test(player) && (player.world.conduitConfig.idleSpawnNearbyEntities && IEntitySelector.notIdle.test(player))) {
++                if(distance < 0.0D || player.distanceSquared(x, y, z) < d2) {
++                    return true;
++                }
++            }
++        }
++        return false;
+     }
+ 
++    // Conduit end - Idle API
++
+     @Nullable
+     default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
+         return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
+diff --git a/src/main/java/net/minecraft/server/IEntitySelector.java b/src/main/java/net/minecraft/server/IEntitySelector.java
+index 1398c47a2..d2b686e25 100644
+--- a/src/main/java/net/minecraft/server/IEntitySelector.java
++++ b/src/main/java/net/minecraft/server/IEntitySelector.java
+@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
+ public final class IEntitySelector {
+ 
+     public static final Predicate<Entity> a = Entity::isAlive;
++    public static final Predicate<EntityLiving> isAlive() { return b; } // Conduit - OBFHELPER
+     public static final Predicate<EntityLiving> b = EntityLiving::isAlive;
+     public static final Predicate<Entity> c = (entity) -> {
+         return entity.isAlive() && !entity.isVehicle() && !entity.isPassenger();
+@@ -32,6 +33,7 @@ public final class IEntitySelector {
+             return entity != null && entity.g(d0, d1, d2) <= d4;
+         };
+     }
++    public static Predicate<EntityHuman> notIdle = (player) -> !player.isIdle(); // Conduit - Idle API
+ 
+     public static Predicate<Entity> a(Entity entity) {
+         ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index b25b3b481..5e3d4a33d 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -233,6 +233,12 @@ public class PlayerConnection implements PacketListenerPlayIn {
+         }
+ 
+         if (this.player.F() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.F() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
++            // Conduit start - Idle API
++            this.player.setIdle(true);
++            if (!this.player.world.conduitConfig.idleKick) {
++                return;
++            }
++            // Conduit end - Idle API
+             this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
+             this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
+         }
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 9e32e2db1..9ca6b8b5c 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -405,7 +405,7 @@ public class WorldServer extends World {
+         }
+ 
+         if (this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> {
+-            return !entityplayer.isSpectator() && !entityplayer.isDeeplySleeping() && !entityplayer.fauxSleeping; // CraftBukkit
++            return !entityplayer.isSpectator() && !entityplayer.isDeeplySleeping() && !entityplayer.fauxSleeping && !(conduitConfig.idleTimeoutCountAsSleeping && entityplayer.isIdle()); // CraftBukkit // Conduit
+         })) {
+             // CraftBukkit start
+             long l = this.worldData.getDayTime() + 24000L;
+@@ -717,7 +717,7 @@ public class WorldServer extends World {
+             while (iterator.hasNext()) {
+                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+ 
+-                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping())) { // CraftBukkit
++                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping()) || (conduitConfig.idleTimeoutCountAsSleeping && entityplayer.isIdle())) { // CraftBukkit
+                     ++i;
+                 } else if (entityplayer.isSleeping()) {
+                     ++j;
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index 5304d5422..ccf2e0cff 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -88,4 +88,17 @@ public class ConduitWorldConfig {
+         phantomMaxSize = getInt("mobs.phantom.max-size", 64);
+         phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 0.1D);
+     }
++
++    public boolean idleTickNearbyEntities;
++    public boolean idleSpawnNearbyEntities;
++    public boolean idleIgnoreCollision;
++    public boolean idleTimeoutCountAsSleeping;
++    public boolean idleKick;
++    private void idleSettings() {
++        idleTickNearbyEntities = getBoolean("gameplay-mechanics.player.idle.tick-nearby-entities", true);
++        idleSpawnNearbyEntities = getBoolean("gameplay-mechanics.player.idle.spawn-nearby-entities", true);
++        idleIgnoreCollision = getBoolean("gameplay-mechanics.player.idle.ignore-collision", false);
++        idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.player.idle.count-as-sleeping", false);
++        idleKick = getBoolean("gameplay-mechanics.player.idle.kick", true);
++    }
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index dcbda5b35..cc7d42c55 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -2079,4 +2079,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         return spigot;
+     }
+     // Spigot end
++
++    // Conduit start
++
++    public boolean isIdle() {
++        return getHandle().isIdle();
++    }
++
++    public void setIdle(boolean idle) {
++        getHandle().setIdle(idle);
++    }
++
++    // Conduit end
+ }
+diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
+index f735217e7..a6d11f84c 100644
+--- a/src/main/java/org/spigotmc/ActivationRange.java
++++ b/src/main/java/org/spigotmc/ActivationRange.java
+@@ -207,6 +207,7 @@ public class ActivationRange
+         {
+ 
+             player.activatedTick = MinecraftServer.currentTick;
++            if(!player.world.conduitConfig.idleTickNearbyEntities && player.isIdle()) { return; } // Conduit - Idle API
+             maxBB = player.getBoundingBox().grow( maxRange, 256, maxRange );
+             ActivationType.MISC.boundingBox = player.getBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
+             ActivationType.RAIDER.boundingBox = player.getBoundingBox().grow( raiderActivationRange, 256, raiderActivationRange );
+-- 
+2.24.1.windows.2
+

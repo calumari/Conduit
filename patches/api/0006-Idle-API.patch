@@ -1,0 +1,109 @@
+From cd137b40c01884281b61db33de31606b785f5cca Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 30 May 2020 18:06:05 +0100
+Subject: [PATCH] Idle API
+
+---
+ .../conduit/events/PlayerIdleEvent.java       | 61 +++++++++++++++++++
+ src/main/java/org/bukkit/entity/Player.java   | 18 ++++++
+ 2 files changed, 79 insertions(+)
+ create mode 100644 src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
+
+diff --git a/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
+new file mode 100644
+index 00000000..f215a674
+--- /dev/null
++++ b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
+@@ -0,0 +1,61 @@
++package net.socialhangover.conduit.events;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.player.PlayerEvent;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++public class PlayerIdleEvent extends PlayerEvent implements Cancellable {
++
++    private static final HandlerList handlers = new HandlerList();
++
++    private boolean idle;
++
++    @Nullable
++    private String message;
++
++    private boolean cancelled;
++
++    public PlayerIdleEvent(@NotNull Player who, boolean idle) {
++        super(who);
++        this.idle = idle;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++    public boolean isIdle() {
++        return idle;
++    }
++
++    public void setIdle(boolean idle) {
++        this.idle = idle;
++    }
++
++    @Nullable
++    public String getMessage() {
++        return message;
++    }
++
++    public void setMessage(@Nullable String message) {
++        this.message = message;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        cancelled = cancel;
++    }
++
++    @Override
++    public @NotNull HandlerList getHandlers() {
++        return handlers;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index 787bb144..135d3a0f 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -1830,4 +1830,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+     @Override
+     Spigot spigot();
+     // Spigot end
++
++    // Conduit start
++
++    /**
++     * Gets whether the player is idle or not
++     *
++     * @return whether the player is idle or not
++     */
++    boolean isIdle();
++
++    /**
++     * Sets whether the player is idle or not
++     *
++     * @param idle whether the player is idle or not
++     */
++    void setIdle(boolean idle);
++
++    // Conduit end
+ }
+-- 
+2.24.1.windows.2
+
