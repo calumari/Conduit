@@ -1,4 +1,4 @@
-From b50c2ecf09c393eb3eaf43cd6050a5c23b71699c Mon Sep 17 00:00:00 2001
+From a73a6ffc44d2aa90d4ddd87054673f41bba1886d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -6,15 +6,15 @@ Subject: [PATCH] Idle API
 ---
  .../java/net/minecraft/server/Entity.java     |  1 +
  .../net/minecraft/server/EntityHuman.java     | 10 ++++
- .../net/minecraft/server/EntityPlayer.java    | 38 ++++++++++++
+ .../net/minecraft/server/EntityPlayer.java    | 33 ++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
  .../net/minecraft/server/IEntitySelector.java |  2 +
  .../minecraft/server/PlayerConnection.java    |  6 ++
  .../net/minecraft/server/WorldServer.java     |  4 +-
- .../conduit/config/ConduitWorldConfig.java    | 13 ++++
+ .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
- .../java/org/spigotmc/ActivationRange.java    |  4 ++
- 10 files changed, 126 insertions(+), 24 deletions(-)
+ .../java/org/spigotmc/ActivationRange.java    |  2 +
+ 10 files changed, 117 insertions(+), 24 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index e0ab058bf..4a98601a5 100644
@@ -48,7 +48,7 @@ index 7df24be46..163fa2bb2 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5a6cc52bf..61af71d3b 100644
+index 5a6cc52bf..1e3a7ba10 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1623,6 +1623,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -59,7 +59,7 @@ index 5a6cc52bf..61af71d3b 100644
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1992,4 +1993,41 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1992,4 +1993,36 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -92,11 +92,6 @@ index 5a6cc52bf..61af71d3b 100644
 +        }
 +
 +        ((WorldServer) world).everyoneSleeping();
-+    }
-+
-+    @Override
-+    public boolean isCollidable() {
-+        return !this.idle && super.isCollidable(); // todo make configurable
 +    }
 +
 +    // Conduit end
@@ -234,23 +229,21 @@ index 9e32e2db1..cd424bc5b 100644
                  } else if (entityplayer.isSleeping()) {
                      ++j;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 5304d5422..ccf2e0cff 100644
+index 5304d5422..2275684e7 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -88,4 +88,17 @@ public class ConduitWorldConfig {
+@@ -88,4 +88,15 @@ public class ConduitWorldConfig {
          phantomMaxSize = getInt("mobs.phantom.max-size", 64);
          phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 0.1D);
      }
 +
 +    public boolean idleTickNearbyEntities;
 +    public boolean idleSpawnNearbyEntities;
-+    public boolean idleIgnoreCollision;
 +    public boolean idleTimeoutCountAsSleeping;
 +    public boolean idleKick;
 +    private void idleSettings() {
 +        idleTickNearbyEntities = getBoolean("gameplay-mechanics.player.idle.tick-nearby-entities", true);
 +        idleSpawnNearbyEntities = getBoolean("gameplay-mechanics.player.idle.spawn-nearby-entities", true);
-+        idleIgnoreCollision = getBoolean("gameplay-mechanics.player.idle.ignore-collision", false);
 +        idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.player.idle.count-as-sleeping", false);
 +        idleKick = getBoolean("gameplay-mechanics.player.idle.kick", true);
 +    }
@@ -277,7 +270,7 @@ index dcbda5b35..cc7d42c55 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index f735217e7..87b33a5a6 100644
+index f735217e7..f234feb8f 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -49,6 +49,7 @@ import co.aikar.timings.MinecraftTimings;
@@ -288,13 +281,11 @@ index f735217e7..87b33a5a6 100644
  // Paper end
  
  public class ActivationRange
-@@ -207,6 +208,9 @@ public class ActivationRange
+@@ -207,6 +208,7 @@ public class ActivationRange
          {
  
              player.activatedTick = MinecraftServer.currentTick;
-+            if(!player.world.conduitConfig.idleTickNearbyEntities && player.isIdle()) {
-+                Bukkit.getLogger().info("skipping");
-+                continue; } // Conduit - Idle API
++            if(!player.world.conduitConfig.idleTickNearbyEntities && player.isIdle()) { continue; } // Conduit - Idle API
              maxBB = player.getBoundingBox().grow( maxRange, 256, maxRange );
              ActivationType.MISC.boundingBox = player.getBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
              ActivationType.RAIDER.boundingBox = player.getBoundingBox().grow( raiderActivationRange, 256, raiderActivationRange );
