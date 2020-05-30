@@ -1,4 +1,4 @@
-From 9a7cec6a521d170cbb3b5016fd43849a06c26b64 Mon Sep 17 00:00:00 2001
+From b50c2ecf09c393eb3eaf43cd6050a5c23b71699c Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -13,8 +13,8 @@ Subject: [PATCH] Idle API
  .../net/minecraft/server/WorldServer.java     |  4 +-
  .../conduit/config/ConduitWorldConfig.java    | 13 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
- .../java/org/spigotmc/ActivationRange.java    |  1 +
- 10 files changed, 123 insertions(+), 24 deletions(-)
+ .../java/org/spigotmc/ActivationRange.java    |  4 ++
+ 10 files changed, 126 insertions(+), 24 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index e0ab058bf..4a98601a5 100644
@@ -48,7 +48,7 @@ index 7df24be46..163fa2bb2 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5a6cc52bf..034dc233b 100644
+index 5a6cc52bf..61af71d3b 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1623,6 +1623,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -77,8 +77,8 @@ index 5a6cc52bf..034dc233b 100644
 +            return;
 +        }
 +
-+        net.socialhangover.conduit.events.PlayerIdleEvent event = new net.socialhangover.conduit.events.PlayerIdleEvent(getBukkitEntity(), idle);
-+        if (event.callEvent()) {
++        net.socialhangover.conduit.events.PlayerIdleEvent event = new net.socialhangover.conduit.events.PlayerIdleEvent(getBukkitEntity(), idle, !Bukkit.isPrimaryThread());
++        if (!event.callEvent()) {
 +            return;
 +        }
 +
@@ -96,13 +96,13 @@ index 5a6cc52bf..034dc233b 100644
 +
 +    @Override
 +    public boolean isCollidable() {
-+        return !(this.idle && world.conduitConfig.idleIgnoreCollision) && super.isCollidable();
++        return !this.idle && super.isCollidable(); // todo make configurable
 +    }
 +
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index 3bc57ef91..82c94af6b 100644
+index 3bc57ef91..243530ac5 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
 @@ -149,30 +149,46 @@ public interface IEntityAccess {
@@ -160,8 +160,8 @@ index 3bc57ef91..82c94af6b 100644
 +    default boolean isPlayerNearby(double x, double y, double z, double distance) {
 +        double d2 = distance * distance;
 +        for (EntityHuman player : this.getPlayers()) {
-+            if(IEntitySelector.isAlive().test(player) && IEntitySelector.notSpectator().test(player) && (player.world.conduitConfig.idleSpawnNearbyEntities && IEntitySelector.notIdle.test(player))) {
-+                if(distance < 0.0D || player.distanceSquared(x, y, z) < d2) {
++            if (IEntitySelector.isAlive().test(player) && IEntitySelector.notSpectator().test(player) && (player.world.conduitConfig.idleSpawnNearbyEntities || IEntitySelector.notIdle.test(player))) {
++                if (distance < 0.0D || player.distanceSquared(x, y, z) < d2) {
 +                    return true;
 +                }
 +            }
@@ -175,7 +175,7 @@ index 3bc57ef91..82c94af6b 100644
      default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
          return (EntityHuman) this.a(this.getPlayers(), pathfindertargetcondition, entityliving, entityliving.locX(), entityliving.locY(), entityliving.locZ());
 diff --git a/src/main/java/net/minecraft/server/IEntitySelector.java b/src/main/java/net/minecraft/server/IEntitySelector.java
-index 1398c47a2..d2b686e25 100644
+index 1398c47a2..a79191f2b 100644
 --- a/src/main/java/net/minecraft/server/IEntitySelector.java
 +++ b/src/main/java/net/minecraft/server/IEntitySelector.java
 @@ -7,6 +7,7 @@ import javax.annotation.Nullable;
@@ -190,7 +190,7 @@ index 1398c47a2..d2b686e25 100644
              return entity != null && entity.g(d0, d1, d2) <= d4;
          };
      }
-+    public static Predicate<EntityHuman> notIdle = (player) -> !player.isIdle(); // Conduit - Idle API
++    public static Predicate<EntityHuman> notIdle = player -> !player.isIdle(); // Conduit - Idle API
  
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
@@ -212,7 +212,7 @@ index b25b3b481..5e3d4a33d 100644
              this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
          }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 9e32e2db1..9ca6b8b5c 100644
+index 9e32e2db1..cd424bc5b 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -405,7 +405,7 @@ public class WorldServer extends World {
@@ -229,7 +229,7 @@ index 9e32e2db1..9ca6b8b5c 100644
                  EntityPlayer entityplayer = (EntityPlayer) iterator.next();
  
 -                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping())) { // CraftBukkit
-+                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping()) || (conduitConfig.idleTimeoutCountAsSleeping && entityplayer.isIdle())) { // CraftBukkit
++                if (entityplayer.isSpectator() || (entityplayer.fauxSleeping && !entityplayer.isSleeping()) || (conduitConfig.idleTimeoutCountAsSleeping && entityplayer.isIdle())) { // CraftBukkit // Conduit
                      ++i;
                  } else if (entityplayer.isSleeping()) {
                      ++j;
@@ -277,14 +277,24 @@ index dcbda5b35..cc7d42c55 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index f735217e7..a6d11f84c 100644
+index f735217e7..87b33a5a6 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
-@@ -207,6 +207,7 @@ public class ActivationRange
+@@ -49,6 +49,7 @@ import co.aikar.timings.MinecraftTimings;
+ import net.minecraft.server.EntityInsentient;
+ import net.minecraft.server.EntityLlama;
+ import net.minecraft.server.EntityWaterAnimal;
++import org.bukkit.Bukkit;
+ // Paper end
+ 
+ public class ActivationRange
+@@ -207,6 +208,9 @@ public class ActivationRange
          {
  
              player.activatedTick = MinecraftServer.currentTick;
-+            if(!player.world.conduitConfig.idleTickNearbyEntities && player.isIdle()) { return; } // Conduit - Idle API
++            if(!player.world.conduitConfig.idleTickNearbyEntities && player.isIdle()) {
++                Bukkit.getLogger().info("skipping");
++                continue; } // Conduit - Idle API
              maxBB = player.getBoundingBox().grow( maxRange, 256, maxRange );
              ActivationType.MISC.boundingBox = player.getBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
              ActivationType.RAIDER.boundingBox = player.getBoundingBox().grow( raiderActivationRange, 256, raiderActivationRange );

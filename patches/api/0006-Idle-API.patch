@@ -1,4 +1,4 @@
-From cd137b40c01884281b61db33de31606b785f5cca Mon Sep 17 00:00:00 2001
+From 9e7e3fd2ba9e1ea114d9a7bc53e0111ba9bcb50a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
@@ -11,7 +11,7 @@ Subject: [PATCH] Idle API
 
 diff --git a/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
 new file mode 100644
-index 00000000..f215a674
+index 00000000..6ac3be5d
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
 @@ -0,0 +1,61 @@
@@ -35,8 +35,8 @@ index 00000000..f215a674
 +
 +    private boolean cancelled;
 +
-+    public PlayerIdleEvent(@NotNull Player who, boolean idle) {
-+        super(who);
++    public PlayerIdleEvent(@NotNull Player who, boolean idle, boolean async) {
++        super(who, async);
 +        this.idle = idle;
 +    }
 +
