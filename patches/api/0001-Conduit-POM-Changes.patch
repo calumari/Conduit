@@ -1,23 +1,29 @@
-From 22bdcc2fcf4b4b47253e1d63d185025bc960c01e Mon Sep 17 00:00:00 2001
+From 796cd0c617719196987611015da4bdd32f56252d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:23 +0100
 Subject: [PATCH] Conduit POM Changes
 
 ---
- pom.xml | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ pom.xml | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 20c473f5..67df61eb 100644
+index 20c473f5..dd7c5a8d 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -8,13 +8,13 @@
+@@ -3,18 +3,17 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+-        <groupId>com.destroystokyo.paper</groupId>
+-        <artifactId>paper-parent</artifactId>
++        <groupId>net.socialhangover.conduit</groupId>
++        <artifactId>conduit-parent</artifactId>
          <version>dev-SNAPSHOT</version>
      </parent>
  
 -    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
-+    <groupId>net.socialhangover</groupId>
 +    <artifactId>conduit-api</artifactId>
      <version>1.15.2-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>

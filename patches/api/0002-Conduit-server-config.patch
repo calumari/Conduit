@@ -1,4 +1,4 @@
-From 2e6e14fd78bb543c2bcfdc76211318c496c76e4f Mon Sep 17 00:00:00 2001
+From 5dd63bc3b1bd76d03f3c65af037f5745a119c426 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:36:49 +0100
 Subject: [PATCH] Conduit server config
@@ -9,10 +9,10 @@ Subject: [PATCH] Conduit server config
  2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/pom.xml b/pom.xml
-index 67df61eb..36559017 100644
+index dd7c5a8d..d79c1fed 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -14,7 +14,7 @@
+@@ -13,7 +13,7 @@
      <packaging>jar</packaging>
  
      <name>Conduit-API</name>
