@@ -1,4 +1,4 @@
-From 796cd0c617719196987611015da4bdd32f56252d Mon Sep 17 00:00:00 2001
+From 0d06ecf5598226b8da4160e4e3c706fd5376928a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:23 +0100
 Subject: [PATCH] Conduit POM Changes
@@ -8,7 +8,7 @@ Subject: [PATCH] Conduit POM Changes
  1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 20c473f5..dd7c5a8d 100644
+index 20c473f5..d79c1fed 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,17 @@
@@ -31,7 +31,7 @@ index 20c473f5..dd7c5a8d 100644
 -    <name>Paper-API</name>
 -    <url>https://github.com/PaperMC/Paper</url>
 +    <name>Conduit-API</name>
-+    <url>https://github.com/calumari/Conduit/url>
++    <url>https://github.com/calumari/Conduit</url>
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
