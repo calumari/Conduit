@@ -1,4 +1,4 @@
-From d985e18f6e694a57326092f3c7fab9676258caa7 Mon Sep 17 00:00:00 2001
+From 22ae1437621693afbf7bfc806300680cd8521d67 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -9,12 +9,12 @@ Subject: [PATCH] Idle API
  .../net/minecraft/server/EntityPlayer.java    | 34 +++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
  .../net/minecraft/server/IEntitySelector.java |  2 +
- .../minecraft/server/PlayerConnection.java    | 12 +++-
+ .../minecraft/server/PlayerConnection.java    |  9 ++-
  .../net/minecraft/server/WorldServer.java     |  4 +-
- .../conduit/config/ConduitWorldConfig.java    | 13 ++++
+ .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  2 +
- 10 files changed, 124 insertions(+), 26 deletions(-)
+ 10 files changed, 119 insertions(+), 26 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index e0ab058bf..4a98601a5 100644
@@ -198,10 +198,10 @@ index 1398c47a2..a79191f2b 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index b25b3b481..15b85461b 100644
+index b25b3b481..1fb794f8e 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -231,8 +231,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -231,8 +231,13 @@ public class PlayerConnection implements PacketListenerPlayIn {
          if (this.j > 0) {
              --this.j;
          }
@@ -213,9 +213,6 @@ index b25b3b481..15b85461b 100644
 +        }
 +        if (this.player.getIdleTimer() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.getIdleTimer() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
 +            this.player.setIdle(true);
-+            if (!this.player.world.conduitConfig.idleTimeoutKick) {
-+                return;
-+            }
 +            // Conduit end - Idle API
              this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
              this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
@@ -243,10 +240,10 @@ index 9e32e2db1..cd424bc5b 100644
                  } else if (entityplayer.isSleeping()) {
                      ++j;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 5304d5422..213ae05b6 100644
+index 5304d5422..b06845d60 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -88,4 +88,17 @@ public class ConduitWorldConfig {
+@@ -88,4 +88,15 @@ public class ConduitWorldConfig {
          phantomMaxSize = getInt("mobs.phantom.max-size", 64);
          phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 0.1D);
      }
@@ -255,13 +252,11 @@ index 5304d5422..213ae05b6 100644
 +    public boolean idleTimeoutTickNearbyEntities;
 +    public boolean idleTimeoutSpawnNearbyEntities;
 +    public boolean idleTimeoutCountAsSleeping;
-+    public boolean idleTimeoutKick;
 +    private void idleTimeoutSettings() {
 +        idleTimeoutSoft = getInt("gameplay-mechanics.idle-timeout.soft-timeout", 0); // the minutes until a player is considered idle without attempting to kick hence "soft".
 +        idleTimeoutTickNearbyEntities = getBoolean("gameplay-mechanics.idle-timeout.tick-nearby-entities", true);
 +        idleTimeoutSpawnNearbyEntities = getBoolean("gameplay-mechanics.idle-timeout.spawn-nearby-entities", true);
 +        idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.idle-timeout.count-as-sleeping", false);
-+        idleTimeoutKick = getBoolean("gameplay-mechanics.idle-timeout.hard-kick", true);
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
