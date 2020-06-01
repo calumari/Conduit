@@ -1,0 +1,40 @@
+From 2846484dd0b0dd48d9851b215d8bb6fe033821dd Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 1 Jun 2020 03:09:39 +0100
+Subject: [PATCH] EMC Persistent withers
+
+---
+ src/main/java/net/minecraft/server/EntityWither.java         | 2 ++
+ .../socialhangover/conduit/config/ConduitWorldConfig.java    | 5 +++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
+index 2f466af4d..9e3bedc4b 100644
+--- a/src/main/java/net/minecraft/server/EntityWither.java
++++ b/src/main/java/net/minecraft/server/EntityWither.java
+@@ -534,6 +534,8 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+         return this.getHealth() <= this.getMaxHealth() / 2.0F;
+     }
+ 
++    @Override public boolean isTypeNotPersistent(double d0) { return world.conduitConfig.witherPersistent; } // Conduit
++
+     @Override
+     public EnumMonsterType getMonsterType() {
+         return EnumMonsterType.UNDEAD;
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index b06845d60..8bb9b90f1 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -99,4 +99,9 @@ public class ConduitWorldConfig {
+         idleTimeoutSpawnNearbyEntities = getBoolean("gameplay-mechanics.idle-timeout.spawn-nearby-entities", true);
+         idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.idle-timeout.count-as-sleeping", false);
+     }
++
++    public boolean witherPersistent;
++    private void witherSettings() {
++        witherPersistent = getBoolean("mobs.wither.persistent", false);
++    }
+ }
+-- 
+2.24.1.windows.2
+
