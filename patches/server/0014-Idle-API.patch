@@ -1,21 +1,35 @@
-From b828fd563e25fd618d46f5d4f2e8929f2b9d3b58 Mon Sep 17 00:00:00 2001
+From 6083e34e15f7738f84ecfb09cb327a6ab05610d4 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
 
 ---
+ .../minecraft/server/ChunkProviderServer.java |  2 +-
  .../java/net/minecraft/server/Entity.java     |  1 +
  .../net/minecraft/server/EntityHuman.java     | 10 ++++
  .../net/minecraft/server/EntityPlayer.java    | 34 +++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
  .../net/minecraft/server/IEntitySelector.java |  2 +
- .../minecraft/server/PlayerConnection.java    | 13 +++-
+ .../minecraft/server/PlayerConnection.java    | 15 +++--
  .../net/minecraft/server/WorldServer.java     |  4 +-
  .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  2 +
- 10 files changed, 122 insertions(+), 27 deletions(-)
+ 11 files changed, 124 insertions(+), 29 deletions(-)
 
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 54e89c9cc..2f379c6dd 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -750,7 +750,7 @@ public class ChunkProviderServer extends IChunkProvider {
+             // Paper start - optimize isOutisdeRange
+             PlayerChunkMap playerChunkMap = this.playerChunkMap;
+             for (EntityPlayer player : this.world.players) {
+-                if (!player.affectsSpawning || player.isSpectator()) {
++                if (!player.affectsSpawning || player.isSpectator() || (player.isIdle() && !player.world.conduitConfig.idleTimeoutSpawnNearbyEntities)) { // Conduit - Idle API
+                     playerChunkMap.playerMobSpawnMap.remove(player);
+                     continue;
+                 }
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index e0ab058bf..4a98601a5 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
@@ -198,7 +212,7 @@ index 1398c47a2..a79191f2b 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index b25b3b481..e6442bcbc 100644
+index b25b3b481..66413fb6e 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -231,10 +231,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
@@ -207,15 +221,16 @@ index b25b3b481..e6442bcbc 100644
          }
 -
 -        if (this.player.F() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.F() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
+-            this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
+-            this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
 +        // Conduit start - Idle API
 +        if (this.player.getIdleTimer() > 0L && this.player.world.conduitConfig.idleTimeoutSoft > 0 && SystemUtils.getMonotonicMillis() - this.player.getIdleTimer() > (long) (this.player.world.conduitConfig.idleTimeoutSoft * 1000 * 60)) {
 +            this.player.setIdle(true);
 +        }
 +        if (this.player.getIdleTimer() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.getIdleTimer() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
 +            this.player.setIdle(true);
-             this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
--            this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
 +            if (!player.getBukkitEntity().hasPermission("minecraft.idle.bypass")) {
++                this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
 +                this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
 +            }
 +            // Conduit end - Idle API
