@@ -1,4 +1,4 @@
-From abd1e5ff3e56be400561373dbe65a5da49c1dc0f Mon Sep 17 00:00:00 2001
+From 562feab798b20f690082828190a6d99795a66196 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:37:32 +0100
 Subject: [PATCH] Purpur Allow villager leashing
@@ -59,10 +59,10 @@ index 2ad8dba5c..923c2e29f 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 64f8bf3be..f771f08f8 100644
+index f22c4ae2f..fb5fb3729 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -53,4 +53,9 @@ public class ConduitWorldConfig {
+@@ -51,4 +51,9 @@ public class ConduitWorldConfig {
          return config.getString("world-settings." + worldName + "." + path, config.getString("world-settings.default." + path));
      }
  

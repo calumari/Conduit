@@ -1,4 +1,4 @@
-From e94b8237d6bdb4ce0212db381f28cc0cb05d63af Mon Sep 17 00:00:00 2001
+From 53cffbbd92b6cff968a081aa0086eebab2ceaae7 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 14:52:41 +0100
 Subject: [PATCH] Purpur Prevent player cramming damage
@@ -22,10 +22,10 @@ index d60f659b3..5a6cc52bf 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index dcf8800a6..33a839341 100644
+index 6a8fb505d..74c86adad 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -54,8 +54,10 @@ public class ConduitWorldConfig {
+@@ -52,8 +52,10 @@ public class ConduitWorldConfig {
      }
  
      public boolean fixClimbingBypassingCrammingRule;

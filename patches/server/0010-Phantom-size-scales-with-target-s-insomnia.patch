@@ -1,4 +1,4 @@
-From 54a2f4dfd81d87196210543140b3cd12605714fb Mon Sep 17 00:00:00 2001
+From 435054bf4ed61df8f7bb6d04715bd43bde657eb2 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 09:20:07 +0100
 Subject: [PATCH] Phantom size scales with target's insomnia
@@ -48,10 +48,10 @@ index 0db431cd6..38269158b 100644
                                              }
  
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 36cce1dc4..ddabfb631 100644
+index ba8e9c51f..5303f4681 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -73,4 +73,16 @@ public class ConduitWorldConfig {
+@@ -71,4 +71,16 @@ public class ConduitWorldConfig {
          giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
      }
  
