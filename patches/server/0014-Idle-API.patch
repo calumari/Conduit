@@ -1,4 +1,4 @@
-From 22ae1437621693afbf7bfc806300680cd8521d67 Mon Sep 17 00:00:00 2001
+From 2a2a8fe1529e3b6129288430142b3d43323f6c72 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -9,12 +9,12 @@ Subject: [PATCH] Idle API
  .../net/minecraft/server/EntityPlayer.java    | 34 +++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
  .../net/minecraft/server/IEntitySelector.java |  2 +
- .../minecraft/server/PlayerConnection.java    |  9 ++-
+ .../minecraft/server/PlayerConnection.java    | 13 +++-
  .../net/minecraft/server/WorldServer.java     |  4 +-
  .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  2 +
- 10 files changed, 119 insertions(+), 26 deletions(-)
+ 10 files changed, 122 insertions(+), 27 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index e0ab058bf..4a98601a5 100644
@@ -198,10 +198,10 @@ index 1398c47a2..a79191f2b 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index b25b3b481..1fb794f8e 100644
+index b25b3b481..e6442bcbc 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -231,8 +231,13 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -231,10 +231,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
          if (this.j > 0) {
              --this.j;
          }
@@ -213,10 +213,15 @@ index b25b3b481..1fb794f8e 100644
 +        }
 +        if (this.player.getIdleTimer() > 0L && this.minecraftServer.getIdleTimeout() > 0 && SystemUtils.getMonotonicMillis() - this.player.getIdleTimer() > (long) (this.minecraftServer.getIdleTimeout() * 1000 * 60)) {
 +            this.player.setIdle(true);
-+            // Conduit end - Idle API
              this.player.resetIdleTimer(); // CraftBukkit - SPIGOT-854
-             this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
+-            this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
++            if (!player.getBukkitEntity().hasPermission("minecraft.idle.bypass")) {
++                this.disconnect(new ChatMessage("multiplayer.disconnect.idling", new Object[0]));
++            }
++            // Conduit end - Idle API
          }
+ 
+     }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
 index 9e32e2db1..cd424bc5b 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
