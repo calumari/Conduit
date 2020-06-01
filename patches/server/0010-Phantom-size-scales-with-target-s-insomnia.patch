@@ -1,4 +1,4 @@
-From 435054bf4ed61df8f7bb6d04715bd43bde657eb2 Mon Sep 17 00:00:00 2001
+From f1d0bdb30ed6c89b3787e0ba8210cf7231f1bb87 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 09:20:07 +0100
 Subject: [PATCH] Phantom size scales with target's insomnia
@@ -31,7 +31,7 @@ index 96b4912c4..54f4df89a 100644
  
      public int getSize() {
 diff --git a/src/main/java/net/minecraft/server/MobSpawnerPhantom.java b/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
-index 0db431cd6..38269158b 100644
+index 0db431cd6..09ec8d687 100644
 --- a/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
 +++ b/src/main/java/net/minecraft/server/MobSpawnerPhantom.java
 @@ -65,6 +65,12 @@ public class MobSpawnerPhantom {
@@ -41,7 +41,7 @@ index 0db431cd6..38269158b 100644
 +                                                // Conduit start
 +                                                if (entityphantom.getWorld().conduitConfig.phantomSizeScalesWithInsomnia) {
 +                                                    // todo move to EntityPhantom#prepare? would require a new ref to target entity
-+                                                    entityphantom.setSize((j % 24000) - 3); // todo lerp this?
++                                                    entityphantom.setSize(j / 24000 - 3); // todo lerp this?
 +                                                }
 +                                                // Conduit end
                                                  worldserver.addEntity(entityphantom, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL); // CraftBukkit
