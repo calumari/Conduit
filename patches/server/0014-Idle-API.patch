@@ -1,4 +1,4 @@
-From 9863db55c3f7d545c77056349baa10c220f460ab Mon Sep 17 00:00:00 2001
+From b828fd563e25fd618d46f5d4f2e8929f2b9d3b58 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -245,10 +245,10 @@ index 9e32e2db1..cd424bc5b 100644
                  } else if (entityplayer.isSleeping()) {
                      ++j;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index efe6080a8..6886ba34a 100644
+index 33a839341..85917349f 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -90,4 +90,15 @@ public class ConduitWorldConfig {
+@@ -92,4 +92,15 @@ public class ConduitWorldConfig {
          phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 1.0D);
          phantomSizeHealthMultiplier = getDouble("mobs.phantom.size-health-multiplier", 0.0D);
      }

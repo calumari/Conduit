@@ -1,16 +1,16 @@
-From b7fa44e51d5e2b5dba13ce813ec815cd6af29a12 Mon Sep 17 00:00:00 2001
+From 54a2f4dfd81d87196210543140b3cd12605714fb Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 09:20:07 +0100
 Subject: [PATCH] Phantom size scales with target's insomnia
 
 ---
- src/main/java/net/minecraft/server/EntityPhantom.java  |  6 ++++--
- .../java/net/minecraft/server/MobSpawnerPhantom.java   |  6 ++++++
- .../conduit/config/ConduitWorldConfig.java             | 10 ++++++++++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ .../java/net/minecraft/server/EntityPhantom.java     |  6 ++++--
+ .../java/net/minecraft/server/MobSpawnerPhantom.java |  6 ++++++
+ .../conduit/config/ConduitWorldConfig.java           | 12 ++++++++++++
+ 3 files changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPhantom.java b/src/main/java/net/minecraft/server/EntityPhantom.java
-index 96b4912c4..fda106055 100644
+index 96b4912c4..54f4df89a 100644
 --- a/src/main/java/net/minecraft/server/EntityPhantom.java
 +++ b/src/main/java/net/minecraft/server/EntityPhantom.java
 @@ -48,12 +48,14 @@ public class EntityPhantom extends EntityFlying implements IMonster {
@@ -24,7 +24,7 @@ index 96b4912c4..fda106055 100644
      private void ep() {
          this.updateSize();
 -        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (6 + this.getSize()));
-+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (6 + this.getSize() * world.conduitConfig.phantomSizeDamageMultiplier)); // Conduit
++        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(world.conduitConfig.phantomBaseDamage + this.getSize() * world.conduitConfig.phantomSizeDamageMultiplier); // Conduit
 +        this.getAttributeInstance(GenericAttributes.MAX_HEALTH).setValue(this.getAttributeInstance(GenericAttributes.MAX_HEALTH).getBaseValue() + this.getSize() * world.conduitConfig.phantomSizeHealthMultiplier); // Conduit
 +        this.setHealth(this.getMaxHealth()); // Conduit - todo find a better way to do this
      }
@@ -48,19 +48,21 @@ index 0db431cd6..38269158b 100644
                                              }
  
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 36cce1dc4..06593ed3d 100644
+index 36cce1dc4..ddabfb631 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -73,4 +73,14 @@ public class ConduitWorldConfig {
+@@ -73,4 +73,16 @@ public class ConduitWorldConfig {
          giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
      }
  
 +    public boolean phantomSizeScalesWithInsomnia;
++    public double phantomBaseDamage;
 +    public int phantomMaxSize;
 +    public double phantomSizeDamageMultiplier;
 +    public double phantomSizeHealthMultiplier;
 +    private void phantomSettings() {
 +        phantomSizeScalesWithInsomnia = getBoolean("mobs.phantom.size-scales-with-insomnia", false);
++        phantomBaseDamage = getDouble("mobs.phantom.base-damage", 3.0D); // easy/normal:2, hard:3,
 +        phantomMaxSize = getInt("mobs.phantom.max-size", 64);
 +        phantomSizeDamageMultiplier = getDouble("mobs.phantom.size-damage-multiplier", 1.0D);
 +        phantomSizeHealthMultiplier = getDouble("mobs.phantom.size-health-multiplier", 0.0D);
