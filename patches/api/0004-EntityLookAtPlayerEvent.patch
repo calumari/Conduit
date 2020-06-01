@@ -1,20 +1,20 @@
-From 6c066259f87fe37743069d47780e1b22c61466a1 Mon Sep 17 00:00:00 2001
+From 1129e22996db2ec293929b6079be02c647b3f85f Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 27 May 2020 14:14:27 +0100
 Subject: [PATCH] EntityLookAtPlayerEvent
 
 ---
- .../event/EntityLookAtPlayerEvent.java        | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ .../event/EntityLookAtPlayerEvent.java        | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 new file mode 100644
-index 00000000..f4709024
+index 00000000..4308a3f4
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
-@@ -0,0 +1,51 @@
-+package net.socialhangover.conduit.events;
+@@ -0,0 +1,49 @@
++package net.socialhangover.conduit.event;
 +
 +import org.bukkit.entity.LivingEntity;
 +import org.bukkit.entity.Player;
@@ -26,18 +26,12 @@ index 00000000..f4709024
 +public class EntityLookAtPlayerEvent extends EntityEvent implements Cancellable {
 +
 +    private static final HandlerList handlers = new HandlerList();
-+
 +    private final Player player;
-+    private boolean cancelled;
++    private boolean cancel;
 +
 +    public EntityLookAtPlayerEvent(@NotNull LivingEntity what, @NotNull Player player) {
 +        super(what);
-+        this.entity = what;
 +        this.player = player;
-+    }
-+
-+    public static HandlerList getHandlerList() {
-+        return handlers;
 +    }
 +
 +    @Override
@@ -45,18 +39,19 @@ index 00000000..f4709024
 +        return (LivingEntity) super.getEntity();
 +    }
 +
++    @NotNull
 +    public Player getPlayer() {
 +        return player;
 +    }
 +
 +    @Override
 +    public boolean isCancelled() {
-+        return cancelled;
++        return cancel;
 +    }
 +
 +    @Override
 +    public void setCancelled(boolean cancel) {
-+        cancelled = cancel;
++        this.cancel = cancel;
 +    }
 +
 +    @Override
@@ -64,6 +59,9 @@ index 00000000..f4709024
 +        return handlers;
 +    }
 +
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
 +}
 -- 
 2.24.1.windows.2

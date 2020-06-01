@@ -1,20 +1,20 @@
-From 5daf83ef3fa0c8b02e6592d436bd4154a05310cc Mon Sep 17 00:00:00 2001
+From fb0d7582f655f95ea50c61d5b1c2a546bbe034f9 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 11:50:27 +0100
 Subject: [PATCH] EMC AnvilEvent
 
 ---
- .../conduit/event/AnvilEvent.java             | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ .../conduit/event/AnvilEvent.java             | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/event/AnvilEvent.java
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/AnvilEvent.java b/src/main/java/net/socialhangover/conduit/event/AnvilEvent.java
 new file mode 100644
-index 00000000..a1eac6e4
+index 00000000..19a5cd01
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/AnvilEvent.java
-@@ -0,0 +1,78 @@
-+package net.socialhangover.conduit.events;
+@@ -0,0 +1,80 @@
++package net.socialhangover.conduit.event;
 +
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.Cancellable;
@@ -22,20 +22,19 @@ index 00000000..a1eac6e4
 +import org.bukkit.event.HandlerList;
 +import org.bukkit.inventory.ItemStack;
 +import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public class AnvilEvent extends Event implements Cancellable {
 +
 +    private static final HandlerList handlers = new HandlerList();
-+
 +    private final Player player;
 +    private final ItemStack left;
 +    private final ItemStack right;
 +    private ItemStack result;
 +    private int cost;
++    private boolean cancel;
 +
-+    private boolean cancelled;
-+
-+    public AnvilEvent(@NotNull Player player, ItemStack left, ItemStack right, ItemStack result, int cost) {
++    public AnvilEvent(@NotNull Player player, @NotNull ItemStack left, @Nullable ItemStack right, @Nullable ItemStack result, int cost) {
 +        this.player = player;
 +        this.left = left;
 +        this.right = right;
@@ -43,23 +42,22 @@ index 00000000..a1eac6e4
 +        this.cost = cost;
 +    }
 +
-+    public static HandlerList getHandlerList() {
-+        return handlers;
-+    }
-+
 +    @NotNull
 +    public Player getPlayer() {
 +        return player;
 +    }
 +
++    @NotNull
 +    public ItemStack getLeft() {
 +        return left;
 +    }
 +
++    @Nullable
 +    public ItemStack getRight() {
 +        return right;
 +    }
 +
++    @Nullable
 +    public ItemStack getResult() {
 +        return result;
 +    }
@@ -78,12 +76,12 @@ index 00000000..a1eac6e4
 +
 +    @Override
 +    public boolean isCancelled() {
-+        return cancelled;
++        return cancel;
 +    }
 +
 +    @Override
 +    public void setCancelled(boolean cancel) {
-+        cancelled = cancel;
++        this.cancel = cancel;
 +    }
 +
 +    @Override
@@ -91,6 +89,10 @@ index 00000000..a1eac6e4
 +        return handlers;
 +    }
 +
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
 +}
 \ No newline at end of file
 -- 

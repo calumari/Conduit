@@ -1,4 +1,4 @@
-From 6083e34e15f7738f84ecfb09cb327a6ab05610d4 Mon Sep 17 00:00:00 2001
+From 5f8dc65aa2550642cac185dc8b22ce8bd8645a17 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -62,7 +62,7 @@ index 7df24be46..163fa2bb2 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5a6cc52bf..ab176f446 100644
+index 5a6cc52bf..4a81f19b4 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1623,6 +1623,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -99,7 +99,7 @@ index 5a6cc52bf..ab176f446 100644
 +            return;
 +        }
 +
-+        net.socialhangover.conduit.events.PlayerIdleEvent event = new net.socialhangover.conduit.events.PlayerIdleEvent(getBukkitEntity(), idle, !Bukkit.isPrimaryThread());
++        net.socialhangover.conduit.event.PlayerIdleEvent event = new net.socialhangover.conduit.event.PlayerIdleEvent(getBukkitEntity(), idle, !Bukkit.isPrimaryThread());
 +        if (!event.callEvent()) {
 +            return;
 +        }

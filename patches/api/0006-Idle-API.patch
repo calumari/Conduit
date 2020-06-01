@@ -1,21 +1,21 @@
-From ef81882e65efc8664ef112eb288e8a802329564d Mon Sep 17 00:00:00 2001
+From f0e0857dee43b1a21a761aab00cd71e7a0267e94 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
 
 ---
- .../conduit/event/PlayerIdleEvent.java        | 61 +++++++++++++++++++
+ .../conduit/event/PlayerIdleEvent.java        | 58 +++++++++++++++++++
  src/main/java/org/bukkit/entity/Player.java   | 18 ++++++
- 2 files changed, 79 insertions(+)
+ 2 files changed, 76 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 new file mode 100644
-index 00000000..6ac3be5d
+index 00000000..a2a7b60f
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
-@@ -0,0 +1,61 @@
-+package net.socialhangover.conduit.events;
+@@ -0,0 +1,58 @@
++package net.socialhangover.conduit.event;
 +
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.Cancellable;
@@ -27,21 +27,13 @@ index 00000000..6ac3be5d
 +public class PlayerIdleEvent extends PlayerEvent implements Cancellable {
 +
 +    private static final HandlerList handlers = new HandlerList();
-+
 +    private boolean idle;
-+
-+    @Nullable
 +    private String message;
-+
 +    private boolean cancelled;
 +
 +    public PlayerIdleEvent(@NotNull Player who, boolean idle, boolean async) {
 +        super(who, async);
 +        this.idle = idle;
-+    }
-+
-+    public static HandlerList getHandlerList() {
-+        return handlers;
 +    }
 +
 +    public boolean isIdle() {
@@ -73,6 +65,11 @@ index 00000000..6ac3be5d
 +
 +    @Override
 +    public @NotNull HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
 +        return handlers;
 +    }
 +}

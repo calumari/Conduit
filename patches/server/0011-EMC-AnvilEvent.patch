@@ -1,39 +1,36 @@
-From 934d3b570baba0f67929342ff265faf2511d365a Mon Sep 17 00:00:00 2001
+From a6fe89419cc914a9a88bc5f727084a3978eabd9c Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 11:49:58 +0100
 Subject: [PATCH] EMC AnvilEvent
 
 ---
- .../net/minecraft/server/ContainerAnvil.java  | 19 +++++++++++++++++++
- .../minecraft/server/ContainerProperty.java   |  2 ++
- 2 files changed, 21 insertions(+)
+ .../net/minecraft/server/ContainerAnvil.java     | 16 ++++++++++++++++
+ .../net/minecraft/server/ContainerProperty.java  |  2 ++
+ 2 files changed, 18 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/ContainerAnvil.java b/src/main/java/net/minecraft/server/ContainerAnvil.java
-index 286b930dd..3126fbded 100644
+index 286b930dd..aca9582da 100644
 --- a/src/main/java/net/minecraft/server/ContainerAnvil.java
 +++ b/src/main/java/net/minecraft/server/ContainerAnvil.java
-@@ -9,6 +9,12 @@ import org.apache.logging.log4j.Logger;
+@@ -9,6 +9,10 @@ import org.apache.logging.log4j.Logger;
  // CraftBukkit start
  import org.bukkit.craftbukkit.inventory.CraftInventoryView;
  // CraftBukkit end
 +// Conduit start
-+import net.socialhangover.conduit.events.AnvilEvent;
-+import org.bukkit.Bukkit;
 +import org.bukkit.craftbukkit.inventory.CraftItemStack;
 +import org.bukkit.entity.Player;
 +// Conduit end
  
  public class ContainerAnvil extends Container {
  
-@@ -299,6 +305,19 @@ public class ContainerAnvil extends Container {
+@@ -299,6 +303,18 @@ public class ContainerAnvil extends Container {
                  itemstack1 = ItemStack.a;
              }
  
 +            // Conduit start
 +            final int originalCost = this.levelCost.get();
-+            AnvilEvent event = new AnvilEvent((Player) player.getBukkitEntity(), CraftItemStack.asBukkitCopy(itemstack), CraftItemStack.asBukkitCopy(itemstack2), CraftItemStack.asBukkitCopy(itemstack1), this.levelCost.get());
-+            Bukkit.getPluginManager().callEvent(event);
-+            if (event.isCancelled()) {
++            net.socialhangover.conduit.event.AnvilEvent event = new net.socialhangover.conduit.event.AnvilEvent((Player) player.getBukkitEntity(), CraftItemStack.asBukkitCopy(itemstack), CraftItemStack.asBukkitCopy(itemstack2), CraftItemStack.asBukkitCopy(itemstack1), this.levelCost.get());
++            if (!event.callEvent()) {
 +                itemstack1 = ItemStack.NULL_ITEM;
 +            } else {
 +                itemstack1 = CraftItemStack.asNMSCopy(event.getResult());
