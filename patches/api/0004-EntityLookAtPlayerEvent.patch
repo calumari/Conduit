@@ -1,18 +1,18 @@
-From fb61e665eec6b992b5d84774cfbbccddbc8494b4 Mon Sep 17 00:00:00 2001
+From 6c066259f87fe37743069d47780e1b22c61466a1 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 27 May 2020 14:14:27 +0100
-Subject: [PATCH] Add EntityLookAtPlayerEvent
+Subject: [PATCH] EntityLookAtPlayerEvent
 
 ---
- .../events/EntityLookAtPlayerEvent.java       | 51 +++++++++++++++++++
+ .../event/EntityLookAtPlayerEvent.java        | 51 +++++++++++++++++++
  1 file changed, 51 insertions(+)
- create mode 100644 src/main/java/net/socialhangover/conduit/events/EntityLookAtPlayerEvent.java
+ create mode 100644 src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 
-diff --git a/src/main/java/net/socialhangover/conduit/events/EntityLookAtPlayerEvent.java b/src/main/java/net/socialhangover/conduit/events/EntityLookAtPlayerEvent.java
+diff --git a/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 new file mode 100644
 index 00000000..f4709024
 --- /dev/null
-+++ b/src/main/java/net/socialhangover/conduit/events/EntityLookAtPlayerEvent.java
++++ b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 @@ -0,0 +1,51 @@
 +package net.socialhangover.conduit.events;
 +

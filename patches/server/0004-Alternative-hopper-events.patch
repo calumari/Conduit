@@ -1,36 +1,31 @@
-From fcc11fd7a45a0fc37cf08022efa93ea760f1b5c9 Mon Sep 17 00:00:00 2001
+From 30c4361097e1cd45b29e66adec8bacf810280785 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:08:38 +0100
-Subject: [PATCH] Hopper events
+Subject: [PATCH] Alternative hopper events
 
 ---
- .../minecraft/server/TileEntityHopper.java    | 27 ++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ .../minecraft/server/TileEntityHopper.java    | 21 +++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index c755faed4..5ef46222c 100644
+index c755faed4..5ed9854be 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
-@@ -7,6 +7,11 @@ import java.util.stream.Collectors;
+@@ -3,7 +3,6 @@ package net.minecraft.server;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.function.Supplier;
+-import java.util.stream.Collectors;
  import java.util.stream.IntStream;
  import javax.annotation.Nullable;
  
-+// Conduit start
-+import net.socialhangover.conduit.events.HopperDrainEvent;
-+import net.socialhangover.conduit.events.HopperFillEvent;
-+import org.bukkit.Bukkit;
-+// Conduit end
- // CraftBukkit start
- import org.bukkit.craftbukkit.entity.CraftHumanEntity;
- import org.bukkit.craftbukkit.inventory.CraftItemStack;
-@@ -330,6 +335,14 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -330,6 +329,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          } else {
              EnumDirection enumdirection = ((EnumDirection) this.getBlock().get(BlockHopper.FACING)).opposite();
  
-+            // Conduit start - Hopper fill event
-+            HopperFillEvent event = new HopperFillEvent(this.getOwner(false).getInventory(), getInventory(iinventory));
-+            Bukkit.getPluginManager().callEvent(event);
-+            if (event.isCancelled()) {
++            // Conduit start
++            net.socialhangover.conduit.event.HopperFillEvent event = new net.socialhangover.conduit.event.HopperFillEvent(this.getOwner(false).getInventory(), getInventory(iinventory));
++            if (!event.callEvent()) {
 +                return false;
 +            }
 +            // Conduit end
@@ -38,21 +33,21 @@ index c755faed4..5ef46222c 100644
              if (this.b(iinventory, enumdirection)) {
                  return false;
              } else {
-@@ -437,8 +450,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -436,9 +442,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         if (iinventory != null) {
              EnumDirection enumdirection = EnumDirection.DOWN;
  
-             // Paper start - optimize hoppers and remove streams
-+            // Conduit start - hopper drain event
++            // Conduit start
 +            if (c(iinventory, enumdirection)) {
 +                return false;
 +            }
 +
-+            HopperDrainEvent event = new HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper));
-+            Bukkit.getPluginManager().callEvent(event);
-+            if (event.isCancelled()) {
++            net.socialhangover.conduit.event.HopperDrainEvent event = new net.socialhangover.conduit.event.HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper));
++            if (!event.callEvent()) {
 +                return false;
 +            }
 +
+             // Paper start - optimize hoppers and remove streams
              skipPullModeEventFire = skipHopperEvents;
 -            return !c(iinventory, enumdirection) && anyMatch(iinventory, enumdirection, (item, i) -> {
 +            return anyMatch(iinventory, enumdirection, (item, i) -> {

@@ -1,14 +1,14 @@
-From 0129c6655a19a03df676f68596671bb158cbbeda Mon Sep 17 00:00:00 2001
+From f2cdf718c8ae59d350350b12f79f4cb030ed51f5 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 08:36:45 +0100
-Subject: [PATCH] Add EntityLookAtPlayerEvent
+Subject: [PATCH] EntityLookAtPlayerEvent
 
 ---
  .../net/minecraft/server/PathfinderGoalLookAtPlayer.java  | 8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-index a73e5b77c..e6396ecd8 100644
+index a73e5b77c..d123d2720 100644
 --- a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
 +++ b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
 @@ -53,6 +53,14 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
@@ -18,7 +18,7 @@ index a73e5b77c..e6396ecd8 100644
 +        // Conduit start
 +        if (this.b instanceof EntityPlayer) {
 +            net.socialhangover.conduit.events.EntityLookAtPlayerEvent event = new net.socialhangover.conduit.events.EntityLookAtPlayerEvent(this.a.getBukkitLivingEntity(), ((EntityPlayer) this.b).getBukkitEntity());
-+            if (event.isCancelled()) {
++            if (!event.callEvent()) {
 +                return false;
 +            }
 +        }

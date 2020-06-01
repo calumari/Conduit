@@ -1,0 +1,127 @@
+From 85fc0cef621f2b89b189ca2fe5b077ef2185aa71 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 25 May 2020 02:08:25 +0100
+Subject: [PATCH] Alternative hopper events
+
+---
+ .../conduit/event/HopperDrainEvent.java       | 50 +++++++++++++++++++
+ .../conduit/event/HopperFillEvent.java        | 50 +++++++++++++++++++
+ 2 files changed, 100 insertions(+)
+ create mode 100644 src/main/java/net/socialhangover/conduit/event/HopperDrainEvent.java
+ create mode 100644 src/main/java/net/socialhangover/conduit/event/HopperFillEvent.java
+
+diff --git a/src/main/java/net/socialhangover/conduit/event/HopperDrainEvent.java b/src/main/java/net/socialhangover/conduit/event/HopperDrainEvent.java
+new file mode 100644
+index 00000000..896778f9
+--- /dev/null
++++ b/src/main/java/net/socialhangover/conduit/event/HopperDrainEvent.java
+@@ -0,0 +1,50 @@
++package net.socialhangover.conduit.event;
++
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.Inventory;
++import org.jetbrains.annotations.NotNull;
++
++public class HopperDrainEvent extends Event implements Cancellable {
++
++    private static final HandlerList handlers = new HandlerList();
++    private final Inventory sourceInventory;
++    private final Inventory hopperInventory;
++    private boolean cancel;
++
++    public HopperDrainEvent(Inventory sourceInventory, Inventory hopperInventory) {
++        this.sourceInventory = sourceInventory;
++        this.hopperInventory = hopperInventory;
++    }
++
++    @NotNull
++    public Inventory getSourceInventory() {
++        return sourceInventory;
++    }
++
++    @NotNull
++    public Inventory getHopperInventory() {
++        return sourceInventory;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancel;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancel = cancel;
++    }
++
++    @Override
++    public @NotNull HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/net/socialhangover/conduit/event/HopperFillEvent.java b/src/main/java/net/socialhangover/conduit/event/HopperFillEvent.java
+new file mode 100644
+index 00000000..bd5cfc27
+--- /dev/null
++++ b/src/main/java/net/socialhangover/conduit/event/HopperFillEvent.java
+@@ -0,0 +1,50 @@
++package net.socialhangover.conduit.event;
++
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.Inventory;
++import org.jetbrains.annotations.NotNull;
++
++public class HopperFillEvent extends Event implements Cancellable {
++
++    private static final HandlerList handlers = new HandlerList();
++    private final Inventory hopperInventory;
++    private final Inventory destinationInventory;
++    private boolean cancel;
++
++    public HopperFillEvent(Inventory hopperInventory, Inventory destinationInventory) {
++        this.hopperInventory = hopperInventory;
++        this.destinationInventory = destinationInventory;
++    }
++
++    @NotNull
++    public Inventory getHopperInventory() {
++        return hopperInventory;
++    }
++
++    @NotNull
++    public Inventory getDestinationInventory() {
++        return destinationInventory;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancel;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancel = cancel;
++    }
++
++    @Override
++    public @NotNull HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+-- 
+2.24.1.windows.2
+

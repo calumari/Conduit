@@ -1,19 +1,19 @@
-From 9e7e3fd2ba9e1ea114d9a7bc53e0111ba9bcb50a Mon Sep 17 00:00:00 2001
+From ef81882e65efc8664ef112eb288e8a802329564d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
 
 ---
- .../conduit/events/PlayerIdleEvent.java       | 61 +++++++++++++++++++
+ .../conduit/event/PlayerIdleEvent.java        | 61 +++++++++++++++++++
  src/main/java/org/bukkit/entity/Player.java   | 18 ++++++
  2 files changed, 79 insertions(+)
- create mode 100644 src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
+ create mode 100644 src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 
-diff --git a/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
+diff --git a/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 new file mode 100644
 index 00000000..6ac3be5d
 --- /dev/null
-+++ b/src/main/java/net/socialhangover/conduit/events/PlayerIdleEvent.java
++++ b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 @@ -0,0 +1,61 @@
 +package net.socialhangover.conduit.events;
 +
