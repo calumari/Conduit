@@ -1,8 +1,9 @@
-From e6dce7087660de93c75414b75372ceb0c10867b4 Mon Sep 17 00:00:00 2001
+From 82024832ca6fa52016ba526c1e842bcefbae6e3c Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
 
+Based on Purpur's AFK API with more focus on idle farm prevention.
 ---
  .../minecraft/server/ChunkProviderServer.java |  2 +-
  .../java/net/minecraft/server/Entity.java     |  1 +

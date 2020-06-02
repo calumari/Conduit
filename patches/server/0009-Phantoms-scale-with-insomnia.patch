@@ -1,7 +1,7 @@
-From f1d0bdb30ed6c89b3787e0ba8210cf7231f1bb87 Mon Sep 17 00:00:00 2001
+From 22167eec4b4d2860bd68a0d2020165ff0f7501e0 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 09:20:07 +0100
-Subject: [PATCH] Phantom size scales with target's insomnia
+Subject: [PATCH] Phantoms scale with insomnia
 
 ---
  .../java/net/minecraft/server/EntityPhantom.java     |  6 ++++--

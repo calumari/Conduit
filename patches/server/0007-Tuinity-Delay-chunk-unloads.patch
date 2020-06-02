@@ -1,8 +1,18 @@
-From f59402a352519e3fd93bf09fd2a45b76ddea9b8f Mon Sep 17 00:00:00 2001
-From: Callum <38501234+calumari@users.noreply.github.com>
-Date: Fri, 29 May 2020 01:46:11 +0100
-Subject: [PATCH] Tuinity delay chunk unloads
+From 96233aeba4dd9aba1cf10df5274ce944ffeccadb Mon Sep 17 00:00:00 2001
+From: Spottedleaf <Spottedleaf@users.noreply.github.com>
+Date: Fri, 25 Oct 2019 02:11:30 -0700
+Subject: [PATCH] Tuinity Delay chunk unloads
 
+Chunk unloads are now delayed by 1s. Specifically, ticket level
+reduction is delayed by 1s. This is done to allow players to
+teleport and have their pets follow them, as the chunks will no longer
+unload or have entity ticking status removed.
+
+It's also targetted to reduce performance regressions when
+plugins or edge cases in code do not spam sync loads since chunks
+without tickets get unloaded immediately.
+
+Configurable under `delay-chunkunloads-by` in config.
 ---
  .../java/net/minecraft/server/ChunkMap.java   |  1 +
  .../minecraft/server/ChunkMapDistance.java    | 50 ++++++++++++++++++-
@@ -145,10 +155,10 @@ index 24ec5d77c..11f96ee53 100644
      public static <T> TicketType<T> a(String s, Comparator<T> comparator) {
          return new TicketType<>(s, comparator, 0L);
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-index 5591deaf1..5c3bcd488 100644
+index 9284371a0..c6430c17a 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-@@ -5,6 +5,7 @@ import java.util.HashMap;
+@@ -4,6 +4,7 @@ import java.util.HashMap;
  import java.util.Map;
  import net.minecraft.server.MinecraftServer;
  import net.socialhangover.conduit.command.ConduitCommand;
@@ -156,7 +166,7 @@ index 5591deaf1..5c3bcd488 100644
  import org.bukkit.Bukkit;
  import org.bukkit.command.Command;
  import org.bukkit.configuration.InvalidConfigurationException;
-@@ -114,4 +115,13 @@ public final class ConduitConfig {
+@@ -113,4 +114,13 @@ public final class ConduitConfig {
      private static void serverModName() {
          serverModName = getString("settings.server-mod-name", serverModName);
      }

@@ -1,7 +1,7 @@
-From 562feab798b20f690082828190a6d99795a66196 Mon Sep 17 00:00:00 2001
-From: Callum <38501234+calumari@users.noreply.github.com>
-Date: Mon, 25 May 2020 02:37:32 +0100
-Subject: [PATCH] Purpur Allow villager leashing
+From b230f27b5f7588c92ecc2b38e9a9313d2e2d1d6e Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Thu, 3 Oct 2019 18:08:03 -0500
+Subject: [PATCH] Purpur Allow leashing villagers
 
 ---
  src/main/java/net/minecraft/server/EntityInsentient.java   | 5 +++++

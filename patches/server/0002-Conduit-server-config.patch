@@ -1,4 +1,4 @@
-From 14f10b12891a40eaf22dff3c78a7a3b46b998a6c Mon Sep 17 00:00:00 2001
+From 66c297578043792d7bca0f62544ecf70788d6ef0 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -7,11 +7,11 @@ Subject: [PATCH] Conduit server config
  .../net/minecraft/server/DedicatedServer.java |  10 ++
  src/main/java/net/minecraft/server/World.java |   3 +
  .../conduit/command/ConduitCommand.java       |  75 ++++++++++++
- .../conduit/config/ConduitConfig.java         | 112 ++++++++++++++++++
+ .../conduit/config/ConduitConfig.java         | 111 ++++++++++++++++++
  .../conduit/config/ConduitWorldConfig.java    |  54 +++++++++
  .../org/bukkit/craftbukkit/CraftServer.java   |  10 ++
  .../java/org/bukkit/craftbukkit/Main.java     |   8 ++
- 7 files changed, 272 insertions(+)
+ 7 files changed, 271 insertions(+)
  create mode 100644 src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
@@ -141,13 +141,12 @@ index 000000000..a41dd7ede
 +}
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 new file mode 100644
-index 000000000..2ef6fe175
+index 000000000..c2ba92acb
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-@@ -0,0 +1,112 @@
+@@ -0,0 +1,111 @@
 +package net.socialhangover.conduit.config;
 +
-+import com.destroystokyo.paper.Metrics;
 +import java.util.HashMap;
 +import java.util.Map;
 +import net.minecraft.server.MinecraftServer;

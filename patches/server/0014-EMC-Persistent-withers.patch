@@ -1,6 +1,6 @@
-From 5beb2b22579dd99db0e2c1316833e1062719a135 Mon Sep 17 00:00:00 2001
-From: Callum <38501234+calumari@users.noreply.github.com>
-Date: Mon, 1 Jun 2020 03:09:39 +0100
+From 17c62bee64f5c6488ff23876bf8dcb5f02584bd1 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Thu, 6 Nov 2014 21:36:14 -0500
 Subject: [PATCH] EMC Persistent withers
 
 ---

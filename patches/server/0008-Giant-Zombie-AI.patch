@@ -1,8 +1,10 @@
-From a0c24143524e8682589b97911df5b5f4ca37e2da Mon Sep 17 00:00:00 2001
+From 3f5242d31adca7bb556855a31106ee4aada7b3ce Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 08:19:37 +0100
 Subject: [PATCH] Giant Zombie AI
 
+Based on Purpur's Giant AI patch. However, with different goals,
+configurable villager targeting and spawning with tools.
 ---
  .../minecraft/server/EntityGiantZombie.java   | 55 ++++++++++++++++++-
  .../minecraft/server/EntityInsentient.java    |  2 +

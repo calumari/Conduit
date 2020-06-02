@@ -1,15 +1,16 @@
-From a417b7a11eda21e6f69064c5158a70ce12e5efa0 Mon Sep 17 00:00:00 2001
+From 269ec109b6e9809188112795478cf0ce64909590 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:42:46 +0100
 Subject: [PATCH] Conduit branding
 
 ---
- src/main/java/net/minecraft/server/MinecraftServer.java | 2 +-
- src/main/java/org/bukkit/craftbukkit/CraftServer.java   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ src/main/java/net/minecraft/server/MinecraftServer.java      | 2 +-
+ .../net/socialhangover/conduit/config/ConduitConfig.java     | 5 +++++
+ src/main/java/org/bukkit/craftbukkit/CraftServer.java        | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5b24de6d..d3360b62 100644
+index 5b24de6d6..30543a93e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1559,7 +1559,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
@@ -17,12 +18,26 @@ index 5b24de6d..d3360b62 100644
  
      public String getServerModName() {
 -        return "Paper"; //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Conduit"; // Conduit // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return net.socialhangover.conduit.config.ConduitConfig.serverModName; // Conduit // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public CrashReport b(CrashReport crashreport) {
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+index c2ba92acb..9284371a0 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+@@ -108,4 +108,9 @@ public final class ConduitConfig {
+         return config.getString(path, config.getString(path));
+     }
+ 
++    public static String serverModName = "Conduit";
++
++    private static void serverModName() {
++        serverModName = getString("settings.server-mod-name", serverModName);
++    }
+ }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3e7d7516..41bff439 100644
+index 21a08dedb..a8d807ab3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -205,7 +205,7 @@ import javax.annotation.Nullable; // Paper
