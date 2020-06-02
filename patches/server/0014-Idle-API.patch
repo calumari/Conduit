@@ -1,4 +1,4 @@
-From c9bf33f75d5e9f68a87c449be2b15388e23f321d Mon Sep 17 00:00:00 2001
+From e6dce7087660de93c75414b75372ceb0c10867b4 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -10,13 +10,12 @@ Subject: [PATCH] Idle API
  .../net/minecraft/server/EntityPlayer.java    | 34 +++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 60 ++++++++++++-------
  .../net/minecraft/server/IEntitySelector.java |  2 +
- .../server/PathfinderGoalLookAtPlayer.java    |  2 +-
  .../minecraft/server/PlayerConnection.java    | 15 +++--
  .../net/minecraft/server/WorldServer.java     |  4 +-
  .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  2 +
- 12 files changed, 125 insertions(+), 30 deletions(-)
+ 11 files changed, 124 insertions(+), 29 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 index 54e89c9cc..2f379c6dd 100644
@@ -212,19 +211,6 @@ index 1398c47a2..a79191f2b 100644
  
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
-diff --git a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-index d123d2720..89e328b4b 100644
---- a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-+++ b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-@@ -55,7 +55,7 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
-     public boolean b() {
-         // Conduit start
-         if (this.b instanceof EntityPlayer) {
--            net.socialhangover.conduit.events.EntityLookAtPlayerEvent event = new net.socialhangover.conduit.events.EntityLookAtPlayerEvent(this.a.getBukkitLivingEntity(), ((EntityPlayer) this.b).getBukkitEntity());
-+            net.socialhangover.conduit.event.EntityLookAtPlayerEvent event = new net.socialhangover.conduit.event.EntityLookAtPlayerEvent(this.a.getBukkitLivingEntity(), ((EntityPlayer) this.b).getBukkitEntity());
-             if (!event.callEvent()) {
-                 return false;
-             }
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
 index b25b3b481..66413fb6e 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
