@@ -1,4 +1,4 @@
-From e6de514c97c6ed40a4146622bd22a08b7ffe14a6 Mon Sep 17 00:00:00 2001
+From 1ec8935121351f492f888cf6f430d28267d716d2 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:01:46 -0500
 Subject: [PATCH] Purpur Players should not cram to death
@@ -22,7 +22,7 @@ index d60f659b3..5a6cc52bf 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 6a8fb505d..74c86adad 100644
+index e07413817..93f06b289 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -52,8 +52,10 @@ public class ConduitWorldConfig {

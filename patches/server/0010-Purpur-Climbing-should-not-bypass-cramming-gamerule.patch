@@ -1,4 +1,4 @@
-From e90a2f5fe046c2f1e766eb1ea99bdbcee65b44fa Mon Sep 17 00:00:00 2001
+From d3c0b33fa0822f673389e6bfec79b57f75475eda Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:06:20 -0500
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
@@ -22,7 +22,7 @@ index 3fc2360a1..96288224f 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 5303f4681..6a8fb505d 100644
+index ba8e9c51f..e07413817 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -51,6 +51,11 @@ public class ConduitWorldConfig {

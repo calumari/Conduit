@@ -1,4 +1,4 @@
-From 17c62bee64f5c6488ff23876bf8dcb5f02584bd1 Mon Sep 17 00:00:00 2001
+From 17aa45e43a589426f46e063de907bc73a13612df Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Thu, 6 Nov 2014 21:36:14 -0500
 Subject: [PATCH] EMC Persistent withers
@@ -22,10 +22,10 @@ index 2f466af4d..9e3bedc4b 100644
      public EnumMonsterType getMonsterType() {
          return EnumMonsterType.UNDEAD;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 3f7fc92d3..a591f4235 100644
+index f60ca86b3..177ed174f 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -101,4 +101,9 @@ public class ConduitWorldConfig {
+@@ -88,4 +88,9 @@ public class ConduitWorldConfig {
          idleTimeoutSpawnNearbyEntities = getBoolean("gameplay-mechanics.idle-timeout.spawn-nearby-entities", true);
          idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.idle-timeout.count-as-sleeping", false);
      }
