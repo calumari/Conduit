@@ -1,4 +1,4 @@
-From 269ec109b6e9809188112795478cf0ce64909590 Mon Sep 17 00:00:00 2001
+From c5a82e0f5bc8819a910d87632010be6cfe6825fe Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:42:46 +0100
 Subject: [PATCH] Conduit branding
@@ -10,10 +10,10 @@ Subject: [PATCH] Conduit branding
  3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 5b24de6d6..30543a93e 100644
+index 395e5034e..9d50d90c1 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1559,7 +1559,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1561,7 +1561,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {

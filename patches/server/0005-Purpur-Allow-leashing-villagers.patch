@@ -1,4 +1,4 @@
-From b230f27b5f7588c92ecc2b38e9a9313d2e2d1d6e Mon Sep 17 00:00:00 2001
+From edfc3b47d08de0d82dd82670fb3f37d5d7016a30 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Thu, 3 Oct 2019 18:08:03 -0500
 Subject: [PATCH] Purpur Allow leashing villagers
@@ -27,10 +27,10 @@ index 5aca7a913..b88c47f55 100644
              if (CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman).isCancelled()) {
                  ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(this, this.getLeashHolder()));
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 1094324d0..3913aa0c3 100644
+index 7da267d28..a100c12b8 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -987,4 +987,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -1002,4 +1002,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
          this.bL = restocksToday;
      }
      // Paper end

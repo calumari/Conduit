@@ -1,4 +1,4 @@
-From 7cfe785d05eaa7c39413811a2928a0e74cda33bd Mon Sep 17 00:00:00 2001
+From 6d9312b1a6467936c3dc0d11eb98feea97af9ceb Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -63,10 +63,10 @@ index 7df24be46..163fa2bb2 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5a6cc52bf..4a81f19b4 100644
+index 02d5672ac..ab3fb3c0f 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1623,6 +1623,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1632,6 +1632,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void resetIdleTimer() {
          this.cj = SystemUtils.getMonotonicMillis();
@@ -74,7 +74,7 @@ index 5a6cc52bf..4a81f19b4 100644
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1734,6 +1735,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1743,6 +1744,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
@@ -82,7 +82,7 @@ index 5a6cc52bf..4a81f19b4 100644
      public long F() {
          return this.cj;
      }
-@@ -1992,4 +1994,36 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2001,4 +2003,36 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -213,7 +213,7 @@ index 1398c47a2..a79191f2b 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index b25b3b481..66413fb6e 100644
+index d52fbda79..98a295057 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -231,10 +231,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
@@ -239,10 +239,10 @@ index b25b3b481..66413fb6e 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 9e32e2db1..cd424bc5b 100644
+index 854c97bdd..3a179b1e1 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -405,7 +405,7 @@ public class WorldServer extends World {
+@@ -408,7 +408,7 @@ public class WorldServer extends World {
          }
  
          if (this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> {
@@ -251,7 +251,7 @@ index 9e32e2db1..cd424bc5b 100644
          })) {
              // CraftBukkit start
              long l = this.worldData.getDayTime() + 24000L;
-@@ -717,7 +717,7 @@ public class WorldServer extends World {
+@@ -720,7 +720,7 @@ public class WorldServer extends World {
              while (iterator.hasNext()) {
                  EntityPlayer entityplayer = (EntityPlayer) iterator.next();
  
@@ -280,10 +280,10 @@ index 93f06b289..f60ca86b3 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index dcbda5b35..cc7d42c55 100644
+index bd4d5184b..f83978994 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2079,4 +2079,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2078,4 +2078,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          return spigot;
      }
      // Spigot end

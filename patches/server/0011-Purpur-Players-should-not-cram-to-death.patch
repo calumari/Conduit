@@ -1,4 +1,4 @@
-From 1ec8935121351f492f888cf6f430d28267d716d2 Mon Sep 17 00:00:00 2001
+From c4c2b12b85ec84e7baf89cc64e409587a8a84aed Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:01:46 -0500
 Subject: [PATCH] Purpur Players should not cram to death
@@ -9,10 +9,10 @@ Subject: [PATCH] Purpur Players should not cram to death
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index d60f659b3..5a6cc52bf 100644
+index c88177b77..02d5672ac 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1105,7 +1105,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1114,7 +1114,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      @Override
      public boolean isInvulnerable(DamageSource damagesource) {

@@ -1,4 +1,4 @@
-From 66c297578043792d7bca0f62544ecf70788d6ef0 Mon Sep 17 00:00:00 2001
+From 1fc073dda9789d40596f7de8eb8659e20038733a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -38,7 +38,7 @@ index b07c49f1b..6f1965973 100644
          this.setSpawnNPCs(dedicatedserverproperties.spawnNpcs);
          this.setPVP(dedicatedserverproperties.pvp);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 561b42472..ccfe66a3a 100644
+index 9de505d01..691ccc8a1 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -88,6 +88,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -57,7 +57,7 @@ index 561b42472..ccfe66a3a 100644
 +        this.conduitConfig = new net.socialhangover.conduit.config.ConduitWorldConfig(worlddata.getName()); // Conduit
          this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this.paperConfig) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
          this.generator = gen;
-         dimensionmanager.world = (WorldServer) this; // Paper
+         if (dimensionmanager.world == null) dimensionmanager.world = (WorldServer) this; // Paper
 diff --git a/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java b/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
 new file mode 100644
 index 000000000..a41dd7ede
@@ -359,7 +359,7 @@ index 894917c88..21a08dedb 100644
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index ffee0c5dd..4ad926732 100644
+index d6e5d014c..081d63d0a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
