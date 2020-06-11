@@ -1,4 +1,4 @@
-From c4c2b12b85ec84e7baf89cc64e409587a8a84aed Mon Sep 17 00:00:00 2001
+From d997f7450e500f431105a6c53aca7f23e724b33f Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:01:46 -0500
 Subject: [PATCH] Purpur Players should not cram to death
@@ -9,10 +9,10 @@ Subject: [PATCH] Purpur Players should not cram to death
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index c88177b77..02d5672ac 100644
+index 4ed4ad6bc3..5ed8348800 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1114,7 +1114,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1121,7 +1121,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      @Override
      public boolean isInvulnerable(DamageSource damagesource) {
@@ -22,7 +22,7 @@ index c88177b77..02d5672ac 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index e07413817..93f06b289 100644
+index e074138176..93f06b2893 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -52,8 +52,10 @@ public class ConduitWorldConfig {

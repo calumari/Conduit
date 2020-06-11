@@ -1,4 +1,4 @@
-From 66715bccba50c6223c4a869b95e60e76e5919dc9 Mon Sep 17 00:00:00 2001
+From fc3527ffe754cc5798d0b2da172af33d78fcf033 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 8 Jun 2020 00:34:32 +0100
 Subject: [PATCH] Per world spawn limits
@@ -9,7 +9,7 @@ Subject: [PATCH] Per world spawn limits
  2 files changed, 17 insertions(+)
 
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 177ed174f..780e6b3f3 100644
+index 177ed174fd..780e6b3f34 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -93,4 +93,15 @@ public class ConduitWorldConfig {
@@ -29,7 +29,7 @@ index 177ed174f..780e6b3f3 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 6b7e97e6c..583a18e4b 100644
+index f4a1be34f0..b6adc76646 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -333,6 +333,12 @@ public class CraftWorld implements World {

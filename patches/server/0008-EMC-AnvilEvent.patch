@@ -1,4 +1,4 @@
-From fa30dcf3d7afec4497184d44c5ce8abc813f13fa Mon Sep 17 00:00:00 2001
+From b18258085c67851f5cca78dccf262785c296c871 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 31 Dec 2012 01:25:46 -0500
 Subject: [PATCH] EMC AnvilEvent
@@ -9,7 +9,7 @@ Subject: [PATCH] EMC AnvilEvent
  2 files changed, 18 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/ContainerAnvil.java b/src/main/java/net/minecraft/server/ContainerAnvil.java
-index 286b930dd..aca9582da 100644
+index 286b930ddb..aca9582daa 100644
 --- a/src/main/java/net/minecraft/server/ContainerAnvil.java
 +++ b/src/main/java/net/minecraft/server/ContainerAnvil.java
 @@ -9,6 +9,10 @@ import org.apache.logging.log4j.Logger;
@@ -43,7 +43,7 @@ index 286b930dd..aca9582da 100644
                  int k2 = itemstack1.getRepairCost();
  
 diff --git a/src/main/java/net/minecraft/server/ContainerProperty.java b/src/main/java/net/minecraft/server/ContainerProperty.java
-index e26b85693..a139eb3fa 100644
+index e26b856934..a139eb3fad 100644
 --- a/src/main/java/net/minecraft/server/ContainerProperty.java
 +++ b/src/main/java/net/minecraft/server/ContainerProperty.java
 @@ -3,6 +3,7 @@ package net.minecraft.server;

@@ -1,4 +1,4 @@
-From 1fc073dda9789d40596f7de8eb8659e20038733a Mon Sep 17 00:00:00 2001
+From 5cd0eb8c16b1c247f47b32c26d9b007e26bd5306 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -17,7 +17,7 @@ Subject: [PATCH] Conduit server config
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index b07c49f1b..6f1965973 100644
+index 32cd645abb..62016746f9 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -195,6 +195,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -38,7 +38,7 @@ index b07c49f1b..6f1965973 100644
          this.setSpawnNPCs(dedicatedserverproperties.spawnNpcs);
          this.setPVP(dedicatedserverproperties.pvp);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 9de505d01..691ccc8a1 100644
+index 032b7acee8..1f93f31482 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -88,6 +88,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -51,16 +51,16 @@ index 9de505d01..691ccc8a1 100644
      public static BlockPosition lastPhysicsProblem; // Spigot
      private org.spigotmc.TickLimiter entityLimiter;
 @@ -136,6 +138,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
-     protected World(WorldData worlddata, DimensionManager dimensionmanager, BiFunction<World, WorldProvider, IChunkProvider> bifunction, GameProfilerFiller gameprofilerfiller, boolean flag, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env) {
+     protected World(WorldData worlddata, DimensionManager dimensionmanager, java.util.concurrent.Executor executor, BiFunction<World, WorldProvider, IChunkProvider> bifunction, GameProfilerFiller gameprofilerfiller, boolean flag, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env) { // Paper - executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig( worlddata.getName() ); // Spigot
          this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(worlddata.getName(), this.spigotConfig); // Paper
 +        this.conduitConfig = new net.socialhangover.conduit.config.ConduitWorldConfig(worlddata.getName()); // Conduit
-         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this.paperConfig) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
+         this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this.paperConfig, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
          this.generator = gen;
          if (dimensionmanager.world == null) dimensionmanager.world = (WorldServer) this; // Paper
 diff --git a/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java b/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
 new file mode 100644
-index 000000000..a41dd7ede
+index 0000000000..a41dd7edeb
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
 @@ -0,0 +1,75 @@
@@ -141,7 +141,7 @@ index 000000000..a41dd7ede
 +}
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 new file mode 100644
-index 000000000..c2ba92acb
+index 0000000000..c2ba92acbc
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 @@ -0,0 +1,111 @@
@@ -258,7 +258,7 @@ index 000000000..c2ba92acb
 +}
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 new file mode 100644
-index 000000000..f22c4ae2f
+index 0000000000..f22c4ae2f1
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -0,0 +1,54 @@
@@ -317,7 +317,7 @@ index 000000000..f22c4ae2f
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 894917c88..21a08dedb 100644
+index 568aefdf69..e98f289654 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -815,6 +815,7 @@ public final class CraftServer implements Server {
@@ -359,7 +359,7 @@ index 894917c88..21a08dedb 100644
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index d6e5d014c..081d63d0a 100644
+index d6e5d014c0..081d63d0a8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
