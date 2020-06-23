@@ -1,4 +1,4 @@
-From 5ab51ded56ebd616a7f74bb20d4099078286d2fe Mon Sep 17 00:00:00 2001
+From 0b54ce23b28abff605024322686704667f7cb288 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -19,10 +19,10 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  11 files changed, 122 insertions(+), 29 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index d07fcc0c51..46809b817c 100644
+index 7d50b94cb3..d3d82dd1c8 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -759,7 +759,7 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -770,7 +770,7 @@ public class ChunkProviderServer extends IChunkProvider {
              // Paper start - optimize isOutisdeRange
              PlayerChunkMap playerChunkMap = this.playerChunkMap;
              for (EntityPlayer player : this.world.players) {
@@ -63,10 +63,10 @@ index 7df24be46e..163fa2bb25 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 5ed8348800..f850064eb8 100644
+index 8094b0f70e..add709a2fd 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1639,6 +1639,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1644,6 +1644,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void resetIdleTimer() {
          this.cj = SystemUtils.getMonotonicMillis();
@@ -74,7 +74,7 @@ index 5ed8348800..f850064eb8 100644
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1750,6 +1751,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1755,6 +1756,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
@@ -82,7 +82,7 @@ index 5ed8348800..f850064eb8 100644
      public long F() {
          return this.cj;
      }
-@@ -2008,4 +2010,36 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2013,4 +2015,36 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -213,7 +213,7 @@ index 1398c47a2f..a79191f2bd 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 7123e197c7..e7dfacaed4 100644
+index 10e3bf60f1..cbac0ed6a7 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -231,10 +231,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
@@ -239,7 +239,7 @@ index 7123e197c7..e7dfacaed4 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 49da7352dc..6690343544 100644
+index 46e261b651..b59b5b96ea 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -409,7 +409,7 @@ public class WorldServer extends World {
@@ -251,7 +251,7 @@ index 49da7352dc..6690343544 100644
          })) {
              // CraftBukkit start
              long l = this.worldData.getDayTime() + 24000L;
-@@ -721,7 +721,7 @@ public class WorldServer extends World {
+@@ -722,7 +722,7 @@ public class WorldServer extends World {
              while (iterator.hasNext()) {
                  EntityPlayer entityplayer = (EntityPlayer) iterator.next();
  
