@@ -1,4 +1,4 @@
-From 1129e22996db2ec293929b6079be02c647b3f85f Mon Sep 17 00:00:00 2001
+From 8a67c33802e29d286cb6340b3b711e07a3c7bfb0 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 27 May 2020 14:14:27 +0100
 Subject: [PATCH] EntityLookAtPlayerEvent
@@ -10,7 +10,7 @@ Subject: [PATCH] EntityLookAtPlayerEvent
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 new file mode 100644
-index 00000000..4308a3f4
+index 000000000..4308a3f47
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/EntityLookAtPlayerEvent.java
 @@ -0,0 +1,49 @@

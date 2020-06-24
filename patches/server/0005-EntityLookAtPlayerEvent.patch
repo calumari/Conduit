@@ -1,4 +1,4 @@
-From 962b6e844f7c7f4f3bccde5828c8084c61009feb Mon Sep 17 00:00:00 2001
+From c3dc854e6107bbde1787a9d33677291d6970a57a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 08:36:45 +0100
 Subject: [PATCH] EntityLookAtPlayerEvent
@@ -8,7 +8,7 @@ Subject: [PATCH] EntityLookAtPlayerEvent
  1 file changed, 8 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-index a73e5b77c..89e328b4b 100644
+index a73e5b77ca..89e328b4bc 100644
 --- a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
 +++ b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
 @@ -53,6 +53,14 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {

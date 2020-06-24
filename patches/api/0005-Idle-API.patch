@@ -1,4 +1,4 @@
-From f0e0857dee43b1a21a761aab00cd71e7a0267e94 Mon Sep 17 00:00:00 2001
+From b5fdcf66769374468a60425e9722a2f70faa9ac1 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
@@ -11,7 +11,7 @@ Subject: [PATCH] Idle API
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 new file mode 100644
-index 00000000..a2a7b60f
+index 000000000..a2a7b60f2
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 @@ -0,0 +1,58 @@
@@ -75,7 +75,7 @@ index 00000000..a2a7b60f
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 787bb144..135d3a0f 100644
+index 787bb144b..135d3a0f3 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
 @@ -1830,4 +1830,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
