@@ -1,49 +1,36 @@
-From f27bc9a6be65230eae10dbe69c68aa244a378c12 Mon Sep 17 00:00:00 2001
+From 6d75f5ff2fdc7ee1dc01fbfd199e9249c5de9ab2 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:08:38 +0100
 Subject: [PATCH] Alternative hopper events
 
 ---
- .../minecraft/server/TileEntityHopper.java    | 20 ++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ src/main/java/net/minecraft/server/TileEntityHopper.java | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index c755faed4..4e8be123d 100644
+index c755faed4f..f54bfb36b7 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
-@@ -330,6 +330,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -330,6 +330,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          } else {
              EnumDirection enumdirection = ((EnumDirection) this.getBlock().get(BlockHopper.FACING)).opposite();
  
-+            // Conduit start
-+            net.socialhangover.conduit.event.HopperFillEvent event = new net.socialhangover.conduit.event.HopperFillEvent(this.getOwner(false).getInventory(), getInventory(iinventory));
-+            if (!event.callEvent()) {
-+                return false;
-+            }
-+            // Conduit end
-+
++            if (!new net.socialhangover.conduit.event.HopperFillEvent(this.getOwner(false).getInventory(), getInventory(iinventory)).callEvent()) { return false; } // Conduit - Alternative hopper events
              if (this.b(iinventory, enumdirection)) {
                  return false;
              } else {
-@@ -436,9 +443,20 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -436,9 +437,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          if (iinventory != null) {
              EnumDirection enumdirection = EnumDirection.DOWN;
  
-+            // Conduit start
-+            if (c(iinventory, enumdirection)) {
-+                return false;
-+            }
-+
-+            net.socialhangover.conduit.event.HopperDrainEvent event = new net.socialhangover.conduit.event.HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper));
-+            if (!event.callEvent()) {
-+                return false;
-+            }
-+
++            // Conduit start - Alternative hopper events
++            if (c(iinventory, enumdirection)) { return false; }
++            if (!new net.socialhangover.conduit.event.HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper)).callEvent()) { return false; }
              // Paper start - optimize hoppers and remove streams
              skipPullModeEventFire = skipHopperEvents;
 -            return !c(iinventory, enumdirection) && anyMatch(iinventory, enumdirection, (item, i) -> {
 +            return anyMatch(iinventory, enumdirection, (item, i) -> {
-+                // Conduit end
++                // Conduit end - Alternative hopper events
                  // Logic copied from below to avoid extra getItem calls
                  if (!item.isEmpty() && canTakeItem(iinventory, item, i, enumdirection)) {
                      return hopperPull(ihopper, iinventory, item, i);
