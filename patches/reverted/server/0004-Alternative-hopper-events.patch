@@ -1,4 +1,4 @@
-From 6d75f5ff2fdc7ee1dc01fbfd199e9249c5de9ab2 Mon Sep 17 00:00:00 2001
+From 9ecf2abf933b918c4a948fc2a67c0c0f649a5fd5 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 02:08:38 +0100
 Subject: [PATCH] Alternative hopper events
@@ -8,7 +8,7 @@ Subject: [PATCH] Alternative hopper events
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index c755faed4f..f54bfb36b7 100644
+index c755faed4f..1916c05e52 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -330,6 +330,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
@@ -25,7 +25,7 @@ index c755faed4f..f54bfb36b7 100644
  
 +            // Conduit start - Alternative hopper events
 +            if (c(iinventory, enumdirection)) { return false; }
-+            if (!new net.socialhangover.conduit.event.HopperDrainEvent(getInventory(iinventory), new org.bukkit.craftbukkit.inventory.CraftInventory(ihopper)).callEvent()) { return false; }
++            if (!new net.socialhangover.conduit.event.HopperDrainEvent(getInventory(iinventory), getInventory(ihopper)).callEvent()) { return false; }
              // Paper start - optimize hoppers and remove streams
              skipPullModeEventFire = skipHopperEvents;
 -            return !c(iinventory, enumdirection) && anyMatch(iinventory, enumdirection, (item, i) -> {

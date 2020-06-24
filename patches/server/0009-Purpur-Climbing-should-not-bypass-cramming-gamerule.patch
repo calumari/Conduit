@@ -1,4 +1,4 @@
-From 6ee11ee4ecdca0e7493efe0790d76926aaf476e0 Mon Sep 17 00:00:00 2001
+From e3161dac2dca3c7754e6f508545c3bfb77a88f73 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:06:20 -0500
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
@@ -9,10 +9,10 @@ Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
  2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 3fc2360a10..96288224ff 100644
+index ab6576f36e..bea7bb6268 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -2812,7 +2812,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2813,7 +2813,7 @@ public abstract class EntityLiving extends Entity {
  
      @Override
      public boolean isCollidable() {
