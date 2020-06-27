@@ -1,4 +1,4 @@
-From e73bfe45450506ba948cfac1d04d90e772652b64 Mon Sep 17 00:00:00 2001
+From 065f704df0961e14027edec5abcc3e8594c0b195 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -13,13 +13,13 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  .../net/minecraft/server/IEntitySelector.java |  2 +
  .../minecraft/server/PlayerConnection.java    | 15 +++--
  .../net/minecraft/server/WorldServer.java     |  4 +-
- .../conduit/config/ConduitWorldConfig.java    | 10 ++++
+ .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  1 +
- 11 files changed, 119 insertions(+), 29 deletions(-)
+ 11 files changed, 120 insertions(+), 29 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 70fdce2946..c8e529954f 100644
+index ef980f9859..cc6280375e 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -763,7 +763,7 @@ public class ChunkProviderServer extends IChunkProvider {
@@ -44,10 +44,10 @@ index b11383b356..c9ee47f335 100644
          double d3 = this.locX() - d0;
          double d4 = this.locY() - d1;
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index 3fa9e7b52b..1536a29763 100644
+index 2cada09ced..eacd9394ae 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -2135,4 +2135,14 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -2131,4 +2131,14 @@ public abstract class EntityHuman extends EntityLiving {
              return this.g;
          }
      }
@@ -63,10 +63,10 @@ index 3fa9e7b52b..1536a29763 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 6bfa1043b1..3f335b683f 100644
+index 7c8fafaa14..6abc9f2ea9 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1748,6 +1748,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1754,6 +1754,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void resetIdleTimer() {
          this.ch = SystemUtils.getMonotonicMillis();
@@ -74,7 +74,7 @@ index 6bfa1043b1..3f335b683f 100644
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1859,6 +1860,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1865,6 +1866,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
@@ -82,7 +82,7 @@ index 6bfa1043b1..3f335b683f 100644
      public long F() {
          return this.ch;
      }
-@@ -2146,4 +2148,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2153,4 +2155,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -119,7 +119,7 @@ index 6bfa1043b1..3f335b683f 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index 24705eef55..3dcdf816a8 100644
+index 267a6baae8..3cfa58c680 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
 @@ -143,29 +143,43 @@ public interface IEntityAccess {
@@ -257,13 +257,14 @@ index f24c4def37..4596cd6167 100644
                  } else if (entityplayer.isSleeping()) {
                      ++j;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index b6dbb211ac..b77bb4cc8f 100644
+index 83ab410b89..834780d671 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -63,4 +63,14 @@ public class ConduitWorldConfig {
-         allowLeashVillager = getBoolean("mobs.villager.allow-leash", false);
+@@ -71,4 +71,15 @@ public class ConduitWorldConfig {
+         giantHasHostileAI = getBoolean("mobs.giant.enable-hostile-ai", false);
+         giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
      }
- 
++
 +    public int idleTimeoutSoft;
 +    public boolean idleTimeoutTickNearbyEntities;
 +    public boolean idleTimeoutSpawnNearbyEntities;
@@ -276,10 +277,10 @@ index b6dbb211ac..b77bb4cc8f 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 784be20585..b9cdfe18a8 100644
+index 2e2b28b145..727b0d35fb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2131,4 +2131,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2127,4 +2127,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          return spigot;
      }
      // Spigot end

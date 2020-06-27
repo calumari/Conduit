@@ -1,4 +1,4 @@
-From 889cef7e191cff7fe1d31a40251def8db32e16fa Mon Sep 17 00:00:00 2001
+From 2a4b0fe482a2f9d53f826f2df5ba41fdff59c661 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -317,7 +317,7 @@ index 0000000000..f22c4ae2f1
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a62ca5f24c..8fd3a93a77 100644
+index 0c6bc28265..aa89a8bbe6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -846,6 +846,7 @@ public final class CraftServer implements Server {
@@ -344,7 +344,7 @@ index a62ca5f24c..8fd3a93a77 100644
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
          ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2203,6 +2206,13 @@ public final class CraftServer implements Server {
+@@ -2204,6 +2207,13 @@ public final class CraftServer implements Server {
              return com.destroystokyo.paper.PaperConfig.config;
          }
  

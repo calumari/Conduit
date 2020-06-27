@@ -1,4 +1,4 @@
-From 9e97d9e99ff3f62e2004f3158c0a9f5e6e1596ce Mon Sep 17 00:00:00 2001
+From c2eca82c86f0b15ce98c18e5e349647a94b3f11e Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 08:19:37 +0100
 Subject: [PATCH] Giant Zombie AI
@@ -6,38 +6,18 @@ Subject: [PATCH] Giant Zombie AI
 Based on Purpur's Giant AI patch. However, with different goals,
 configurable villager targeting and spawning with tools.
 ---
- .../minecraft/server/EntityGiantZombie.java   | 41 +++++++++++++++++++
- .../conduit/config/ConduitWorldConfig.java    |  8 ++++
- 2 files changed, 49 insertions(+)
- create mode 100644 src/main/java/net/minecraft/server/EntityGiantZombie.java
+ .../minecraft/server/EntityGiantZombie.java   | 19 +++++++++++++++++++
+ .../conduit/config/ConduitWorldConfig.java    |  8 ++++++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityGiantZombie.java b/src/main/java/net/minecraft/server/EntityGiantZombie.java
-new file mode 100644
-index 0000000000..d25a8e218d
---- /dev/null
+index 603fe5caaf..d25a8e218d 100644
+--- a/src/main/java/net/minecraft/server/EntityGiantZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityGiantZombie.java
-@@ -0,0 +1,41 @@
-+package net.minecraft.server;
-+
-+public class EntityGiantZombie extends EntityMonster {
-+
-+    public EntityGiantZombie(EntityTypes<? extends EntityGiantZombie> entitytypes, World world) {
-+        super(entitytypes, world);
-+    }
-+
-+    @Override
-+    protected float b(EntityPose entitypose, EntitySize entitysize) {
-+        return 10.440001F;
-+    }
-+
-+    public static AttributeProvider.Builder m() {
-+        return EntityMonster.eS().a(GenericAttributes.MAX_HEALTH, 100.0D).a(GenericAttributes.MOVEMENT_SPEED, 0.5D).a(GenericAttributes.ATTACK_DAMAGE, 50.0D);
-+    }
-+
-+    @Override
-+    public float a(BlockPosition blockposition, IWorldReader iworldreader) {
-+        return iworldreader.y(blockposition) - 0.5F;
-+    }
+@@ -19,4 +19,23 @@ public class EntityGiantZombie extends EntityMonster {
+     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
+         return iworldreader.y(blockposition) - 0.5F;
+     }
 +
 +    // Conduit - start
 +    @Override
@@ -57,7 +37,7 @@ index 0000000000..d25a8e218d
 +        }
 +    }
 +    // Conduit - end
-+}
+ }
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 index fb5fb3729e..624e4a8ca2 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java

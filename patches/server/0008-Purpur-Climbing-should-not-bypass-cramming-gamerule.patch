@@ -1,4 +1,4 @@
-From c764e12dd5ca9095e8b4d3f9dcf4bb47aebcec73 Mon Sep 17 00:00:00 2001
+From b31f0992a6e7a22f602264412bd298a88d1c3ee2 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:06:20 -0500
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
@@ -9,7 +9,7 @@ Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
  2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 14606a12c4..77f137bee5 100644
+index 7a2140e4b9..60248f3a5c 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -2975,7 +2975,7 @@ public abstract class EntityLiving extends Entity {
@@ -22,7 +22,7 @@ index 14606a12c4..77f137bee5 100644
  
      // CraftBukkit start - collidable API
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index fb5fb3729e..c9aaf20136 100644
+index 624e4a8ca2..b2f33bcee8 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -51,6 +51,11 @@ public class ConduitWorldConfig {
