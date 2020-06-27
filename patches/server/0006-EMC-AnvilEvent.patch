@@ -1,4 +1,4 @@
-From e1a05a484b86459872b1c07c06dff3fa1ea61312 Mon Sep 17 00:00:00 2001
+From ef6ad060a37ae1d4f1a715d0dd3a62ace975e286 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 31 Dec 2012 01:25:46 -0500
 Subject: [PATCH] EMC AnvilEvent
@@ -9,7 +9,7 @@ Subject: [PATCH] EMC AnvilEvent
  2 files changed, 18 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/ContainerAnvil.java b/src/main/java/net/minecraft/server/ContainerAnvil.java
-index 286b930ddb..aca9582daa 100644
+index 24631b2bcb..946ef7a6ea 100644
 --- a/src/main/java/net/minecraft/server/ContainerAnvil.java
 +++ b/src/main/java/net/minecraft/server/ContainerAnvil.java
 @@ -9,6 +9,10 @@ import org.apache.logging.log4j.Logger;
@@ -21,10 +21,10 @@ index 286b930ddb..aca9582daa 100644
 +import org.bukkit.entity.Player;
 +// Conduit end
  
- public class ContainerAnvil extends Container {
+ public class ContainerAnvil extends ContainerAnvilAbstract {
  
-@@ -299,6 +303,18 @@ public class ContainerAnvil extends Container {
-                 itemstack1 = ItemStack.a;
+@@ -257,6 +261,18 @@ public class ContainerAnvil extends ContainerAnvilAbstract {
+                 itemstack1 = ItemStack.b;
              }
  
 +            // Conduit start

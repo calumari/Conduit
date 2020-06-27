@@ -1,4 +1,4 @@
-From b5fdcf66769374468a60425e9722a2f70faa9ac1 Mon Sep 17 00:00:00 2001
+From aee0aa15a3968cb7e5abe0760f6ef79aac4f0dbe Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
@@ -75,10 +75,10 @@ index 000000000..a2a7b60f2
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 787bb144b..135d3a0f3 100644
+index e133fe79d..aa412eaae 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1830,4 +1830,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -1856,4 +1856,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      @Override
      Spigot spigot();
      // Spigot end

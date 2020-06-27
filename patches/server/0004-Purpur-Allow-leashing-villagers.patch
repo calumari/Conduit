@@ -1,4 +1,4 @@
-From 6e5d3dad01b0ded1b893646ebef5ab75d617dc4f Mon Sep 17 00:00:00 2001
+From ef93ac756c301bda77144dfb1e432850a7e4d8ab Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Thu, 3 Oct 2019 18:08:03 -0500
 Subject: [PATCH] Purpur Allow leashing villagers
@@ -11,29 +11,29 @@ Subject: [PATCH] Purpur Allow leashing villagers
  4 files changed, 24 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
-index 5aca7a9131..b88c47f559 100644
+index 61323f9b15..6310051056 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -1054,6 +1054,11 @@ public abstract class EntityInsentient extends EntityLiving {
+@@ -1125,6 +1125,11 @@ public abstract class EntityInsentient extends EntityLiving {
          if (!this.isAlive()) {
-             return false;
+             return EnumInteractionResult.PASS;
          } else if (this.getLeashHolder() == entityhuman) {
 +            // Conduit start
 +            if (enumhand == EnumHand.OFF_HAND && world.conduitConfig.allowLeashVillager && this instanceof EntityVillagerAbstract) {
-+                return true;
++                return EnumInteractionResult.PASS;
 +            }
 +            // Conduit end
              // CraftBukkit start - fire PlayerUnleashEntityEvent
              if (CraftEventFactory.callPlayerUnleashEntityEvent(this, entityhuman).isCancelled()) {
                  ((EntityPlayer) entityhuman).playerConnection.sendPacket(new PacketPlayOutAttachEntity(this, this.getLeashHolder()));
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 7da267d287..a100c12b8b 100644
+index bf019043a9..7b01ad5f83 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -1002,4 +1002,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
-         this.bL = restocksToday;
+@@ -993,4 +993,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+ 
+         return optional.isPresent() ? i - (Long) optional.get() < 24000L : false;
      }
-     // Paper end
 +
 +    // Conduit start
 +    @Override
@@ -43,10 +43,10 @@ index 7da267d287..a100c12b8b 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityVillagerTrader.java b/src/main/java/net/minecraft/server/EntityVillagerTrader.java
-index 2ad8dba5c0..923c2e29fa 100644
+index a0841cfaf9..e8d353deee 100644
 --- a/src/main/java/net/minecraft/server/EntityVillagerTrader.java
 +++ b/src/main/java/net/minecraft/server/EntityVillagerTrader.java
-@@ -264,4 +264,11 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
+@@ -261,4 +261,11 @@ public class EntityVillagerTrader extends EntityVillagerAbstract {
              return !blockposition.a((IPosition) this.a.getPositionVector(), d0);
          }
      }

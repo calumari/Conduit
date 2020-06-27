@@ -1,4 +1,4 @@
-From 0d06ecf5598226b8da4160e4e3c706fd5376928a Mon Sep 17 00:00:00 2001
+From b2f571f2e3ab6f3d5601f6cca088acc5aabc56de Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:23 +0100
 Subject: [PATCH] Conduit POM Changes
@@ -8,7 +8,7 @@ Subject: [PATCH] Conduit POM Changes
  1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 20c473f5..d79c1fed 100644
+index fee78297a..a9f224a8b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,17 @@
@@ -25,7 +25,7 @@ index 20c473f5..d79c1fed 100644
 -    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
 +    <artifactId>conduit-api</artifactId>
-     <version>1.15.2-R0.1-SNAPSHOT</version>
+     <version>1.16.1-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>

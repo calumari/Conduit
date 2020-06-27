@@ -1,4 +1,4 @@
-From 46e9efedf8f98b3804d4e1433d58930b8117b7d9 Mon Sep 17 00:00:00 2001
+From 93335c42f2993a4660a5b48a4523ae59e373b0da Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:59 +0100
 Subject: [PATCH] Conduit POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Conduit POM Changes
  2 files changed, 17 insertions(+), 16 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index e4c63bb76..cd1301f70 100644
+index 2b24688310..778310834a 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,19 @@
@@ -26,7 +26,7 @@ index e4c63bb76..cd1301f70 100644
 +    </parent>
 +
 +    <artifactId>conduit</artifactId>
-     <version>1.15.2-R0.1-SNAPSHOT</version>
+     <version>1.16.1-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 -    <url>https://papermc.io</url>
 +    <packaging>jar</packaging>
@@ -75,7 +75,7 @@ index e4c63bb76..cd1301f70 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096cab..184bb0ad0 100644
+index 674096cab1..184bb0ad03 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {

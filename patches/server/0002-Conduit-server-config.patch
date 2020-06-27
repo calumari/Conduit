@@ -1,4 +1,4 @@
-From 5cd0eb8c16b1c247f47b32c26d9b007e26bd5306 Mon Sep 17 00:00:00 2001
+From 889cef7e191cff7fe1d31a40251def8db32e16fa Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -17,16 +17,16 @@ Subject: [PATCH] Conduit server config
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 32cd645abb..62016746f9 100644
+index 4c561181a9..99f7e3f43e 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -195,6 +195,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -171,6 +171,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end
  
 +        // Conduit start
 +        try {
-+            net.socialhangover.conduit.config.ConduitConfig.init((File) options.valueOf("conduit-settings"));
++            net.socialhangover.conduit.config.ConduitConfig.init((java.io.File) options.valueOf("conduit-settings"));
 +        } catch (Exception e) {
 +            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
 +            return false;
@@ -34,14 +34,14 @@ index 32cd645abb..62016746f9 100644
 +        net.socialhangover.conduit.config.ConduitConfig.registerCommands();
 +        // Conduit end
 +
-         this.setSpawnAnimals(dedicatedserverproperties.spawnAnimals);
-         this.setSpawnNPCs(dedicatedserverproperties.spawnNpcs);
          this.setPVP(dedicatedserverproperties.pvp);
+         this.setAllowFlight(dedicatedserverproperties.allowFlight);
+         this.setResourcePack(dedicatedserverproperties.resourcePack, this.aY());
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 032b7acee8..1f93f31482 100644
+index b598c48692..036777ab64 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
-@@ -88,6 +88,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+@@ -94,6 +94,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
      public final com.destroystokyo.paper.PaperWorldConfig paperConfig; // Paper
      public final ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
  
@@ -50,14 +50,14 @@ index 032b7acee8..1f93f31482 100644
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPosition lastPhysicsProblem; // Spigot
      private org.spigotmc.TickLimiter entityLimiter;
-@@ -136,6 +138,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
-     protected World(WorldData worlddata, DimensionManager dimensionmanager, java.util.concurrent.Executor executor, BiFunction<World, WorldProvider, IChunkProvider> bifunction, GameProfilerFiller gameprofilerfiller, boolean flag, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env) { // Paper - executor
-         this.spigotConfig = new org.spigotmc.SpigotWorldConfig( worlddata.getName() ); // Spigot
-         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(worlddata.getName(), this.spigotConfig); // Paper
-+        this.conduitConfig = new net.socialhangover.conduit.config.ConduitWorldConfig(worlddata.getName()); // Conduit
+@@ -120,6 +122,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+     protected World(WorldDataMutable worlddatamutable, ResourceKey<World> resourcekey, ResourceKey<DimensionManager> resourcekey1, DimensionManager dimensionmanager, Supplier<GameProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) {
+         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((WorldDataServer) worlddatamutable).getName()); // Spigot
+         this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig((((WorldDataServer)worlddatamutable).getName()), this.spigotConfig); // Paper
++        this.conduitConfig = new net.socialhangover.conduit.config.ConduitWorldConfig(((WorldDataServer)worlddatamutable).getName()); // Conduit
          this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this.paperConfig, executor) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
          this.generator = gen;
-         if (dimensionmanager.world == null) dimensionmanager.world = (WorldServer) this; // Paper
+         this.world = new CraftWorld((WorldServer) this, gen, env);
 diff --git a/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java b/src/main/java/net/socialhangover/conduit/command/ConduitCommand.java
 new file mode 100644
 index 0000000000..a41dd7edeb
@@ -317,18 +317,18 @@ index 0000000000..f22c4ae2f1
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 568aefdf69..e98f289654 100644
+index a62ca5f24c..8fd3a93a77 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -815,6 +815,7 @@ public final class CraftServer implements Server {
+@@ -846,6 +846,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
 +        net.socialhangover.conduit.config.ConduitConfig.init((File) console.options.valueOf("conduit-settings")); // Conduit
          for (WorldServer world : console.getWorlds()) {
-             world.worldData.setDifficulty(config.difficulty);
+             world.worldDataServer.setDifficulty(config.difficulty);
              world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
-@@ -843,6 +844,7 @@ public final class CraftServer implements Server {
+@@ -880,6 +881,7 @@ public final class CraftServer implements Server {
              }
              world.spigotConfig.init(); // Spigot
              world.paperConfig.init(); // Paper
@@ -336,7 +336,7 @@ index 568aefdf69..e98f289654 100644
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -861,6 +863,7 @@ public final class CraftServer implements Server {
+@@ -898,6 +900,7 @@ public final class CraftServer implements Server {
          reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
@@ -344,7 +344,7 @@ index 568aefdf69..e98f289654 100644
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
          ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2134,6 +2137,13 @@ public final class CraftServer implements Server {
+@@ -2203,6 +2206,13 @@ public final class CraftServer implements Server {
              return com.destroystokyo.paper.PaperConfig.config;
          }
  
@@ -359,7 +359,7 @@ index 568aefdf69..e98f289654 100644
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index d6e5d014c0..081d63d0a8 100644
+index feb45475bb..3772a91571 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
