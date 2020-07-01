@@ -1,4 +1,4 @@
-From aee0aa15a3968cb7e5abe0760f6ef79aac4f0dbe Mon Sep 17 00:00:00 2001
+From 44a8deb216c95a06e74f08a03912f0787e04a608 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:05 +0100
 Subject: [PATCH] Idle API
@@ -11,7 +11,7 @@ Subject: [PATCH] Idle API
 
 diff --git a/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 new file mode 100644
-index 000000000..a2a7b60f2
+index 00000000..a2a7b60f
 --- /dev/null
 +++ b/src/main/java/net/socialhangover/conduit/event/PlayerIdleEvent.java
 @@ -0,0 +1,58 @@
@@ -75,10 +75,10 @@ index 000000000..a2a7b60f2
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index e133fe79d..aa412eaae 100644
+index 2eb31213..c07ec462 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -1856,4 +1856,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -1870,4 +1870,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      @Override
      Spigot spigot();
      // Spigot end
