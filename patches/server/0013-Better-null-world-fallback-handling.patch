@@ -1,21 +1,24 @@
-From f4bf1ce22176a7fc1ecd5170d6d6ab9c25fa7e0a Mon Sep 17 00:00:00 2001
+From 38913e3faccb0e7e5c8ff37cb1e68926c6f493b3 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 1 Jul 2020 13:40:10 +0100
 Subject: [PATCH] Better null world fallback handling
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This patch builds upon my previous upstream PR concerning null
-world spawn point handling.
+This patch builds upon my previous upstream PR concerning null world
+spawn point handling.
 
-In the case where players attempt to join the server to an
-unloaded world, the vanilla behaviour is to move them to the
-overworld at their previous world's locations, which can cause
-players to spawn in inopportune locations.
+When a player joins a server where their previous world is
+unloaded/missing, the vanilla behaviour is to move them to the
+Overworld (spawn dimension in 1.16) at their current coordinates,
+which can cause players to spawn in inopportune locations.
 
 This patch improves the vanilla behaviour by safely relocating
-players to their spawn point. While the vanilla code handles
-null worlds, it does not safely handle worlds with identical
-dimensions, yet differing uuids (i.e. ones that have been
-deleted/regenerated).
+players to their spawn point (or Overworld spawn if all else fails)
+when their previous world is unloaded. The vanilla code attempts
+this by using the player’s last dimension, which fails (as described
+above) when a new world is loaded with an identical dimension id.
 ---
  .../java/net/minecraft/server/PlayerList.java | 66 ++++++++++++-------
  1 file changed, 43 insertions(+), 23 deletions(-)
