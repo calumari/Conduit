@@ -1,19 +1,27 @@
-From ea2dfb610d82d77db7c1a12dc91be4cdaeff217f Mon Sep 17 00:00:00 2001
+From f4bf1ce22176a7fc1ecd5170d6d6ab9c25fa7e0a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 1 Jul 2020 13:40:10 +0100
 Subject: [PATCH] Better null world fallback handling
 
-This patch builds upon my previous upstream PR concerning (https://github.com/PaperMC/Paper/commit/68a7b9fec80e39788fccf19ebd1e00aad18b16e5) null world spawn point handling.
+This patch builds upon my previous upstream PR concerning null
+world spawn point handling.
 
-In the case where players attempt to join the server to an unloaded world, the vanilla behaviour is to move them to the overworld at their previous world's locations, which can cause players to spawn in inopportune locations.
+In the case where players attempt to join the server to an
+unloaded world, the vanilla behaviour is to move them to the
+overworld at their previous world's locations, which can cause
+players to spawn in inopportune locations.
 
-As my previous PR did for 1.15, this patch improves the vanilla behaviour by safely relocating players to their spawn point. While the vanilla code handles null worlds, it does not safely handle worlds with identical dimension, yet differing uuids (i.e. ones that have been deleted/regenerated).
+This patch improves the vanilla behaviour by safely relocating
+players to their spawn point. While the vanilla code handles
+null worlds, it does not safely handle worlds with identical
+dimensions, yet differing uuids (i.e. ones that have been
+deleted/regenerated).
 ---
- .../java/net/minecraft/server/PlayerList.java | 55 ++++++++++++++-----
- 1 file changed, 41 insertions(+), 14 deletions(-)
+ .../java/net/minecraft/server/PlayerList.java | 66 ++++++++++++-------
+ 1 file changed, 43 insertions(+), 23 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index 3c5ba8f2f..bab6eb3a1 100644
+index 3c5ba8f2f..0e00886de 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -111,7 +111,7 @@ public abstract class PlayerList {
@@ -25,13 +33,27 @@ index 3c5ba8f2f..bab6eb3a1 100644
          // CraftBukkit start - Better rename detection
          if (nbttagcompound != null && nbttagcompound.hasKey("bukkit")) {
              NBTTagCompound bukkit = nbttagcompound.getCompound("bukkit");
-@@ -119,28 +119,55 @@ public abstract class PlayerList {
+@@ -119,30 +119,50 @@ public abstract class PlayerList {
          }String lastKnownName = s; // Paper
          // CraftBukkit end
  
 -        if (nbttagcompound != null) {
 -            DataResult dataresult = DimensionManager.a(new Dynamic(DynamicOpsNBT.a, nbttagcompound.get("Dimension")));
 -            Logger logger = PlayerList.LOGGER;
+-
+-            logger.getClass();
+-            resourcekey = (ResourceKey) dataresult.resultOrPartial(logger::error).orElse(World.OVERWORLD);
+-        } else {
+-            resourcekey = World.OVERWORLD;
+-        }
+-
+-        ResourceKey<World> resourcekey1 = resourcekey;
+-        WorldServer worldserver = this.server.getWorldServer(resourcekey1);
+-        WorldServer worldserver1;
+-
+-        if (worldserver == null) {
+-            PlayerList.LOGGER.warn("Unknown respawn dimension {}, defaulting to overworld", resourcekey1);
+-            worldserver1 = this.server.D();
 +        // Conduit start - null worlds spawn point fallback
 +        // if (nbttagcompound != null) {
 +        //    DataResult dataresult = DimensionManager.a(new Dynamic(DynamicOpsNBT.a, nbttagcompound.get("Dimension")));
@@ -57,16 +79,13 @@ index 3c5ba8f2f..bab6eb3a1 100644
 +        // if (nbttagcompound == null) {entityplayer.moveToSpawn(worldserver1); // Paper - only move to spawn on first login, otherwise, stay where you are....
 +
 +        WorldServer worldserver;
-+        WorldServer worldserver1;
 +        org.bukkit.Server server = Bukkit.getServer();
- 
--            logger.getClass();
--            resourcekey = (ResourceKey) dataresult.resultOrPartial(logger::error).orElse(World.OVERWORLD);
++
 +        if (nbttagcompound == null) {
 +            worldserver = ((CraftWorld) server.getWorlds().get(0)).getHandle();
 +            entityplayer.moveToSpawn(worldserver);
          } else {
--            resourcekey = World.OVERWORLD;
+-            worldserver1 = worldserver;
 +            org.bukkit.World bworld;
 +            String worldName = nbttagcompound.getString("world");
 +            if (nbttagcompound.hasKey("WorldUUIDMost") && nbttagcompound.hasKey("WorldUUIDLeast")) {
@@ -77,20 +96,21 @@ index 3c5ba8f2f..bab6eb3a1 100644
 +            }
 +            worldserver = bworld == null ? null : ((CraftWorld) bworld).getHandle();
          }
- 
--        ResourceKey<World> resourcekey1 = resourcekey;
--        WorldServer worldserver = this.server.getWorldServer(resourcekey1);
--        WorldServer worldserver1;
--
-         if (worldserver == null) {
--            PlayerList.LOGGER.warn("Unknown respawn dimension {}, defaulting to overworld", resourcekey1);
-             worldserver1 = this.server.D();
-         } else {
-             worldserver1 = worldserver;
-         }
--
--        if (nbttagcompound == null) entityplayer.moveToSpawn(worldserver1); // Paper - only move to spawn on first login, otherwise, stay where you are....
 +        // Conduit end - null worlds spawn point fallback
+ 
+-        if (nbttagcompound == null) entityplayer.moveToSpawn(worldserver1); // Paper - only move to spawn on first login, otherwise, stay where you are....
+-
+-        entityplayer.spawnIn(worldserver1);
++        entityplayer.spawnIn(worldserver); // Conduit - null worlds spawn point fallback
+         entityplayer.playerInteractManager.a((WorldServer) entityplayer.world);
+         String s1 = "local";
+ 
+@@ -156,7 +176,7 @@ public abstract class PlayerList {
+         Bukkit.getPluginManager().callEvent(ev);
+ 
+         Location loc = ev.getSpawnLocation();
+-        worldserver1 = ((CraftWorld) loc.getWorld()).getHandle();
++        WorldServer worldserver1 = ((CraftWorld) loc.getWorld()).getHandle(); // Conduit - null worlds spawn point fallback
  
          entityplayer.spawnIn(worldserver1);
          entityplayer.playerInteractManager.a((WorldServer) entityplayer.world);
