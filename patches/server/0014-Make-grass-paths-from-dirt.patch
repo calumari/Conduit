@@ -1,0 +1,25 @@
+From 2c9f9d389365c9b5646119d414140d28c91638c5 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 2 Jul 2020 13:12:30 +0100
+Subject: [PATCH] Make grass paths from dirt
+
+---
+ src/main/java/net/minecraft/server/ItemSpade.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/ItemSpade.java b/src/main/java/net/minecraft/server/ItemSpade.java
+index 5b82663d6..d0b77959f 100644
+--- a/src/main/java/net/minecraft/server/ItemSpade.java
++++ b/src/main/java/net/minecraft/server/ItemSpade.java
+@@ -9,7 +9,7 @@ import java.util.Set;
+ public class ItemSpade extends ItemTool {
+ 
+     private static final Set<Block> c = Sets.newHashSet(new Block[]{Blocks.CLAY, Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.PODZOL, Blocks.FARMLAND, Blocks.GRASS_BLOCK, Blocks.GRAVEL, Blocks.MYCELIUM, Blocks.SAND, Blocks.RED_SAND, Blocks.SNOW_BLOCK, Blocks.SNOW, Blocks.SOUL_SAND, Blocks.GRASS_PATH, Blocks.WHITE_CONCRETE_POWDER, Blocks.ORANGE_CONCRETE_POWDER, Blocks.MAGENTA_CONCRETE_POWDER, Blocks.LIGHT_BLUE_CONCRETE_POWDER, Blocks.YELLOW_CONCRETE_POWDER, Blocks.LIME_CONCRETE_POWDER, Blocks.PINK_CONCRETE_POWDER, Blocks.GRAY_CONCRETE_POWDER, Blocks.LIGHT_GRAY_CONCRETE_POWDER, Blocks.CYAN_CONCRETE_POWDER, Blocks.PURPLE_CONCRETE_POWDER, Blocks.BLUE_CONCRETE_POWDER, Blocks.BROWN_CONCRETE_POWDER, Blocks.GREEN_CONCRETE_POWDER, Blocks.RED_CONCRETE_POWDER, Blocks.BLACK_CONCRETE_POWDER, Blocks.SOUL_SOIL});
+-    protected static final Map<Block, IBlockData> a = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH.getBlockData()));
++    protected static final Map<Block, IBlockData> a = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH.getBlockData(), Blocks.DIRT, Blocks.GRASS_PATH.getBlockData())); // Conduit - dirt paths
+ 
+     public ItemSpade(ToolMaterial toolmaterial, float f, float f1, Item.Info item_info) {
+         super(f, f1, toolmaterial, ItemSpade.c, item_info);
+-- 
+2.24.1.windows.2
+

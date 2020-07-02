@@ -1,4 +1,4 @@
-From 2a9812322f391d992411e9a69a2bd0c198cb8274 Mon Sep 17 00:00:00 2001
+From d35124ed49aa966b8a9a1fadbff302bc3348797a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -277,10 +277,10 @@ index 83ab410b8..834780d67 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index db617e04f..73b74bcd1 100644
+index 8f2b84a84..2464eb93d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2128,4 +2128,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2149,4 +2149,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          return spigot;
      }
      // Spigot end
