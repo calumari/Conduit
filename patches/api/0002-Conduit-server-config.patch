@@ -1,4 +1,4 @@
-From a60544ca7b3ed25c38bb3d195551e0f4aeab204e Mon Sep 17 00:00:00 2001
+From 63956150d21c699ccfb1a48bb487ed304817dd22 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:36:49 +0100
 Subject: [PATCH] Conduit server config
@@ -8,10 +8,10 @@ Subject: [PATCH] Conduit server config
  1 file changed, 8 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index b464cc1a7..8d5ed6646 100644
+index 0653e0ffe..dd7de4042 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1424,6 +1424,14 @@ public interface Server extends PluginMessageRecipient {
+@@ -1438,6 +1438,14 @@ public interface Server extends PluginMessageRecipient {
          }
          // Paper end
  
