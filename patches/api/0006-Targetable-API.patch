@@ -1,0 +1,28 @@
+From 6d766aaccbdf892728805783138355252c2dce4e Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 4 Jul 2020 22:01:44 +0100
+Subject: [PATCH] Targetable API
+
+---
+ src/main/java/org/bukkit/entity/LivingEntity.java | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
+index a60523cc9..1037bf48d 100644
+--- a/src/main/java/org/bukkit/entity/LivingEntity.java
++++ b/src/main/java/org/bukkit/entity/LivingEntity.java
+@@ -753,4 +753,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
+      */
+     void setJumping(boolean jumping);
+     // Paper end
++
++    // Conduit start
++
++    void setTargetable(boolean targetable);
++
++    boolean isTargetable();
++    // Conduit end
+ }
+-- 
+2.24.1.windows.2
+
