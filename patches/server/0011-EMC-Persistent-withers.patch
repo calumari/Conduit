@@ -1,4 +1,4 @@
-From d7ef3545aaddd6777b0d8d60081fb82c87a9b98c Mon Sep 17 00:00:00 2001
+From 0a9bfa804b38dc2be9a07cc2a4ebf0f1ff33411c Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Thu, 6 Nov 2014 21:36:14 -0500
 Subject: [PATCH] EMC Persistent withers
@@ -9,10 +9,10 @@ Subject: [PATCH] EMC Persistent withers
  2 files changed, 7 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 2f466af4d5..9e3bedc4b4 100644
+index 1074995e8c..6b13757546 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
-@@ -534,6 +534,8 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+@@ -533,6 +533,8 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
          return this.getHealth() <= this.getMaxHealth() / 2.0F;
      }
  
@@ -22,10 +22,10 @@ index 2f466af4d5..9e3bedc4b4 100644
      public EnumMonsterType getMonsterType() {
          return EnumMonsterType.UNDEAD;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index f60ca86b3c..177ed174fd 100644
+index 834780d671..5d322d729a 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -88,4 +88,9 @@ public class ConduitWorldConfig {
+@@ -82,4 +82,9 @@ public class ConduitWorldConfig {
          idleTimeoutSpawnNearbyEntities = getBoolean("gameplay-mechanics.idle-timeout.spawn-nearby-entities", true);
          idleTimeoutCountAsSleeping = getBoolean("gameplay-mechanics.idle-timeout.count-as-sleeping", false);
      }

@@ -1,4 +1,4 @@
-From 129a9808e4a4e9599ea3c0bcaf862c483239d150 Mon Sep 17 00:00:00 2001
+From c12cd107765ab7860fff5e13684c3a259e65f7a1 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:42:46 +0100
 Subject: [PATCH] Conduit branding
@@ -10,10 +10,10 @@ Subject: [PATCH] Conduit branding
  3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4ab6579032..819677c156 100644
+index 26f230a80..73a5730d5 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1570,7 +1570,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1446,7 +1446,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -23,7 +23,7 @@ index 4ab6579032..819677c156 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-index c2ba92acbc..9284371a01 100644
+index c2ba92acb..9284371a0 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 @@ -108,4 +108,9 @@ public final class ConduitConfig {
@@ -37,10 +37,10 @@ index c2ba92acbc..9284371a01 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e98f289654..8e2dd6c743 100644
+index 9bee90cde..d9e652e96 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -205,7 +205,7 @@ import javax.annotation.Nullable; // Paper
+@@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {

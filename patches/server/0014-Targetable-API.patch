@@ -1,0 +1,67 @@
+From e5d5ea9566d84e03788cf3c415b2bb70b871135d Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 4 Jul 2020 21:14:12 +0100
+Subject: [PATCH] Targetable API
+
+Think "soft spectator mode".
+---
+ src/main/java/net/minecraft/server/EntityLiving.java | 12 ++++++++++++
+ .../minecraft/server/PathfinderTargetCondition.java  |  1 +
+ .../bukkit/craftbukkit/entity/CraftLivingEntity.java | 10 ++++++++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 60248f3a5c..a0715893a6 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -3578,4 +3578,16 @@ public abstract class EntityLiving extends Entity {
+         this.shieldBlockingDelay = shieldBlockingDelay;
+     }
+     // Paper end
++
++    // Conduit start
++    private boolean targetable = true;
++
++    public void setTargetable(boolean targetable) {
++        this.targetable = targetable;
++    }
++
++    public boolean isTargetable() {
++        return this.targetable;
++    }
++    // Conduit end
+ }
+diff --git a/src/main/java/net/minecraft/server/PathfinderTargetCondition.java b/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
+index af09e1926f..7521e65f88 100644
+--- a/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
++++ b/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
+@@ -54,6 +54,7 @@ public class PathfinderTargetCondition {
+     public boolean a(@Nullable EntityLiving entityliving, EntityLiving entityliving1) {
+         if (entityliving == entityliving1) {
+             return false;
++        } else if (!entityliving1.isTargetable()) { return false; // Conduit - Targetable API
+         } else if (entityliving1.isSpectator()) {
+             return false;
+         } else if (!entityliving1.isAlive()) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+index 3777aba5f3..20ae8ae534 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+@@ -752,4 +752,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+     }
+ 
+     // Paper end
++
++    // Conduit start
++    public void setTargetable(boolean targetable) {
++        getHandle().setTargetable(targetable);
++    }
++
++    public boolean isTargetable() {
++        return getHandle().isTargetable();
++    }
++    // Conduit end
+ }
+-- 
+2.24.1.windows.2
+

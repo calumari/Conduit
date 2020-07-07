@@ -1,0 +1,60 @@
+From c2eca82c86f0b15ce98c18e5e349647a94b3f11e Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Fri, 29 May 2020 08:19:37 +0100
+Subject: [PATCH] Giant Zombie AI
+
+Based on Purpur's Giant AI patch. However, with different goals,
+configurable villager targeting and spawning with tools.
+---
+ .../minecraft/server/EntityGiantZombie.java   | 19 +++++++++++++++++++
+ .../conduit/config/ConduitWorldConfig.java    |  8 ++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/EntityGiantZombie.java b/src/main/java/net/minecraft/server/EntityGiantZombie.java
+index 603fe5caaf..d25a8e218d 100644
+--- a/src/main/java/net/minecraft/server/EntityGiantZombie.java
++++ b/src/main/java/net/minecraft/server/EntityGiantZombie.java
+@@ -19,4 +19,23 @@ public class EntityGiantZombie extends EntityMonster {
+     public float a(BlockPosition blockposition, IWorldReader iworldreader) {
+         return iworldreader.y(blockposition) - 0.5F;
+     }
++
++    // Conduit - start
++    @Override
++    protected void initPathfinder() {
++        if (world.conduitConfig.giantHasAI) {
++            this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D));
++            this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
++            this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
++            if (world.conduitConfig.giantHasHostileAI) {
++                this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0D, false));
++                this.targetSelector.a(1, (new PathfinderGoalHurtByTarget(this, new Class[0])).a(EntityPigZombie.class));
++                this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
++                if (world.conduitConfig.giantAggressiveTowardsVillager) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)); // Spigot
++                this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, true));
++                this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bv));
++            }
++        }
++    }
++    // Conduit - end
+ }
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index fb5fb3729e..624e4a8ca2 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -56,4 +56,12 @@ public class ConduitWorldConfig {
+         allowLeashVillager = getBoolean("mobs.villager.allow-leash", false);
+     }
+ 
++    public boolean giantHasAI;
++    public boolean giantHasHostileAI;
++    public boolean giantAggressiveTowardsVillager;
++    private void giantSettings() {
++        giantHasAI = getBoolean("mobs.giant.enable-ai", false);
++        giantHasHostileAI = getBoolean("mobs.giant.enable-hostile-ai", false);
++        giantAggressiveTowardsVillager = getBoolean("mobs.giant.aggressive-towards-villager", false);
++    }
+ }
+-- 
+2.24.1.windows.2
+

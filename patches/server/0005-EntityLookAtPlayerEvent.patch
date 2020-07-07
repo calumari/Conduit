@@ -1,31 +1,31 @@
-From c3dc854e6107bbde1787a9d33677291d6970a57a Mon Sep 17 00:00:00 2001
+From ae63353ce96ae162721c26433f86d01d232ad7f3 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 08:36:45 +0100
 Subject: [PATCH] EntityLookAtPlayerEvent
 
 ---
- .../net/minecraft/server/PathfinderGoalLookAtPlayer.java  | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../net/minecraft/server/PathfinderGoalLookAtPlayer.java  | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-index a73e5b77ca..89e328b4bc 100644
+index a73e5b77ca..f6253790c9 100644
 --- a/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
 +++ b/src/main/java/net/minecraft/server/PathfinderGoalLookAtPlayer.java
-@@ -53,6 +53,14 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
+@@ -53,7 +53,13 @@ public class PathfinderGoalLookAtPlayer extends PathfinderGoal {
  
      @Override
      public boolean b() {
-+        // Conduit start
-+        if (this.b instanceof EntityPlayer) {
-+            net.socialhangover.conduit.event.EntityLookAtPlayerEvent event = new net.socialhangover.conduit.event.EntityLookAtPlayerEvent(this.a.getBukkitLivingEntity(), ((EntityPlayer) this.b).getBukkitEntity());
-+            if (!event.callEvent()) {
-+                return false;
-+            }
+-        return !this.b.isAlive() ? false : (this.a.h(this.b) > (double) (this.c * this.c) ? false : this.g > 0);
++        // Conduit start - EntityLookAtPlayerEvent
++        if (this.b.isAlive() && (!(this.a.h(this.b) > (double) (this.c * this.c)) && this.g > 0)) {
++            return !(this.b instanceof EntityPlayer) || new net.socialhangover.conduit.event.EntityLookAtPlayerEvent(this.a.getBukkitLivingEntity(), ((EntityPlayer) this.b).getBukkitEntity()).callEvent();
 +        }
-+        // Conduit end
-         return !this.b.isAlive() ? false : (this.a.h(this.b) > (double) (this.c * this.c) ? false : this.g > 0);
++        return false;
++        // return !this.b.isAlive() ? false : (this.a.h(this.b) > (double) (this.c * this.c) ? false : this.g > 0);
++        // Conduit end - EntityLookAtPlayerEvent
      }
  
+     @Override
 -- 
 2.24.1.windows.2
 
