@@ -1,0 +1,28 @@
+From 0b44fa7d4e5661feffd57b6099adfbf37ab7a525 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 9 Jul 2020 15:59:44 +0100
+Subject: [PATCH] PlayerProfile getProperty
+
+---
+ .../java/com/destroystokyo/paper/profile/PlayerProfile.java  | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
+index 2ef9a7bd5..17f18234b 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
++++ b/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
+@@ -53,6 +53,11 @@ public interface PlayerProfile {
+      */
+     boolean hasProperty(@Nullable String property);
+ 
++    // Conduit start
++    @Nullable
++    ProfileProperty getProperty(String property);
++    // Conduit end
++
+     /**
+      * Sets a property. If the property already exists, the previous one will be replaced
+      * @param property Property to set.
+-- 
+2.24.1.windows.2
+

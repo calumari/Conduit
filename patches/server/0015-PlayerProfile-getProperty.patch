@@ -1,0 +1,34 @@
+From 784e77dfa2a4a49a419a769b496efe1274bbb493 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 9 Jul 2020 15:59:50 +0100
+Subject: [PATCH] PlayerProfile getProperty
+
+---
+ .../paper/profile/CraftPlayerProfile.java             | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+index 293b73f474..b9223ab568 100644
+--- a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
++++ b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
+@@ -43,6 +43,17 @@ public class CraftPlayerProfile implements PlayerProfile {
+         return profile.getProperties().containsKey(property);
+     }
+ 
++    // Conduit start
++    @Override
++    public ProfileProperty getProperty(String property) {
++        Property value = com.google.common.collect.Iterables.getFirst(profile.getProperties().get(property), null);
++        if (value == null) {
++            return null;
++        }
++        return new ProfileProperty(value.getName(), value.getValue(), value.getSignature());
++    }
++    // Conduit end
++
+     @Override
+     public void setProperty(ProfileProperty property) {
+         String name = property.getName();
+-- 
+2.24.1.windows.2
+
