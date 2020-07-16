@@ -1,0 +1,32 @@
+From 8ba52c32c7ae1242dcfebca028668c18847ea689 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 16 Jul 2020 04:12:10 +0100
+Subject: [PATCH] Fix SPIGOT-5885 Unable to disable advancements
+
+---
+ src/main/java/net/minecraft/server/Main.java | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
+index 2f29d7040d..96f3ee6580 100644
+--- a/src/main/java/net/minecraft/server/Main.java
++++ b/src/main/java/net/minecraft/server/Main.java
+@@ -86,6 +86,15 @@ public class Main {
+                 return;
+             }
+ 
++            // Conduit start - Fix SPIGOT-5885
++            try {
++                org.bukkit.configuration.file.YamlConfiguration config = new org.bukkit.configuration.file.YamlConfiguration();
++                config.load((File) optionset.valueOf("spigot-settings"));
++                org.spigotmc.SpigotConfig.disabledAdvancements = config.getStringList("advancements.disabled");
++            } catch (Exception ex) {
++            }
++            // Conduit end - SPIGOT-5885
++
+             File file = (File) optionset.valueOf("universe"); // CraftBukkit
+             YggdrasilAuthenticationService yggdrasilauthenticationservice = new com.destroystokyo.paper.profile.PaperAuthenticationService(Proxy.NO_PROXY, UUID.randomUUID().toString()); // Paper
+             MinecraftSessionService minecraftsessionservice = yggdrasilauthenticationservice.createMinecraftSessionService();
+-- 
+2.24.1.windows.2
+
