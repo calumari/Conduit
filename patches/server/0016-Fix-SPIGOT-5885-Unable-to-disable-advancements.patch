@@ -1,4 +1,4 @@
-From 8ba52c32c7ae1242dcfebca028668c18847ea689 Mon Sep 17 00:00:00 2001
+From dddf2f31baecd7c1c20ec59c9c5b73b704a76c54 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Thu, 16 Jul 2020 04:12:10 +0100
 Subject: [PATCH] Fix SPIGOT-5885 Unable to disable advancements
