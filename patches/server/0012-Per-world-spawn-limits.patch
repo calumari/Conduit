@@ -1,18 +1,18 @@
-From c5a2d951aaa1aeb31f1e02978cb58b2a300a1d76 Mon Sep 17 00:00:00 2001
+From 6c7835516e16511373821f24520ee3eaaef18010 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 8 Jun 2020 00:34:32 +0100
 Subject: [PATCH] Per world spawn limits
 
 ---
- .../conduit/config/ConduitWorldConfig.java            | 11 +++++++++++
- src/main/java/org/bukkit/craftbukkit/CraftWorld.java  |  6 ++++++
- 2 files changed, 17 insertions(+)
+ .../conduit/config/ConduitWorldConfig.java          | 13 +++++++++++++
+ .../java/org/bukkit/craftbukkit/CraftWorld.java     |  7 +++++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index 5d322d729..4fd786b03 100644
+index 5d322d729a..41868f4d0f 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-@@ -87,4 +87,15 @@ public class ConduitWorldConfig {
+@@ -87,4 +87,17 @@ public class ConduitWorldConfig {
      private void witherSettings() {
          witherPersistent = getBoolean("mobs.wither.persistent", false);
      }
@@ -20,19 +20,21 @@ index 5d322d729..4fd786b03 100644
 +    public int monsterSpawn;
 +    public int animalSpawn;
 +    public int waterAnimalSpawn;
++    public int waterAmbientSpawn;
 +    public int ambientSpawn;
 +    private void spawnLimits() {
 +        monsterSpawn = getInt("spawn-limits.monsters", -1);
 +        animalSpawn = getInt("spawn-limits.animals", -1);
 +        waterAnimalSpawn = getInt("spawn-limits.water-animals", -1);
++        waterAmbientSpawn = getInt("spawn-limits.water-ambient", -1);
 +        ambientSpawn = getInt("spawn-limits.ambient", -1);
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 724c0816d..041dda39c 100644
+index 65b36a1741..ae5055554b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -336,6 +336,12 @@ public class CraftWorld implements World {
+@@ -336,6 +336,13 @@ public class CraftWorld implements World {
          this.generator = gen;
  
          environment = env;
@@ -40,7 +42,8 @@ index 724c0816d..041dda39c 100644
 +        monsterSpawn = world.conduitConfig.monsterSpawn;
 +        animalSpawn = world.conduitConfig.animalSpawn;
 +        waterAnimalSpawn = world.conduitConfig.waterAnimalSpawn;
-+        ambientSpawn = world.conduitConfig.ambientSpawn;
++        waterAmbientSpawn = world.conduitConfig.waterAmbientSpawn;
++        ambientSpawn =  world.conduitConfig.ambientSpawn;
 +        // Conduit end
      }
  
