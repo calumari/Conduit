@@ -1,0 +1,814 @@
+From 962ab1ad63ae1eeb4339aa1254dbbf8b3018e83d Mon Sep 17 00:00:00 2001
+From: Spottedleaf <spottedleaf@spottedleaf.dev>
+Date: Sun, 14 Jun 2020 00:34:47 -0700
+Subject: [PATCH] Tuinity Piston pushable TileEntities
+
+Configurable under pistons-can-push-tile-entities, globally.
+Defaults to false because some redstone machines are going to rely on
+TE's not being pushable.
+
+Explicitly disabled blocks & their reasons can be found under their override
+of the function TileEntity#isPushable.
+Other disabled blocks are due to the underlying block material not being
+pushable (in general, a TE is pushable if its underlying material is).
+
+Video demonstration:
+https://www.youtube.com/watch?v=Q0dYMtZ-a5c
+---
+ .../java/net/minecraft/server/BlockChest.java |  2 +-
+ .../net/minecraft/server/BlockPiston.java     | 30 +++++++--
+ .../minecraft/server/BlockPistonMoving.java   |  7 +-
+ src/main/java/net/minecraft/server/Chunk.java | 32 +++++++++
+ .../java/net/minecraft/server/MCUtil.java     | 14 ++++
+ .../java/net/minecraft/server/TileEntity.java | 49 +++++++++++++-
+ .../minecraft/server/TileEntityBeacon.java    | 26 ++++++--
+ .../minecraft/server/TileEntityBeehive.java   |  7 ++
+ .../server/TileEntityBrewingStand.java        | 26 ++++++--
+ .../net/minecraft/server/TileEntityChest.java | 16 +++++
+ .../minecraft/server/TileEntityConduit.java   | 21 +++++-
+ .../minecraft/server/TileEntityFurnace.java   | 26 ++++++--
+ .../minecraft/server/TileEntityJukeBox.java   |  7 ++
+ .../minecraft/server/TileEntityLectern.java   | 51 +++++++++-----
+ .../minecraft/server/TileEntityPiston.java    | 66 +++++++++++++++++--
+ src/main/java/net/minecraft/server/World.java | 25 ++++++-
+ .../conduit/config/ConduitConfig.java         |  5 ++
+ 17 files changed, 361 insertions(+), 49 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/BlockChest.java b/src/main/java/net/minecraft/server/BlockChest.java
+index 44b9bfcdc7..8f052545df 100644
+--- a/src/main/java/net/minecraft/server/BlockChest.java
++++ b/src/main/java/net/minecraft/server/BlockChest.java
+@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
+ public class BlockChest extends BlockChestAbstract<TileEntityChest> implements IBlockWaterlogged {
+ 
+     public static final BlockStateDirection FACING = BlockFacingHorizontal.FACING;
+-    public static final BlockStateEnum<BlockPropertyChestType> c = BlockProperties.aF;
++    public static final BlockStateEnum<BlockPropertyChestType> c = BlockProperties.aF; public static final BlockStateEnum<BlockPropertyChestType> getChestTypeEnum() { return BlockChest.c; } // Conduit - OBFHELPER
+     public static final BlockStateBoolean d = BlockProperties.C; public static final BlockStateBoolean waterlogged() { return d; } // Paper OBFHELPER
+     protected static final VoxelShape e = Block.a(1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 15.0D);
+     protected static final VoxelShape f = Block.a(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 16.0D);
+diff --git a/src/main/java/net/minecraft/server/BlockPiston.java b/src/main/java/net/minecraft/server/BlockPiston.java
+index c3133814f1..659ce7035d 100644
+--- a/src/main/java/net/minecraft/server/BlockPiston.java
++++ b/src/main/java/net/minecraft/server/BlockPiston.java
+@@ -270,7 +270,10 @@ public class BlockPiston extends BlockDirectional {
+                         return false;
+                     }
+ 
+-                    return !iblockdata.getBlock().isTileEntity();
++                    // Conduit start - pushable TE's
++                    TileEntity tileEntity;
++                    return !iblockdata.getBlock().isTileEntity() || ((tileEntity = world.getTileEntity(blockposition)) != null && tileEntity.isPushable());
++                    // Conduit end - pushable TE's
+                 } else {
+                     return false;
+                 }
+@@ -369,7 +372,7 @@ public class BlockPiston extends BlockDirectional {
+ 
+             for (k = list.size() - 1; k >= 0; --k) {
+                 // Paper start - fix a variety of piston desync dupes
+-                boolean allowDesync = com.destroystokyo.paper.PaperConfig.allowPistonDuplication;
++                boolean allowDesync = com.destroystokyo.paper.PaperConfig.allowPistonDuplication && !list1.get(k).getBlock().isTileEntity(); // Conduit - pushable TE's
+                 BlockPosition oldPos = blockposition3 = (BlockPosition) list.get(k);
+                 iblockdata1 = allowDesync ? world.getType(oldPos) : null;
+                 // Paper end - fix a variety of piston desync dupes
+@@ -381,10 +384,29 @@ public class BlockPiston extends BlockDirectional {
+                     iblockdata1 = world.getType(oldPos);
+                     map.replace(oldPos, iblockdata1);
+                 }
+-                world.setTileEntity(blockposition3, BlockPistonMoving.a(allowDesync ? list1.get(k) : iblockdata1, enumdirection, flag, false));
++                // Conduit start - pushable TE's
++                TileEntity tileEntity = world.getTileEntity(oldPos);
++                if (tileEntity != null) {
++                    if (!tileEntity.isPushable()) {
++                        tileEntity = null;
++                    } else {
++                        // ensure the death of world tied state
++                        if (tileEntity instanceof IInventory) {
++                            MCUtil.closeInventory((IInventory)tileEntity, org.bukkit.event.inventory.InventoryCloseEvent.Reason.CANT_USE);
++                        }
++                        if (tileEntity instanceof TileEntityLectern) {
++                            MCUtil.closeInventory(((TileEntityLectern)tileEntity).inventory, org.bukkit.event.inventory.InventoryCloseEvent.Reason.CANT_USE);
++                        }
++
++                        // now copy
++                        tileEntity = tileEntity.createCopyForPush((WorldServer)world, oldPos, blockposition3, iblockdata1);
++                    }
++                }
++                // Conduit end - pushable TE's
+                 if (!allowDesync) {
+-                    world.setTypeAndData(oldPos, Blocks.AIR.getBlockData(), 2 | 4 | 16 | 1024); // set air to prevent later physics updates from seeing this block
++                    world.setTypeAndDataRaw(oldPos, Blocks.AIR.getBlockData(), null); // Conduit - don't fire logic for removing the old block
+                 }
++                world.setTileEntity(blockposition3, BlockPistonMoving.createPistonTile(allowDesync ? list1.get(k) : iblockdata1, enumdirection, flag, false, tileEntity)); // Conduit - pushable TE's
+                 // Paper end - fix a variety of piston desync dupes
+                 aiblockdata[j++] = iblockdata1;
+             }
+diff --git a/src/main/java/net/minecraft/server/BlockPistonMoving.java b/src/main/java/net/minecraft/server/BlockPistonMoving.java
+index 4bf66420f5..449c333514 100644
+--- a/src/main/java/net/minecraft/server/BlockPistonMoving.java
++++ b/src/main/java/net/minecraft/server/BlockPistonMoving.java
+@@ -21,7 +21,12 @@ public class BlockPistonMoving extends BlockTileEntity {
+     }
+ 
+     public static TileEntity a(IBlockData iblockdata, EnumDirection enumdirection, boolean flag, boolean flag1) {
+-        return new TileEntityPiston(iblockdata, enumdirection, flag, flag1);
++        // Conduit start - add tileEntity parameter
++        return createPistonTile(iblockdata, enumdirection, flag, flag1, null);
++    }
++    public static TileEntity createPistonTile(IBlockData iblockdata, EnumDirection enumdirection, boolean flag, boolean flag1, TileEntity tileEntity) {
++        return new TileEntityPiston(iblockdata, enumdirection, flag, flag1, tileEntity);
++        // Conduit end - add tileEntity parameter
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index 84dc89d961..fe9d9b2972 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -510,8 +510,35 @@ public class Chunk implements IChunkAccess {
+         return this.setType(blockposition, iblockdata, flag, true);
+     }
+ 
++    // Conduit start
++    final void setTypeAndDataRaw(BlockPosition blockposition, IBlockData iblockdata) {
++        // copied from setType
++        int i = blockposition.getX() & 15;
++        int j = blockposition.getY();
++        int k = blockposition.getZ() & 15;
++        ChunkSection chunksection = this.sections[j >> 4];
++
++        if (chunksection == Chunk.a) {
++            if (iblockdata.isAir()) {
++                return;
++            }
++
++            chunksection = new ChunkSection(j >> 4 << 4, this, this.world, true); // Paper - Anti-Xray - Add parameters
++            this.sections[j >> 4] = chunksection;
++        }
++
++        chunksection.setType(i, j & 15, k, iblockdata);
++    }
++    // Conduit end
++
+     @Nullable
+     public IBlockData setType(BlockPosition blockposition, IBlockData iblockdata, boolean flag, boolean doPlace) {
++        // Conduit start - add tileEntity parameter
++        return this.setType(blockposition, iblockdata, flag, doPlace, null);
++    }
++    @Nullable
++    public IBlockData setType(BlockPosition blockposition, IBlockData iblockdata, boolean flag, boolean doPlace, TileEntity newTileEntity) {
++        // Conduit end - add tileEntity parameter
+         // CraftBukkit end
+         int i = blockposition.getX() & 15;
+         int j = blockposition.getY();
+@@ -570,6 +597,10 @@ public class Chunk implements IChunkAccess {
+                 }
+ 
+                 if (block instanceof ITileEntity) {
++                    // Conduit start - add tileEntity parameter
++                    if (newTileEntity != null) {
++                        this.world.setTileEntity(blockposition, newTileEntity);
++                    } else { // Conduit end - add tileEntity parameter
+                     tileentity = this.a(blockposition, Chunk.EnumTileEntityState.CHECK);
+                     if (tileentity == null) {
+                         tileentity = ((ITileEntity) block).createTile(this.world);
+@@ -577,6 +608,7 @@ public class Chunk implements IChunkAccess {
+                     } else {
+                         tileentity.invalidateBlockCache();
+                     }
++                    } // Conduit - add tileEntity parameter
+                 }
+ 
+                 this.s = true;
+diff --git a/src/main/java/net/minecraft/server/MCUtil.java b/src/main/java/net/minecraft/server/MCUtil.java
+index e9cedbc8b6..d2cfaeacd5 100644
+--- a/src/main/java/net/minecraft/server/MCUtil.java
++++ b/src/main/java/net/minecraft/server/MCUtil.java
+@@ -48,6 +48,20 @@ public final class MCUtil {
+         new ThreadFactoryBuilder().setNameFormat("Paper Object Cleaner").build()
+     );
+ 
++    // Conduit start
++    private static org.bukkit.entity.HumanEntity[] EMPTY_HUMAN_ARRAY = new org.bukkit.entity.HumanEntity[0];
++    public static void closeInventory(IInventory inventory, org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
++        List<org.bukkit.entity.HumanEntity> viewers = inventory.getViewers();
++        if (viewers.isEmpty()) {
++            return;
++        }
++
++        for (org.bukkit.entity.HumanEntity viewer : viewers.toArray(EMPTY_HUMAN_ARRAY)) {
++            viewer.closeInventory(reason);
++        }
++    }
++    // Conduit end
++
+     public static final long INVALID_CHUNK_KEY = getCoordinateKey(Integer.MAX_VALUE, Integer.MAX_VALUE);
+ 
+ 
+diff --git a/src/main/java/net/minecraft/server/TileEntity.java b/src/main/java/net/minecraft/server/TileEntity.java
+index 67fda8bd5a..4d4149ba4f 100644
+--- a/src/main/java/net/minecraft/server/TileEntity.java
++++ b/src/main/java/net/minecraft/server/TileEntity.java
+@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryHolder;
+ import co.aikar.timings.MinecraftTimings; // Paper
+ import co.aikar.timings.Timing; // Paper
+ 
+-public abstract class TileEntity implements KeyedObject { // Paper
++public abstract class TileEntity implements KeyedObject, Cloneable { // Paper // Conduit
+ 
+     public Timing tickTimer = MinecraftTimings.getTileEntityTimings(this); // Paper
+     // CraftBukkit start - data containers
+@@ -27,7 +27,7 @@ public abstract class TileEntity implements KeyedObject { // Paper
+     protected BlockPosition position;
+     protected boolean f;
+     @Nullable
+-    private IBlockData c;
++    private IBlockData c; protected final IBlockData getBlockDataCache() { return this.c; } public final void setBlockDataCache(final IBlockData value) { this.c = value; } // Conduit - OBFHELPER
+     private boolean g;
+ 
+     public TileEntity(TileEntityTypes<?> tileentitytypes) {
+@@ -35,6 +35,51 @@ public abstract class TileEntity implements KeyedObject { // Paper
+         this.tileType = tileentitytypes;
+     }
+ 
++    // Conduit start - pushable TE's
++    public boolean isPushable() {
++        if (!net.socialhangover.conduit.config.ConduitConfig.pistonsCanPushTileEntities) {
++            return false;
++        }
++        IBlockData block = this.getBlock();
++        if (this.isRemoved() || !this.tileType.isValidBlock(block.getBlock())) {
++            return false;
++        }
++        EnumPistonReaction reaction = block.getPushReaction();
++        return reaction == EnumPistonReaction.NORMAL || reaction == EnumPistonReaction.PUSH_ONLY;
++    }
++
++    @Override
++    protected final TileEntity clone() {
++        try {
++            return (TileEntity)super.clone();
++        } catch (final Throwable thr) {
++            if (thr instanceof ThreadDeath) {
++                throw (ThreadDeath)thr;
++            }
++            throw new InternalError(thr);
++        }
++    }
++
++    // this method presumes the old TE has been completely dropped from worldstate and has no ties to it anymore (this
++    // includes players interacting with them)
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        final TileEntity copy = this.clone();
++
++        copy.world = world;
++        copy.position = newPos;
++
++        // removed is manually set to false after placing the entity into the world.
++        copy.setBlockDataCache(blockData);
++
++        return copy;
++    }
++
++    // updates TE state to its new position
++    public void onPostPush() {
++        this.update();
++    }
++    // Conduit end - pushable TE's
++
+     // Paper start
+     private String tileEntityKeyString = null;
+     private MinecraftKey tileEntityKey = null;
+diff --git a/src/main/java/net/minecraft/server/TileEntityBeacon.java b/src/main/java/net/minecraft/server/TileEntityBeacon.java
+index 2858ea1f3e..1ca4065e6a 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBeacon.java
++++ b/src/main/java/net/minecraft/server/TileEntityBeacon.java
+@@ -35,7 +35,7 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
+     @Nullable
+     public IChatBaseComponent customName;
+     public ChestLock chestLock;
+-    private final IContainerProperties containerProperties;
++    private IContainerProperties containerProperties; // Conduit - need non-final for `createCopyForPush`
+     // CraftBukkit start - add fields and methods
+     public PotionEffect getPrimaryEffect() {
+         return (this.primaryEffect != null) ? CraftPotionUtil.toBukkit(new MobEffect(this.primaryEffect, getLevel(), getAmplification(), true, true)) : null;
+@@ -46,10 +46,10 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
+     }
+     // CraftBukkit end
+ 
+-    public TileEntityBeacon() {
+-        super(TileEntityTypes.BEACON);
+-        this.chestLock = ChestLock.a;
+-        this.containerProperties = new IContainerProperties() {
++    // Conduit start - pushable TE's
++    protected final IContainerProperties getNewContainerProperties() {
++        // moved from constructor - this should be re-copied if it changes
++        return new IContainerProperties() {
+             @Override
+             public int getProperty(int i) {
+                 switch (i) {
+@@ -90,6 +90,22 @@ public class TileEntityBeacon extends TileEntity implements ITileInventory, ITic
+         };
+     }
+ 
++    @Override
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        TileEntityBeacon copy = (TileEntityBeacon)super.createCopyForPush(world, oldPos, newPos, blockData);
++
++        copy.containerProperties = copy.getNewContainerProperties(); // old properties retains reference to old te
++
++        return copy;
++    }
++    // Conduit end - pushable TE's
++
++    public TileEntityBeacon() {
++        super(TileEntityTypes.BEACON);
++        this.chestLock = ChestLock.a;
++        this.containerProperties = this.getNewContainerProperties(); // Conduit - move into function
++    }
++
+     @Override
+     public void tick() {
+         int i = this.position.getX();
+diff --git a/src/main/java/net/minecraft/server/TileEntityBeehive.java b/src/main/java/net/minecraft/server/TileEntityBeehive.java
+index 6dc91d985a..bb38a48364 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBeehive.java
++++ b/src/main/java/net/minecraft/server/TileEntityBeehive.java
+@@ -12,6 +12,13 @@ public class TileEntityBeehive extends TileEntity implements ITickable {
+     public BlockPosition flowerPos = null;
+     public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
+ 
++    // Conduit start - pushable TE's
++    @Override
++    public boolean isPushable() {
++        return false; // TODO until there is a good solution to making the already existing bees in the world re-acquire this position, this cannot be done.
++    }
++    // Conduit end - pushable TE's
++
+     public TileEntityBeehive() {
+         super(TileEntityTypes.BEEHIVE);
+     }
+diff --git a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+index 276eba954b..c01bf2c291 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
++++ b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+@@ -24,7 +24,7 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
+     private boolean[] j;
+     private Item k;
+     public int fuelLevel;
+-    protected final IContainerProperties a;
++    protected IContainerProperties a; protected final void setContainerProperties(IContainerProperties value) { this.a = value; } // Conduit - OBFHELPER // Conduit - need non-final for `createCopyForPush`
+     // CraftBukkit start - add fields and methods
+     private int lastTick = MinecraftServer.currentTick;
+     public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+@@ -56,10 +56,10 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
+     }
+     // CraftBukkit end
+ 
+-    public TileEntityBrewingStand() {
+-        super(TileEntityTypes.BREWING_STAND);
+-        this.items = NonNullList.a(5, ItemStack.b);
+-        this.a = new IContainerProperties() {
++    // Conduit start - pushable TE's
++    protected final IContainerProperties getNewContainerProperties() {
++        // moved from constructor - this should be re-copied if it changes
++        return new IContainerProperties() {
+             @Override
+             public int getProperty(int i) {
+                 switch (i) {
+@@ -91,6 +91,22 @@ public class TileEntityBrewingStand extends TileEntityContainer implements IWorl
+         };
+     }
+ 
++    @Override
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        TileEntityBrewingStand copy = (TileEntityBrewingStand)super.createCopyForPush(world, oldPos, newPos, blockData);
++
++        copy.setContainerProperties(copy.getNewContainerProperties()); // old properties retains reference to old te
++
++        return copy;
++    }
++    // Conduit end - pushable TE's
++
++    public TileEntityBrewingStand() {
++        super(TileEntityTypes.BREWING_STAND);
++        this.items = NonNullList.a(5, ItemStack.b);
++        this.a = this.getNewContainerProperties();
++    }
++
+     @Override
+     protected IChatBaseComponent getContainerName() {
+         return new ChatMessage("container.brewing");
+diff --git a/src/main/java/net/minecraft/server/TileEntityChest.java b/src/main/java/net/minecraft/server/TileEntityChest.java
+index f6f2743892..010813169a 100644
+--- a/src/main/java/net/minecraft/server/TileEntityChest.java
++++ b/src/main/java/net/minecraft/server/TileEntityChest.java
+@@ -45,6 +45,22 @@ public class TileEntityChest extends TileEntityLootable { // Paper - Remove ITic
+     }
+     // CraftBukkit end
+ 
++    // Conduit start
++    @Override
++    public boolean isPushable() {
++        if (!super.isPushable()) {
++            return false;
++        }
++        // what should happen when a double chest is moved is generally just a mess to deal with in the current
++        // codebase.
++        IBlockData type = this.getBlock();
++        if (type.getBlock() == Blocks.CHEST || type.getBlock() == Blocks.TRAPPED_CHEST) {
++            return type.get(BlockChest.getChestTypeEnum()) == BlockPropertyChestType.SINGLE;
++        }
++        return false;
++    }
++    // Conduit end
++
+     protected TileEntityChest(TileEntityTypes<?> tileentitytypes) {
+         super(tileentitytypes);
+         this.items = NonNullList.a(27, ItemStack.b);
+diff --git a/src/main/java/net/minecraft/server/TileEntityConduit.java b/src/main/java/net/minecraft/server/TileEntityConduit.java
+index ade8301227..94363eac7c 100644
+--- a/src/main/java/net/minecraft/server/TileEntityConduit.java
++++ b/src/main/java/net/minecraft/server/TileEntityConduit.java
+@@ -16,15 +16,32 @@ public class TileEntityConduit extends TileEntity implements ITickable {
+     private static final Block[] b = new Block[]{Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.SEA_LANTERN, Blocks.DARK_PRISMARINE};
+     public int a;
+     private float c;
+-    private boolean g;
++    private boolean g; private final void setActive(boolean value) { this.g = value; } // Conduit - OBFHELPER
+     private boolean h;
+-    private final List<BlockPosition> i;
++    private final List<BlockPosition> i; private final List<BlockPosition> getPositionsActivating() { return this.i; } // Conduit - OBFHELPER
+     @Nullable
+     private EntityLiving target;
+     @Nullable
+     private UUID k;
+     private long l;
+ 
++    // Conduit start - make TE's pushable
++    @Override
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        final TileEntityConduit copy = (TileEntityConduit)super.createCopyForPush(world, oldPos, newPos, blockData);
++
++        // the following states need to be re-calculated
++        copy.getPositionsActivating().clear();
++        copy.setActive(false);
++        copy.target = null;
++        // also set our state because the copy and this share the same activating block list
++        this.setActive(false);
++        this.target = null;
++
++        return copy;
++    }
++    // Conduit end - make TE's pushable
++
+     public TileEntityConduit() {
+         this(TileEntityTypes.CONDUIT);
+     }
+diff --git a/src/main/java/net/minecraft/server/TileEntityFurnace.java b/src/main/java/net/minecraft/server/TileEntityFurnace.java
+index f4f50fb837..b968d33e23 100644
+--- a/src/main/java/net/minecraft/server/TileEntityFurnace.java
++++ b/src/main/java/net/minecraft/server/TileEntityFurnace.java
+@@ -32,14 +32,14 @@ public abstract class TileEntityFurnace extends TileEntityContainer implements I
+     public double cookSpeedMultiplier = 1.0; // Paper - cook speed multiplier API
+     public int cookTime;
+     public int cookTimeTotal;
+-    protected final IContainerProperties b;
++    protected IContainerProperties b; protected final void setContainerProperties(IContainerProperties value) { this.b = value; } // Conduit - OBFHELPER // Conduit - need non-final for `createCopyForPush`
+     private final Object2IntOpenHashMap<MinecraftKey> n;
+     protected final Recipes<? extends RecipeCooking> c;
+ 
+-    protected TileEntityFurnace(TileEntityTypes<?> tileentitytypes, Recipes<? extends RecipeCooking> recipes) {
+-        super(tileentitytypes);
+-        this.items = NonNullList.a(3, ItemStack.b);
+-        this.b = new IContainerProperties() {
++    // Conduit start - pushable TE's
++    protected final IContainerProperties getNewContainerProperties() {
++        // moved from constructor - this should be re-copied if it changes
++        return new IContainerProperties() {
+             @Override
+             public int getProperty(int i) {
+                 switch (i) {
+@@ -79,7 +79,23 @@ public abstract class TileEntityFurnace extends TileEntityContainer implements I
+                 return 4;
+             }
+         };
++    }
++
++    @Override
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        TileEntityFurnace copy = (TileEntityFurnace)super.createCopyForPush(world, oldPos, newPos, blockData);
++
++        copy.setContainerProperties(copy.getNewContainerProperties()); // old properties retains reference to old te
++
++        return copy;
++    }
++    // Conduit end - pushable TE's
++
++    protected TileEntityFurnace(TileEntityTypes<?> tileentitytypes, Recipes<? extends RecipeCooking> recipes) {
++        super(tileentitytypes);
++        this.items = NonNullList.a(3, ItemStack.b);
+         this.n = new Object2IntOpenHashMap();
++        this.b = this.getNewContainerProperties();
+         this.c = recipes;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/TileEntityJukeBox.java b/src/main/java/net/minecraft/server/TileEntityJukeBox.java
+index 33c7dc56da..337df8fdc7 100644
+--- a/src/main/java/net/minecraft/server/TileEntityJukeBox.java
++++ b/src/main/java/net/minecraft/server/TileEntityJukeBox.java
+@@ -4,6 +4,13 @@ public class TileEntityJukeBox extends TileEntity implements Clearable {
+ 
+     private ItemStack a;
+ 
++    // Conduit start - pushable TE's
++    @Override
++    public boolean isPushable() {
++        return false; // disabled due to buggy sound
++    }
++    // Conduit end - pushable TE's
++
+     public TileEntityJukeBox() {
+         super(TileEntityTypes.JUKEBOX);
+         this.a = ItemStack.b;
+diff --git a/src/main/java/net/minecraft/server/TileEntityLectern.java b/src/main/java/net/minecraft/server/TileEntityLectern.java
+index b2ceb6c179..38bf4a0415 100644
+--- a/src/main/java/net/minecraft/server/TileEntityLectern.java
++++ b/src/main/java/net/minecraft/server/TileEntityLectern.java
+@@ -17,7 +17,7 @@ import org.bukkit.inventory.InventoryHolder;
+ public class TileEntityLectern extends TileEntity implements Clearable, ITileInventory, ICommandListener { // CraftBukkit - ICommandListener
+ 
+     // CraftBukkit start - add fields and methods
+-    public final IInventory inventory = new LecternInventory();
++    public IInventory inventory = new LecternInventory(); // Conduit - need non-final for `createCopyForPush`
+     public class LecternInventory implements IInventory {
+ 
+         public List<HumanEntity> transaction = new ArrayList<>();
+@@ -137,29 +137,48 @@ public class TileEntityLectern extends TileEntity implements Clearable, ITileInv
+         @Override
+         public void clear() {}
+     };
+-    private final IContainerProperties containerProperties = new IContainerProperties() {
+-        @Override
+-        public int getProperty(int i) {
+-            return i == 0 ? TileEntityLectern.this.page : 0;
+-        }
++    // Conduit start - pushable TE's
++    private IContainerProperties containerProperties = this.getNewContainerProperties(); // Conduit - need non-final for `createCopyForPush`
++
++    protected final IContainerProperties getNewContainerProperties() {
++        return new IContainerProperties() {
++            @Override
++            public int getProperty(int i) {
++                return i == 0 ? TileEntityLectern.this.page : 0;
++            }
++
++            @Override
++            public void setProperty(int i, int j) {
++                if (i == 0) {
++                    TileEntityLectern.this.setPage(j);
++                }
+ 
+-        @Override
+-        public void setProperty(int i, int j) {
+-            if (i == 0) {
+-                TileEntityLectern.this.setPage(j);
+             }
+ 
+-        }
++            @Override
++            public int a() {
++                return 1;
++            }
++        };
++    }
++    // Conduit end - pushable TE's
+ 
+-        @Override
+-        public int a() {
+-            return 1;
+-        }
+-    };
+     private ItemStack book;
+     private int page;
+     private int maxPage;
+ 
++    // Conduit start - pushable TE's
++    @Override
++    public TileEntity createCopyForPush(WorldServer world, BlockPosition oldPos, BlockPosition newPos, IBlockData blockData) {
++        TileEntityLectern copy = (TileEntityLectern)super.createCopyForPush(world, oldPos, newPos, blockData);
++
++        copy.inventory = copy.new LecternInventory();
++        copy.containerProperties = copy.getNewContainerProperties(); // old properties retains reference to old te
++
++        return copy;
++    }
++    // Conduit end - pushable TE's
++
+     public TileEntityLectern() {
+         super(TileEntityTypes.LECTERN);
+         this.book = ItemStack.b;
+diff --git a/src/main/java/net/minecraft/server/TileEntityPiston.java b/src/main/java/net/minecraft/server/TileEntityPiston.java
+index e7b7e468fc..44c1ffdac0 100644
+--- a/src/main/java/net/minecraft/server/TileEntityPiston.java
++++ b/src/main/java/net/minecraft/server/TileEntityPiston.java
+@@ -5,10 +5,10 @@ import java.util.List;
+ 
+ public class TileEntityPiston extends TileEntity implements ITickable {
+ 
+-    private IBlockData a;
++    private IBlockData a; protected final IBlockData getBlockData() { return this.a; } // Conduit - OBFHELPER
+     private EnumDirection b;
+     private boolean c;
+-    private boolean g;
++    private boolean g; protected final boolean isSource() { return this.g; } // Conduit - OBFHELPER
+     private static final ThreadLocal<EnumDirection> h = ThreadLocal.withInitial(() -> {
+         return null;
+     });
+@@ -16,12 +16,27 @@ public class TileEntityPiston extends TileEntity implements ITickable {
+     private float j;
+     private long k;
+ 
++    // Conduit start - pushable TE's
++    private TileEntity tileEntity;
++
++    @Override
++    public boolean isPushable() {
++        return false; // fuck no.
++    }
++    // Conduit end - pushable TE's
++
+     public TileEntityPiston() {
+         super(TileEntityTypes.PISTON);
+     }
+ 
+     public TileEntityPiston(IBlockData iblockdata, EnumDirection enumdirection, boolean flag, boolean flag1) {
++        // Conduit start - add tileEntity parameter
++        this(iblockdata, enumdirection, flag, flag1, null);
++    }
++    public TileEntityPiston(IBlockData iblockdata, EnumDirection enumdirection, boolean flag, boolean flag1, TileEntity tileEntity) {
+         this();
++        this.tileEntity = tileEntity;
++        // Conduit end - add tileEntity parameter
+         this.a = iblockdata;
+         this.b = enumdirection;
+         this.c = flag;
+@@ -30,7 +45,7 @@ public class TileEntityPiston extends TileEntity implements ITickable {
+ 
+     @Override
+     public NBTTagCompound b() {
+-        return this.save(new NBTTagCompound());
++        return this.save(new NBTTagCompound(), false); // Conduit - clients don't need the copied tile entity.
+     }
+ 
+     public boolean d() {
+@@ -238,7 +253,25 @@ public class TileEntityPiston extends TileEntity implements ITickable {
+                     iblockdata = Block.b(this.a, (GeneratorAccess) this.world, this.position);
+                 }
+ 
+-                this.world.setTypeAndData(this.position, iblockdata, 3);
++                // Conduit start - pushable TE's
++                if ((iblockdata.isAir() && !this.isSource()) && !this.getBlockData().isAir()) {
++                    // if the block can't exist at the location anymore, we need to fire drops for it, as
++                    // setTypeAndData wont.
++
++                    // careful - the previous pos is moving_piston, which wont fire drops. So we're safe from dupes.
++                    // but the setAir should be before the drop.
++                    this.world.setAir(this.position, false);
++                    Block.dropItems(this.getBlockData(), this.world, this.position, null, null, ItemStack.NULL_ITEM);
++                } else {
++                    // need to set to air before else the setTypeAndData call will create a new TE and override
++                    // the old one
++                    this.world.setTypeAndDataRaw(this.position, Blocks.AIR.getBlockData(), null);
++                    this.world.setTypeAndData(this.position, iblockdata, 3, iblockdata.getBlock() == this.getBlockData().getBlock() ? this.tileEntity : null);
++                }
++                if (this.tileEntity != null && this.world.getType(this.position).getBlock() == this.getBlockData().getBlock()) {
++                    this.tileEntity.onPostPush();
++                }
++                // Conduit end - pushable TE's
+                 this.world.a(this.position, iblockdata.getBlock(), this.position);
+             }
+         }
+@@ -263,7 +296,12 @@ public class TileEntityPiston extends TileEntity implements ITickable {
+                         iblockdata = (IBlockData) iblockdata.set(BlockProperties.C, false);
+                     }
+ 
+-                    this.world.setTypeAndData(this.position, iblockdata, 67);
++                    // Conduit start - pushable TE's
++                    this.world.setTypeAndData(this.position, iblockdata, 67, this.tileEntity);
++                    if (this.tileEntity != null && this.world.getType(this.position).getBlock() == this.getBlockData().getBlock()) {
++                        this.tileEntity.onPostPush();
++                    }
++                    // Conduit end - pushable TE's
+                     this.world.a(this.position, iblockdata.getBlock(), this.position);
+                 }
+             }
+@@ -290,16 +328,34 @@ public class TileEntityPiston extends TileEntity implements ITickable {
+         this.j = this.i;
+         this.c = nbttagcompound.getBoolean("extending");
+         this.g = nbttagcompound.getBoolean("source");
++        // Conduit start - pushable TE's
++        if (nbttagcompound.hasKey("Conduit.tileEntity")) {
++            NBTTagCompound compound = nbttagcompound.getCompound("Conduit.tileEntity");
++            if (!compound.isEmpty()) {
++                this.tileEntity = TileEntity.create(this.getBlockData(), compound);
++            }
++        }
++        // Conduit end - pushable TE's
+     }
+ 
+     @Override
+     public NBTTagCompound save(NBTTagCompound nbttagcompound) {
++        // Conduit start - add saveTile param
++        return this.save(nbttagcompound, true);
++    }
++    public NBTTagCompound save(NBTTagCompound nbttagcompound, boolean saveTile) {
++        // Conduit end - add saveTile param
+         super.save(nbttagcompound);
+         nbttagcompound.set("blockState", GameProfileSerializer.a(this.a));
+         nbttagcompound.setInt("facing", this.b.c());
+         nbttagcompound.setFloat("progress", this.j);
+         nbttagcompound.setBoolean("extending", this.c);
+         nbttagcompound.setBoolean("source", this.g);
++        // Conduit start - pushable TE's
++        if (saveTile && this.tileEntity != null) {
++            nbttagcompound.set("Conduit.tileEntity", this.tileEntity.save(new NBTTagCompound()));
++        }
++        // Conduit end - pushable TE's
+         return nbttagcompound;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 1245892b23..ff5a6cdc49 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -400,13 +400,32 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+         }
+     }
+ 
++    // Conduit start
++    // Does not affect TE. This simply just a raw set type - runs no logic.
++    final void setTypeAndDataRaw(final BlockPosition pos, final IBlockData blockData, final TileEntity tileEntity) {
++        this.getChunkAt(pos.getX() >> 4, pos.getZ() >> 4).setTypeAndDataRaw(pos, blockData);
++        if (tileEntity == null) {
++            this.removeTileEntity(pos);
++        } else {
++            this.setTileEntity(pos, tileEntity);
++        }
++        ((WorldServer)this).getChunkProvider().flagDirty(pos);
++    }
++    // Conduit end
++
+     @Override
+     public boolean setTypeAndData(BlockPosition blockposition, IBlockData iblockdata, int i) {
+-        return this.a(blockposition, iblockdata, i, 512);
++        return this.setTypeAndData(blockposition, iblockdata, i, null); // Conduit end - add tileEntity parameter
++    }
++    public boolean setTypeAndData(BlockPosition blockposition, IBlockData iblockdata, int i, TileEntity tileEntity) {
++        return this.setTypeAndData(blockposition, iblockdata, i, 512, tileEntity); // Conduit end - add tileEntity parameter
+     }
+ 
+     @Override
+     public boolean a(BlockPosition blockposition, IBlockData iblockdata, int i, int j) {
++        return this.setTypeAndData(blockposition, iblockdata, i, j, null); // Conduit start - add tileEntity parameter
++    }
++    public boolean setTypeAndData(BlockPosition blockposition, IBlockData iblockdata, int i, int j, TileEntity tileEntity) { // Conduit end - add tileEntity parameter
+         // CraftBukkit start - tree generation
+         if (this.captureTreeGeneration) {
+             // Paper start
+@@ -439,7 +458,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+             }
+             // CraftBukkit end
+ 
+-            IBlockData iblockdata1 = chunk.setType(blockposition, iblockdata, (i & 64) != 0, (i & 1024) == 0); // CraftBukkit custom NO_PLACE flag
++            IBlockData iblockdata1 = chunk.setType(blockposition, iblockdata, (i & 64) != 0, (i & 1024) == 0, tileEntity); // CraftBukkit custom NO_PLACE flag // Conduit - add tileEntity parameter
+             this.chunkPacketBlockController.onBlockChange(this, blockposition, iblockdata, iblockdata1, i); // Paper - Anti-Xray
+ 
+             if (iblockdata1 == null) {
+@@ -1039,7 +1058,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
+                     while (iterator.hasNext()) {
+                         TileEntity tileentity1 = (TileEntity) iterator.next();
+ 
+-                        if (tileentity1.getPosition().equals(blockposition)) {
++                        if (tileentity != tileentity1 && tileentity1.getPosition().equals(blockposition)) { // Conduit - don't remove us if we double set...
+                             tileentity1.an_();
+                             iterator.remove();
+                         }
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+index 8b2211c0eb..65c78873fe 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+@@ -112,4 +112,9 @@ public final class ConduitConfig {
+     private static void serverModName() {
+         serverModName = getString("settings.server-mod-name", serverModName);
+     }
++
++    public static boolean pistonsCanPushTileEntities;
++    private static void pistonsCanPushTileEntities() {
++        pistonsCanPushTileEntities = getBoolean("settings.pistons-can-push-tile-entities", false);
++    }
+ }
+-- 
+2.24.1.windows.2
+
