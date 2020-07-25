@@ -1,0 +1,46 @@
+From 4c696ae4a46813bb890c78449bb97284f3dd7cf6 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 25 Jul 2020 10:28:01 +0100
+Subject: [PATCH] Use display name in vanilla player related chat messages
+
+Badly named. Several player related chat messages (e.g. session and
+deaths) use a player's profile name, even when their nickname is set.
+This patch forces these messages to use their display name instead.
+
+Note: it does break the join with new name message.
+---
+ src/main/java/net/minecraft/server/EntityHuman.java  | 2 +-
+ src/main/java/net/minecraft/server/EntityPlayer.java | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index eacd9394ae..55b3b854a2 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -1871,7 +1871,7 @@ public abstract class EntityHuman extends EntityLiving {
+         return (new ChatComponentText("")).addSibling(this.getDisplayName()).c(" (").c(this.bQ.getId().toString()).c(")");
+     }
+ 
+-    private IChatMutableComponent a(IChatMutableComponent ichatmutablecomponent) {
++    protected IChatMutableComponent a(IChatMutableComponent ichatmutablecomponent) { // Conduit private -> protected
+         String s = this.getProfile().getName();
+ 
+         return ichatmutablecomponent.format((chatmodifier) -> {
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index b98bc1a37e..67a17da171 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -2183,5 +2183,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+         ((WorldServer) world).everyoneSleeping();
+     }
++
++    @Override
++    public IChatBaseComponent getScoreboardDisplayName() {
++        return this.a(ScoreboardTeam.a(this.getScoreboardTeam(), new ChatComponentText(displayName)));
++    }
+     // Conduit end
+ }
+-- 
+2.24.1.windows.2
+
