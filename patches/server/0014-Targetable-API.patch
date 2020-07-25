@@ -1,4 +1,4 @@
-From e5d5ea9566d84e03788cf3c415b2bb70b871135d Mon Sep 17 00:00:00 2001
+From c411132ef7ecbbe42f9bcc567bdd09fdefa13650 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 4 Jul 2020 21:14:12 +0100
 Subject: [PATCH] Targetable API
@@ -11,10 +11,10 @@ Think "soft spectator mode".
  3 files changed, 23 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 60248f3a5c..a0715893a6 100644
+index 39bcc1838d..d3483d114e 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -3578,4 +3578,16 @@ public abstract class EntityLiving extends Entity {
+@@ -3575,4 +3575,16 @@ public abstract class EntityLiving extends Entity {
          this.shieldBlockingDelay = shieldBlockingDelay;
      }
      // Paper end

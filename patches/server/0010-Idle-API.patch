@@ -1,4 +1,4 @@
-From 1002ad5700e2bf49f07a6422f4eb16076fe4723e Mon Sep 17 00:00:00 2001
+From e14192a6ef44d3fdb3a348b1a0d3c3c19eaffcbc Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -19,7 +19,7 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  11 files changed, 120 insertions(+), 29 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index ef980f9859..cc6280375e 100644
+index 3a5a9aba11..8f70e41821 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -763,7 +763,7 @@ public class ChunkProviderServer extends IChunkProvider {
@@ -63,7 +63,7 @@ index 2cada09ced..eacd9394ae 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index be40a250a9..e33ea620c2 100644
+index 63644d5e7e..b98bc1a37e 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1752,6 +1752,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -235,7 +235,7 @@ index 95d57c6de9..55b42ceae9 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 5ee9d3009e..53720d2e89 100644
+index d048ee2313..776f5b9a4a 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -425,7 +425,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
@@ -277,10 +277,10 @@ index 83ab410b89..834780d671 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index b832ece494..0f904dbdb1 100644
+index 72cd52fd7f..845998e20c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2149,4 +2149,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2155,4 +2155,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          return spigot;
      }
      // Spigot end

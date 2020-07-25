@@ -1,4 +1,4 @@
-From 0a76d7e5f548481eff3d6e48c4c10d8e98537284 Mon Sep 17 00:00:00 2001
+From fdb16a384ce006e75df94f5c92a4964b00915300 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -38,7 +38,7 @@ index 8b2755a3b9..4bf98b5978 100644
          this.setAllowFlight(dedicatedserverproperties.allowFlight);
          this.setResourcePack(dedicatedserverproperties.resourcePack, this.aY());
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index b598c48692..036777ab64 100644
+index 5f81997db7..1245892b23 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -94,6 +94,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -317,7 +317,7 @@ index 0000000000..f22c4ae2f1
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d8103ab0d5..b09c49a166 100644
+index 6282a05ae8..ea9af8fe22 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -848,6 +848,7 @@ public final class CraftServer implements Server {
@@ -344,7 +344,7 @@ index d8103ab0d5..b09c49a166 100644
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
          ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2231,6 +2234,13 @@ public final class CraftServer implements Server {
+@@ -2238,6 +2241,13 @@ public final class CraftServer implements Server {
              return com.destroystokyo.paper.PaperConfig.config;
          }
  
@@ -359,7 +359,7 @@ index d8103ab0d5..b09c49a166 100644
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index bac292e6d8..edd4a9eaa2 100644
+index 9dd994f8b1..85bcda2e35 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
