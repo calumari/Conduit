@@ -1,4 +1,4 @@
-From a5aaf29fef9da595db34373b3b1a3849a9762b78 Mon Sep 17 00:00:00 2001
+From 73213b20e0168043360983bf601e49c913dbaa07 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:42:46 +0100
 Subject: [PATCH] Conduit branding
@@ -10,10 +10,10 @@ Subject: [PATCH] Conduit branding
  3 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 26f230a801..73a5730d5a 100644
+index 67a6fc68c6..020268c143 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1446,7 +1446,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1447,7 +1447,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -36,7 +36,7 @@ index c2ba92acbc..8b2211c0eb 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b09c49a166..44d23f214d 100644
+index ea9af8fe22..cf1c1c5ddd 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
@@ -49,5 +49,5 @@ index b09c49a166..44d23f214d 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

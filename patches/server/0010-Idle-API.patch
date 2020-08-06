@@ -1,4 +1,4 @@
-From e14192a6ef44d3fdb3a348b1a0d3c3c19eaffcbc Mon Sep 17 00:00:00 2001
+From 753729860700c9983363db8b2d3436d59adef164 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -209,7 +209,7 @@ index a52dd0c021..b9ac5f8bd6 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 95d57c6de9..55b42ceae9 100644
+index 84b9c31cc1..f8fff29882 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -230,10 +230,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
@@ -235,7 +235,7 @@ index 95d57c6de9..55b42ceae9 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index d048ee2313..776f5b9a4a 100644
+index 63c1190729..4e94de264f 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -425,7 +425,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
@@ -247,7 +247,7 @@ index d048ee2313..776f5b9a4a 100644
          })) {
              // CraftBukkit start
              long l = this.worldData.getDayTime() + 24000L;
-@@ -744,7 +744,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+@@ -746,7 +746,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
              while (iterator.hasNext()) {
                  EntityPlayer entityplayer = (EntityPlayer) iterator.next();
  
@@ -310,5 +310,5 @@ index f78e44e05f..828621c857 100644
              ActivationType.MISC.boundingBox = player.getBoundingBox().grow( miscActivationRange, 256, miscActivationRange );
              ActivationType.RAIDER.boundingBox = player.getBoundingBox().grow( raiderActivationRange, 256, raiderActivationRange );
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

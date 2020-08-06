@@ -1,0 +1,29 @@
+From 66b5a030ec81a60963ff4d153c7f490f4e761a2e Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 6 Aug 2020 04:22:38 +0100
+Subject: [PATCH] EAR API
+
+---
+ src/main/java/org/bukkit/entity/Entity.java | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index 7808ade92..85a8ca569 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -695,4 +695,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+      */
+     public boolean isInLava();
+     // Paper end
++
++    // Conduit start
++    long getActivatedTick();
++
++    boolean isTemporarilyActive();
++
++    long getLastActivatedTick();
++    // Conduit end
+ }
+-- 
+2.28.0.windows.1
+

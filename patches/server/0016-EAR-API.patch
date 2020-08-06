@@ -1,0 +1,68 @@
+From d5d1a60c16caaa6d4fb8c6ac251b2bd9f231def5 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 6 Aug 2020 04:22:34 +0100
+Subject: [PATCH] EAR API
+
+---
+ src/main/java/net/minecraft/server/Entity.java  |  1 +
+ .../java/net/minecraft/server/WorldServer.java  |  5 +++++
+ .../bukkit/craftbukkit/entity/CraftEntity.java  | 17 +++++++++++++++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 4de5dc4f2c..e726dc3808 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -199,6 +199,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+     public boolean spawnedViaMobSpawner; // Paper - Yes this name is similar to above, upstream took the better one
+     public boolean fromNetherPortal; // Paper
+     protected int numCollisions = 0; // Paper
++    public long lastActivatedTick = Long.MAX_VALUE; // Conduit
+     public void inactiveTick() { }
+     // Spigot end
+     public boolean shouldBeRemoved; // Paper
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 4e94de264f..70c14c1f8b 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -816,6 +816,11 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+                 return;
+             }
+             // Spigot end
++            // Conduit start
++            if (!entity.isTemporarilyActive) {
++                entity.lastActivatedTick = MinecraftServer.currentTick;
++            }
++            // Conduit end
+             TimingHistory.activatedEntityTicks++; // Paper - timings
+             entity.tickTimer.startTiming(); // Spigot
+             try { // Paper - timings
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index d1df4e5799..80bc3f6b7e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1116,4 +1116,21 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         return getHandle().isInLava();
+     }
+     // Paper end
++
++    // Conduit start
++    @Override
++    public long getActivatedTick() {
++        return getHandle().activatedTick;
++    }
++
++    @Override
++    public boolean isTemporarilyActive() {
++        return getHandle().isTemporarilyActive;
++    }
++
++    @Override
++    public long getLastActivatedTick() {
++        return getHandle().lastActivatedTick;
++    }
++    // Conduit end
+ }
+-- 
+2.28.0.windows.1
+
