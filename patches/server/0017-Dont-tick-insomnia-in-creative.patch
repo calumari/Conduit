@@ -1,0 +1,53 @@
+From 8e8bf012e63746fb9c22428c147ea9114e0b26b7 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Fri, 7 Aug 2020 08:19:19 +0100
+Subject: [PATCH] Dont tick insomnia in creative
+
+---
+ src/main/java/net/minecraft/server/EntityHuman.java          | 2 +-
+ src/main/java/net/minecraft/server/EnumGamemode.java         | 1 +
+ .../socialhangover/conduit/config/ConduitWorldConfig.java    | 5 +++++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index 55b3b854a2..72679cec12 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -171,7 +171,7 @@ public abstract class EntityHuman extends EntityLiving {
+                 this.a(StatisticList.SNEAK_TIME);
+             }
+ 
+-            if (!this.isSleeping()) {
++            if (!this.isSleeping() && (world.conduitConfig.tickInsomniaInCreative || !(this instanceof EntityPlayer) || ((EntityPlayer) this).playerInteractManager.getGameMode().isSurvival())) { // Conduit
+                 this.a(StatisticList.TIME_SINCE_REST);
+             }
+         }
+diff --git a/src/main/java/net/minecraft/server/EnumGamemode.java b/src/main/java/net/minecraft/server/EnumGamemode.java
+index c93f8a15e6..4906d2db40 100644
+--- a/src/main/java/net/minecraft/server/EnumGamemode.java
++++ b/src/main/java/net/minecraft/server/EnumGamemode.java
+@@ -52,6 +52,7 @@ public enum EnumGamemode {
+         return this == EnumGamemode.CREATIVE;
+     }
+ 
++    public boolean isSurvival() { return f(); } // Conduit - OBFHELPER
+     public boolean f() {
+         return this == EnumGamemode.SURVIVAL || this == EnumGamemode.ADVENTURE;
+     }
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+index 41868f4d0f..10bf2e8f39 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
+@@ -100,4 +100,9 @@ public class ConduitWorldConfig {
+         waterAmbientSpawn = getInt("spawn-limits.water-ambient", -1);
+         ambientSpawn = getInt("spawn-limits.ambient", -1);
+     }
++
++    public boolean tickInsomniaInCreative;
++    private void sleepSettings() {
++        tickInsomniaInCreative = getBoolean("sleep.tick-insomnia-in-creative", false);
++    }
+ }
+-- 
+2.28.0.windows.1
+
