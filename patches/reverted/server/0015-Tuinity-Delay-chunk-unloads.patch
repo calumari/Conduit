@@ -1,4 +1,4 @@
-From cb21612c76b6c2644458edd653ac4b392983b2b7 Mon Sep 17 00:00:00 2001
+From 11795d6a1c42fc6a641618139855db85caa61517 Mon Sep 17 00:00:00 2001
 From: Spottedleaf <Spottedleaf@users.noreply.github.com>
 Date: Fri, 25 Oct 2019 02:11:30 -0700
 Subject: [PATCH] Tuinity Delay chunk unloads
@@ -26,7 +26,7 @@ loads.
  5 files changed, 84 insertions(+), 30 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkMapDistance.java b/src/main/java/net/minecraft/server/ChunkMapDistance.java
-index 893c0085bc..ad12dc6908 100644
+index eaed04f786..69a0853421 100644
 --- a/src/main/java/net/minecraft/server/ChunkMapDistance.java
 +++ b/src/main/java/net/minecraft/server/ChunkMapDistance.java
 @@ -31,7 +31,7 @@ public abstract class ChunkMapDistance {
@@ -238,17 +238,17 @@ index 8b2211c0eb..dc84b438cf 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index ae5055554b..01419e648d 100644
+index 9c4ebc7177..3c1010271f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -499,6 +499,7 @@ public class CraftWorld implements World {
          org.spigotmc.AsyncCatcher.catchOp("chunk unload"); // Spigot
          if (isChunkLoaded(x, z)) {
              world.getChunkProvider().removeTicket(TicketType.PLUGIN, new ChunkCoordIntPair(x, z), 0, Unit.INSTANCE); // Paper
-+            ((ChunkMapDistance)world.getChunkProvider().playerChunkMap.getChunkMapDistanceManager()).removeTickets(ChunkCoordIntPair.pair(x, z), TicketType.DELAYED_UNLOAD); // Conduit - delay chunk unloads - let plugins override
++            ((ChunkMapDistance)world.getChunkProvider().playerChunkMap.chunkDistanceManager).removeTickets(ChunkCoordIntPair.pair(x, z), TicketType.DELAYED_UNLOAD); // Conduit - delay chunk unloads - let plugins override
          }
  
          return true;
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 
