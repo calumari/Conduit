@@ -1,12 +1,12 @@
-From a1cca5b0559ae64875fc6bd4f1c9fbdd5354f76d Mon Sep 17 00:00:00 2001
+From e058964b6a7c7aa5dfae3e6ac44ef0b0b0b4653e Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 7 Aug 2020 20:12:08 +0100
 Subject: [PATCH] Squid EAR immunity
 
 ---
- .../conduit/config/ConduitWorldConfig.java               | 5 +++++
- src/main/java/org/spigotmc/ActivationRange.java          | 9 +--------
- 2 files changed, 6 insertions(+), 8 deletions(-)
+ .../socialhangover/conduit/config/ConduitWorldConfig.java    | 5 +++++
+ src/main/java/org/spigotmc/ActivationRange.java              | 1 +
+ 2 files changed, 6 insertions(+)
 
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 index 19e01912aa..2d4125840b 100644
@@ -23,41 +23,10 @@ index 19e01912aa..2d4125840b 100644
 +    }
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 625cf32384..ca6dda4845 100644
+index 625cf32384..f18abe68a2 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
-@@ -1,8 +1,5 @@
- package org.spigotmc;
- 
--import java.util.Collection;
--import java.util.List;
--
- import net.minecraft.server.Activity;
- import net.minecraft.server.AxisAlignedBB;
- import net.minecraft.server.BehaviorController;
-@@ -27,21 +24,16 @@ import net.minecraft.server.EntityFlying;
- import net.minecraft.server.EntityHuman;
- import net.minecraft.server.EntityLightning;
- import net.minecraft.server.EntityLiving;
--import net.minecraft.server.EntityMonster;
- import net.minecraft.server.EntityPillager;
--import net.minecraft.server.EntityPlayer;
- import net.minecraft.server.EntityProjectile;
- import net.minecraft.server.EntityRaider;
- import net.minecraft.server.EntitySheep;
--import net.minecraft.server.EntitySlice;
--import net.minecraft.server.EntitySlime;
- import net.minecraft.server.EntityTNTPrimed;
- import net.minecraft.server.EntityThrownTrident;
- import net.minecraft.server.EntityVillager;
- import net.minecraft.server.EntityWither;
- import net.minecraft.server.IMonster;
- import net.minecraft.server.MathHelper;
--import net.minecraft.server.MemoryModuleType;
- import net.minecraft.server.MinecraftServer;
- import net.minecraft.server.World;
- import co.aikar.timings.MinecraftTimings;
-@@ -379,6 +371,7 @@ public class ActivationRange
+@@ -379,6 +379,7 @@ public class ActivationRange
      public static boolean checkIfActive(Entity entity)
      {
          if (entity.world.conduitConfig.tamableImmuneToEAR && entity instanceof net.minecraft.server.EntityTameableAnimal && ((net.minecraft.server.EntityTameableAnimal) entity).shouldBeActive()) return true; // Conduit
