@@ -1,4 +1,4 @@
-From d5a08ea4252885b507f557ffdf54d2824ab4dc08 Mon Sep 17 00:00:00 2001
+From e2caa4785670263260bd3cd5e2d92c7d3cf5795e Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:01:46 -0500
 Subject: [PATCH] Purpur Players should not cram to death
@@ -9,10 +9,10 @@ Subject: [PATCH] Purpur Players should not cram to death
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index eeed8edfd..9e10a1b31 100644
+index c72cfd2bdf..b1cbc6715d 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1234,7 +1234,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1235,7 +1235,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      @Override
      public boolean isInvulnerable(DamageSource damagesource) {
@@ -22,7 +22,7 @@ index eeed8edfd..9e10a1b31 100644
  
      @Override
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
-index b2f33bcee..83ab410b8 100644
+index b2f33bcee8..83ab410b89 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 @@ -52,8 +52,10 @@ public class ConduitWorldConfig {
@@ -37,5 +37,5 @@ index b2f33bcee..83ab410b8 100644
  
      public boolean allowLeashVillager;
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 
