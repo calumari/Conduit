@@ -1,4 +1,4 @@
-From ef6ad060a37ae1d4f1a715d0dd3a62ace975e286 Mon Sep 17 00:00:00 2001
+From ece810be5f3c63957fbaed64a545a468023a1a7a Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 31 Dec 2012 01:25:46 -0500
 Subject: [PATCH] EMC AnvilEvent
@@ -9,7 +9,7 @@ Subject: [PATCH] EMC AnvilEvent
  2 files changed, 18 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/ContainerAnvil.java b/src/main/java/net/minecraft/server/ContainerAnvil.java
-index 24631b2bcb..946ef7a6ea 100644
+index fc2038df89..0bf0ec2fd3 100644
 --- a/src/main/java/net/minecraft/server/ContainerAnvil.java
 +++ b/src/main/java/net/minecraft/server/ContainerAnvil.java
 @@ -9,6 +9,10 @@ import org.apache.logging.log4j.Logger;
@@ -63,5 +63,5 @@ index e26b856934..a139eb3fad 100644
          boolean flag = i != this.a;
  
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

@@ -1,0 +1,25 @@
+From 9daa62e28d685b0324f2634a709dd3762e17519a Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Tue, 18 Aug 2020 23:48:57 +0100
+Subject: [PATCH] Purpur Use configured height for nether surface builders
+
+---
+ .../net/minecraft/server/WorldGenSurfaceNetherAbstract.java     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
+index 462f0b2bae..73161f46de 100644
+--- a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
++++ b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
+@@ -35,7 +35,7 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
+             return ((NoiseGeneratorOctaves) entry.getValue()).a((double) i, (double) l, (double) j);
+         })).get()).getKey();
+         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
+-        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, 128, l1));
++        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, k, l1));
+ 
+         for (int k2 = k; k2 >= 0; --k2) { // Paper - fix MC-187716 - use configured height
+             blockposition_mutableblockposition.d(k1, k2, l1);
+-- 
+2.28.0.windows.1
+

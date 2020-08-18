@@ -1,4 +1,4 @@
-From f3d01fb79f79274f5af05d7feae1f652d55586e9 Mon Sep 17 00:00:00 2001
+From cd2119fb4672301e46950b3171b8aeb9b46fedcf Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 25 Jul 2020 10:28:01 +0100
 Subject: [PATCH] Use display name in vanilla player related chat messages

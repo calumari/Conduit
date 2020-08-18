@@ -1,0 +1,53 @@
+From 940532f5baba6a608ec1d46dbdf3c3be102946ec Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Mon, 17 Aug 2020 17:34:33 -0500
+Subject: [PATCH] Purpur Crying obsidian valid for portal frames
+
+---
+ src/main/java/net/minecraft/server/BlockBase.java            | 1 +
+ src/main/java/net/minecraft/server/BlockPortalShape.java     | 2 +-
+ .../net/socialhangover/conduit/config/ConduitConfig.java     | 5 +++++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/BlockBase.java b/src/main/java/net/minecraft/server/BlockBase.java
+index 440c959b1c..56dd00b946 100644
+--- a/src/main/java/net/minecraft/server/BlockBase.java
++++ b/src/main/java/net/minecraft/server/BlockBase.java
+@@ -617,6 +617,7 @@ public abstract class BlockBase {
+             return this.getBlock().a(tag) && predicate.test(this);
+         }
+ 
++        public boolean equals(Block block) { return a(block); } // Conduit - OBFHELPER
+         public boolean a(Block block) {
+             return this.getBlock().a(block);
+         }
+diff --git a/src/main/java/net/minecraft/server/BlockPortalShape.java b/src/main/java/net/minecraft/server/BlockPortalShape.java
+index b7635ab162..dc866d27c0 100644
+--- a/src/main/java/net/minecraft/server/BlockPortalShape.java
++++ b/src/main/java/net/minecraft/server/BlockPortalShape.java
+@@ -14,7 +14,7 @@ import org.bukkit.event.world.PortalCreateEvent;
+ public class BlockPortalShape {
+ 
+     private static final BlockBase.e a = (iblockdata, iblockaccess, blockposition) -> {
+-        return iblockdata.a(Blocks.OBSIDIAN);
++        return iblockdata.equals(Blocks.OBSIDIAN) || (ConduitConfig.cryingObsidianValidForPortalFrame && iblockdata.equals(Blocks.CRYING_OBSIDIAN));
+     };
+     private final GeneratorAccess b;
+     private final EnumDirection.EnumAxis c;
+diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+index 8b2211c0eb..275f87c594 100644
+--- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
++++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
+@@ -112,4 +112,9 @@ public final class ConduitConfig {
+     private static void serverModName() {
+         serverModName = getString("settings.server-mod-name", serverModName);
+     }
++
++    public static boolean cryingObsidianValidForPortalFrame = false;
++    public static void blockSettings() {
++        cryingObsidianValidForPortalFrame = getBoolean("settings.blocks.crying-obsidian.valid-for-portal-frame", cryingObsidianValidForPortalFrame);
++    }
+ }
+-- 
+2.28.0.windows.1
+

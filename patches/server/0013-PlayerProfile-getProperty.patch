@@ -1,4 +1,4 @@
-From c5fc548ca569427cae329875f631b35a60e6863b Mon Sep 17 00:00:00 2001
+From 4e58230f326eb090d2b04498e7580baa0aa3565a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Thu, 9 Jul 2020 15:59:50 +0100
 Subject: [PATCH] PlayerProfile getProperty
@@ -8,7 +8,7 @@ Subject: [PATCH] PlayerProfile getProperty
  1 file changed, 8 insertions(+)
 
 diff --git a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
-index 293b73f474..7c774cb6a6 100644
+index 2751ce7f15..2001f45d46 100644
 --- a/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
 +++ b/src/main/java/com/destroystokyo/paper/profile/CraftPlayerProfile.java
 @@ -43,6 +43,14 @@ public class CraftPlayerProfile implements PlayerProfile {
@@ -27,5 +27,5 @@ index 293b73f474..7c774cb6a6 100644
      public void setProperty(ProfileProperty property) {
          String name = property.getName();
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

@@ -1,4 +1,4 @@
-From f28fddbc282e5e817780ab4cf57a1947c659ed60 Mon Sep 17 00:00:00 2001
+From bb86485bb744b0e913ea3a80c86362f4e18bb999 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:06:20 -0500
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule

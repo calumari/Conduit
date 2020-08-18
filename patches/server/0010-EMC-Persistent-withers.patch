@@ -1,4 +1,4 @@
-From 0a9bfa804b38dc2be9a07cc2a4ebf0f1ff33411c Mon Sep 17 00:00:00 2001
+From 2b0b2e63028e6cd43e8ae5d5a9150854ad1db69b Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Thu, 6 Nov 2014 21:36:14 -0500
 Subject: [PATCH] EMC Persistent withers
@@ -9,7 +9,7 @@ Subject: [PATCH] EMC Persistent withers
  2 files changed, 7 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 1074995e8c..6b13757546 100644
+index 1511212cbf..12d3c16928 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
 @@ -533,6 +533,8 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
@@ -36,5 +36,5 @@ index 834780d671..5d322d729a 100644
 +    }
  }
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 
