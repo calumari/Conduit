@@ -1,4 +1,4 @@
-From 940532f5baba6a608ec1d46dbdf3c3be102946ec Mon Sep 17 00:00:00 2001
+From d6e16b45ea4d67586efb4a734d58adec3c85a6ba Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <Blake.Galbreath@GMail.com>
 Date: Mon, 17 Aug 2020 17:34:33 -0500
 Subject: [PATCH] Purpur Crying obsidian valid for portal frames
@@ -22,7 +22,7 @@ index 440c959b1c..56dd00b946 100644
              return this.getBlock().a(block);
          }
 diff --git a/src/main/java/net/minecraft/server/BlockPortalShape.java b/src/main/java/net/minecraft/server/BlockPortalShape.java
-index b7635ab162..dc866d27c0 100644
+index b7635ab162..3fa9f819ca 100644
 --- a/src/main/java/net/minecraft/server/BlockPortalShape.java
 +++ b/src/main/java/net/minecraft/server/BlockPortalShape.java
 @@ -14,7 +14,7 @@ import org.bukkit.event.world.PortalCreateEvent;
@@ -30,7 +30,7 @@ index b7635ab162..dc866d27c0 100644
  
      private static final BlockBase.e a = (iblockdata, iblockaccess, blockposition) -> {
 -        return iblockdata.a(Blocks.OBSIDIAN);
-+        return iblockdata.equals(Blocks.OBSIDIAN) || (ConduitConfig.cryingObsidianValidForPortalFrame && iblockdata.equals(Blocks.CRYING_OBSIDIAN));
++        return iblockdata.equals(Blocks.OBSIDIAN) || (net.socialhangover.conduit.config.ConduitConfig.cryingObsidianValidForPortalFrame && iblockdata.equals(Blocks.CRYING_OBSIDIAN));
      };
      private final GeneratorAccess b;
      private final EnumDirection.EnumAxis c;
