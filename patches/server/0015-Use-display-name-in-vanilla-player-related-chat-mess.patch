@@ -1,4 +1,4 @@
-From bc173219cb3ec0a50516650ff7ec72b69466c778 Mon Sep 17 00:00:00 2001
+From f3d01fb79f79274f5af05d7feae1f652d55586e9 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 25 Jul 2020 10:28:01 +0100
 Subject: [PATCH] Use display name in vanilla player related chat messages
@@ -9,25 +9,24 @@ This patch forces these messages to use their display name instead.
 
 Note: it does break the join with new name message.
 ---
- src/main/java/net/minecraft/server/EntityHuman.java  | 2 +-
+ src/main/java/net/minecraft/server/EntityHuman.java  | 1 +
  src/main/java/net/minecraft/server/EntityPlayer.java | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ 2 files changed, 6 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index 2355ef8384..de992869d5 100644
+index 2355ef8384..803d382a16 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -1870,7 +1870,7 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -1870,6 +1870,7 @@ public abstract class EntityHuman extends EntityLiving {
          return this.a(ichatmutablecomponent);
      }
  
--    private IChatMutableComponent a(IChatMutableComponent ichatmutablecomponent) {
-+    protected IChatMutableComponent a(IChatMutableComponent ichatmutablecomponent) { // Conduit private -> protected
++    protected IChatMutableComponent decorateDisplayNameComponent(IChatMutableComponent ichatmutablecomponent) { return a(ichatmutablecomponent); } // Conduit OBFHELPER
+     private IChatMutableComponent a(IChatMutableComponent ichatmutablecomponent) {
          String s = this.getProfile().getName();
  
-         return ichatmutablecomponent.format((chatmodifier) -> {
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 3c2961e173..e90293e374 100644
+index 3c2961e173..b9c20d11f4 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -2155,5 +2155,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -37,7 +36,7 @@ index 3c2961e173..e90293e374 100644
 +
 +    @Override
 +    public IChatBaseComponent getScoreboardDisplayName() {
-+        return this.a(ScoreboardTeam.a(this.getScoreboardTeam(), new ChatComponentText(displayName)));
++        return decorateDisplayNameComponent(ScoreboardTeam.a(this.getScoreboardTeam(), new ChatComponentText(displayName)));
 +    }
      // Conduit end
  }
