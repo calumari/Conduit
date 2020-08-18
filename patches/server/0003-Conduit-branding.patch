@@ -1,4 +1,4 @@
-From 0366147f51cbdd2c08ca036e165b0ef9a7381827 Mon Sep 17 00:00:00 2001
+From 11e5e5e68cc1faa27685265a3e3fbe0bd593b831 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:42:46 +0100
 Subject: [PATCH] Conduit branding
@@ -10,10 +10,10 @@ Subject: [PATCH] Conduit branding
  3 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0defaec8a8..542164e7af 100644
+index bbe793ca36..95bc7831b2 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1453,7 +1453,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1451,7 +1451,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -36,10 +36,10 @@ index c2ba92acbc..8b2211c0eb 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index ea9af8fe22..cf1c1c5ddd 100644
+index a25967d135..4eba8f4aad 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
+@@ -230,7 +230,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {

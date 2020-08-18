@@ -1,4 +1,4 @@
-From 33b5271ae52766d8c6e161a3b14eeb96f9b2a9b0 Mon Sep 17 00:00:00 2001
+From f28fddbc282e5e817780ab4cf57a1947c659ed60 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 Jul 2019 18:06:20 -0500
 Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
@@ -9,15 +9,15 @@ Subject: [PATCH] Purpur Climbing should not bypass cramming gamerule
  2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index b5c595a4b5..39bcc1838d 100644
+index b92e74349b..00b8c190fc 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -2972,7 +2972,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2975,7 +2975,7 @@ public abstract class EntityLiving extends Entity {
  
      @Override
      public boolean isCollidable() {
--        return this.isAlive() && !this.isClimbing() && this.collides; // CraftBukkit
-+        return this.isAlive() && (world.conduitConfig.fixClimbingBypassingCrammingRule || !this.isClimbing()) && this.collides; // Conduit // CraftBukkit
+-        return this.isAlive() && !this.isSpectator() && !this.isClimbing() && this.collides; // CraftBukkit
++        return this.isAlive() && !this.isSpectator() && (world.conduitConfig.fixClimbingBypassingCrammingRule || !this.isClimbing()) && this.collides; // CraftBukkit
      }
  
      // CraftBukkit start - collidable API
@@ -38,5 +38,5 @@ index 624e4a8ca2..b2f33bcee8 100644
      private void villagerSettings() {
          allowLeashVillager = getBoolean("mobs.villager.allow-leash", false);
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

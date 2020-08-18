@@ -1,4 +1,4 @@
-From c2eca82c86f0b15ce98c18e5e349647a94b3f11e Mon Sep 17 00:00:00 2001
+From 358be1d3d5fbd8a7e5432efc66ed59d6b0218bd2 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 29 May 2020 08:19:37 +0100
 Subject: [PATCH] Giant Zombie AI
@@ -11,7 +11,7 @@ configurable villager targeting and spawning with tools.
  2 files changed, 27 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityGiantZombie.java b/src/main/java/net/minecraft/server/EntityGiantZombie.java
-index 603fe5caaf..d25a8e218d 100644
+index 702242653a..e9dde00d78 100644
 --- a/src/main/java/net/minecraft/server/EntityGiantZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityGiantZombie.java
 @@ -19,4 +19,23 @@ public class EntityGiantZombie extends EntityMonster {
@@ -32,7 +32,7 @@ index 603fe5caaf..d25a8e218d 100644
 +                this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
 +                if (world.conduitConfig.giantAggressiveTowardsVillager) this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillagerAbstract.class, false)); // Spigot
 +                this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, true));
-+                this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bv));
++                this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bo));
 +            }
 +        }
 +    }
@@ -56,5 +56,5 @@ index fb5fb3729e..624e4a8ca2 100644
 +    }
  }
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 
