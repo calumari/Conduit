@@ -1,4 +1,4 @@
-From d6e16b45ea4d67586efb4a734d58adec3c85a6ba Mon Sep 17 00:00:00 2001
+From 009b709d82a4367f57c6eecffa78fc941c236d34 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <Blake.Galbreath@GMail.com>
 Date: Mon, 17 Aug 2020 17:34:33 -0500
 Subject: [PATCH] Purpur Crying obsidian valid for portal frames
@@ -35,7 +35,7 @@ index b7635ab162..3fa9f819ca 100644
      private final GeneratorAccess b;
      private final EnumDirection.EnumAxis c;
 diff --git a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
-index 8b2211c0eb..275f87c594 100644
+index 8b2211c0eb..09d8d076ca 100644
 --- a/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 +++ b/src/main/java/net/socialhangover/conduit/config/ConduitConfig.java
 @@ -112,4 +112,9 @@ public final class ConduitConfig {
@@ -44,7 +44,7 @@ index 8b2211c0eb..275f87c594 100644
      }
 +
 +    public static boolean cryingObsidianValidForPortalFrame = false;
-+    public static void blockSettings() {
++    private static void blockSettings() {
 +        cryingObsidianValidForPortalFrame = getBoolean("settings.blocks.crying-obsidian.valid-for-portal-frame", cryingObsidianValidForPortalFrame);
 +    }
  }
