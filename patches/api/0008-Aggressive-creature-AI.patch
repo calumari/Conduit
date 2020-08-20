@@ -1,4 +1,4 @@
-From 0c549272a9d367b385cbca89640bfa32a77f9558 Mon Sep 17 00:00:00 2001
+From 7e79365e62f5062dac45531e57a4f4a9d9cac364 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Thu, 20 Aug 2020 07:42:47 +0100
 Subject: [PATCH] Aggressive creature AI
@@ -8,7 +8,7 @@ Subject: [PATCH] Aggressive creature AI
  1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/org/bukkit/entity/Creature.java b/src/main/java/org/bukkit/entity/Creature.java
-index 6c9c5e85e..1801d0f93 100644
+index 6c9c5e85e..3e4e4093c 100644
 --- a/src/main/java/org/bukkit/entity/Creature.java
 +++ b/src/main/java/org/bukkit/entity/Creature.java
 @@ -4,4 +4,13 @@ package org.bukkit.entity;
@@ -19,7 +19,7 @@ index 6c9c5e85e..1801d0f93 100644
 +public interface Creature extends Mob {
 +
 +    // Conduit start - hostile EVERYTHING
-+    void setAggressive(float range);
++    void setAggressive();
 +
 +    void setPeaceful();
 +

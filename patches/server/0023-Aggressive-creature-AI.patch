@@ -1,4 +1,4 @@
-From 7f469880090985ea69dbf8d0f4748ccca17a371a Mon Sep 17 00:00:00 2001
+From e191f936becd08524394dd2f4dae10ac7e9bb054 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Thu, 20 Aug 2020 07:42:16 +0100
 Subject: [PATCH] Aggressive creature AI
@@ -141,7 +141,7 @@ index 0000000000..5ecd5ddddd
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
-index 73db6101bc..bed07f284f 100644
+index 73db6101bc..7364050b44 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
 @@ -18,4 +18,21 @@ public class CraftCreature extends CraftMob implements Creature {
@@ -151,7 +151,7 @@ index 73db6101bc..bed07f284f 100644
 +
 +    // Conduit start - hostile EVERYTHING
 +    @Override
-+    public void setAggressive(float range) {
++    public void setAggressive() {
 +        net.socialhangover.conduit.EntityAI.setAggressive(getHandle());
 +    }
 +
