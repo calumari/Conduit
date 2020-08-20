@@ -1,0 +1,25 @@
+From b020cb07020127addc33e5d7e980fcb49f77fde0 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 20 Aug 2020 01:28:48 +0100
+Subject: [PATCH] Fix end platform not generating
+
+---
+ src/main/java/net/minecraft/server/Entity.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 5dc8f87dae..7df82c61b9 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -2667,7 +2667,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+             }
+             blockposition1 = new BlockPosition(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ());
+ 
+-            return new ShapeDetectorShape(new Vec3D((double) blockposition1.getX() + 0.5D, (double) blockposition1.getY(), (double) blockposition1.getZ() + 0.5D), this.getMot(), this.yaw, this.pitch, ((CraftWorld) event.getTo().getWorld()).getHandle(), null);
++            return new ShapeDetectorShape(new Vec3D((double) blockposition1.getX() + 0.5D, (double) blockposition1.getY(), (double) blockposition1.getZ() + 0.5D), this.getMot(), this.yaw, this.pitch, ((CraftWorld) event.getTo().getWorld()).getHandle(), event); // Paper
+             // CraftBukkit end
+         }
+     }
+-- 
+2.28.0.windows.1
+
