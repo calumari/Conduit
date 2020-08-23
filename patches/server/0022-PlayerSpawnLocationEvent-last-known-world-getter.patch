@@ -1,0 +1,37 @@
+From e79b8abc89d11b413c00fd496f88be2734534c2c Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sun, 23 Aug 2020 06:37:44 +0100
+Subject: [PATCH] PlayerSpawnLocationEvent last known world getter
+
+---
+ src/main/java/net/minecraft/server/PlayerList.java | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index f9eb17cb6e..c652336b37 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -119,9 +119,10 @@ public abstract class PlayerList {
+         }String lastKnownName = s; // Paper
+         // CraftBukkit end
+ 
++        UUID uid = null; // Conduit
+         // Paper start - move logic in Entity to here, to use bukkit supplied world UUID.
+         if (nbttagcompound != null && nbttagcompound.hasKey("WorldUUIDMost") && nbttagcompound.hasKey("WorldUUIDLeast")) {
+-            UUID uid = new UUID(nbttagcompound.getLong("WorldUUIDMost"), nbttagcompound.getLong("WorldUUIDLeast"));
++            uid = new UUID(nbttagcompound.getLong("WorldUUIDMost"), nbttagcompound.getLong("WorldUUIDLeast")); // Conduit
+             org.bukkit.World bWorld = Bukkit.getServer().getWorld(uid);
+             if (bWorld != null) {
+                 resourcekey = ((CraftWorld) bWorld).getHandle().getDimensionKey();
+@@ -163,7 +164,7 @@ public abstract class PlayerList {
+ 
+         // Spigot start - spawn location event
+         Player bukkitPlayer = entityplayer.getBukkitEntity();
+-        PlayerSpawnLocationEvent ev = new com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent(bukkitPlayer, bukkitPlayer.getLocation()); // Paper use our duplicate event
++        PlayerSpawnLocationEvent ev = new com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent(bukkitPlayer, bukkitPlayer.getLocation(), uid); // Paper use our duplicate event // Conduit
+         Bukkit.getPluginManager().callEvent(ev);
+ 
+         Location loc = ev.getSpawnLocation();
+-- 
+2.28.0.windows.1
+
