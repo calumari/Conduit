@@ -1,0 +1,95 @@
+From 9216b2129aab4600e6d2672b8f5894646bba109a Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sun, 23 Aug 2020 06:37:38 +0100
+Subject: [PATCH] PlayerSpawnLocationEvent last known world getter
+
+---
+ .../event/player/PlayerInitialSpawnEvent.java | 11 +++++++-
+ .../player/PlayerSpawnLocationEvent.java      | 25 ++++++++++++++++++-
+ 2 files changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerInitialSpawnEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerInitialSpawnEvent.java
+index 8b1fdb9d2..9773700e9 100644
+--- a/src/main/java/com/destroystokyo/paper/event/player/PlayerInitialSpawnEvent.java
++++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerInitialSpawnEvent.java
+@@ -3,14 +3,23 @@ package com.destroystokyo.paper.event.player;
+ import org.bukkit.Location;
+ import org.bukkit.entity.Player;
+ import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable; // Conduit
+ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+ 
++import java.util.UUID; // Conduit
++
+ /**
+  * @deprecated Use {@link PlayerSpawnLocationEvent}, Duplicate API
+  */
+ public class PlayerInitialSpawnEvent extends PlayerSpawnLocationEvent {
+ 
++    // Conduit start
++    public PlayerInitialSpawnEvent(@NotNull Player who, @NotNull Location spawnLocation, @Nullable UUID lastKnownWorld) {
++        super(who, spawnLocation, lastKnownWorld);
++    }
++    // Conduit end
++
+     public PlayerInitialSpawnEvent(@NotNull Player who, @NotNull Location spawnLocation) {
+-        super(who, spawnLocation);
++        super(who, spawnLocation, null); // Conduit
+     }
+ }
+diff --git a/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java b/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
+index 2515887c2..f97448793 100644
+--- a/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
++++ b/src/main/java/org/spigotmc/event/player/PlayerSpawnLocationEvent.java
+@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
+ import org.bukkit.event.HandlerList;
+ import org.bukkit.event.player.PlayerEvent;
+ import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable; // Conduit
++
++import java.util.UUID; // Conduit
+ 
+ /**
+  * Called when player is about to spawn in a world after joining the server.
+@@ -12,10 +15,18 @@ import org.jetbrains.annotations.NotNull;
+ public class PlayerSpawnLocationEvent extends PlayerEvent {
+     private static final HandlerList handlers = new HandlerList();
+     private Location spawnLocation;
++    private final UUID lastKnownWorld;
+ 
+-    public PlayerSpawnLocationEvent(@NotNull final Player who, @NotNull Location spawnLocation) {
++    // Conduit start
++    public PlayerSpawnLocationEvent(@NotNull final Player who, @NotNull Location spawnLocation, @Nullable UUID lastKnownWorld) {
+         super(who);
+         this.spawnLocation = spawnLocation;
++        this.lastKnownWorld = lastKnownWorld;
++    }
++    // Conduit end
++
++    public PlayerSpawnLocationEvent(@NotNull final Player who, @NotNull Location spawnLocation) {
++        this(who, spawnLocation, null);
+     }
+ 
+ 
+@@ -40,6 +51,18 @@ public class PlayerSpawnLocationEvent extends PlayerEvent {
+         this.spawnLocation = location;
+     }
+ 
++    // Conduit start
++    /**
++     * Gets the player's last known world UUID.
++     *
++     * @return the UUID of world
++     */
++    @Nullable
++    public UUID getLastKnownWorld() {
++        return lastKnownWorld;
++    }
++    // Conduit end
++
+     @NotNull
+     @Override
+     public HandlerList getHandlers() {
+-- 
+2.28.0.windows.1
+
