@@ -1,4 +1,4 @@
-From 6c7835516e16511373821f24520ee3eaaef18010 Mon Sep 17 00:00:00 2001
+From 398bcfbb1c7351e883b53fff3e358936014b1527 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 8 Jun 2020 00:34:32 +0100
 Subject: [PATCH] Per world spawn limits
@@ -31,10 +31,10 @@ index 5d322d729a..41868f4d0f 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 65b36a1741..ae5055554b 100644
+index 299f57ca2a..650d6ed732 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -336,6 +336,13 @@ public class CraftWorld implements World {
+@@ -341,6 +341,13 @@ public class CraftWorld implements World {
          this.generator = gen;
  
          environment = env;
@@ -49,5 +49,5 @@ index 65b36a1741..ae5055554b 100644
  
      @Override
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

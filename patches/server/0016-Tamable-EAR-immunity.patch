@@ -1,4 +1,4 @@
-From 6fc4c1c0cd57fcb2dc490132a080f8bc33679d74 Mon Sep 17 00:00:00 2001
+From a162b56c35c8484d4cf6b678066c2898ddd193fc Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 7 Aug 2020 19:25:21 +0100
 Subject: [PATCH] Tamable EAR immunity
@@ -11,7 +11,7 @@ Prevent tamable animals (cats, dogs and parrots) immune to ear IF they are tamed
  3 files changed, 12 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTameableAnimal.java b/src/main/java/net/minecraft/server/EntityTameableAnimal.java
-index 9b0d937f06..5d2df57f72 100644
+index 9e008d56bb..d818935fdc 100644
 --- a/src/main/java/net/minecraft/server/EntityTameableAnimal.java
 +++ b/src/main/java/net/minecraft/server/EntityTameableAnimal.java
 @@ -184,4 +184,10 @@ public abstract class EntityTameableAnimal extends EntityAnimal {

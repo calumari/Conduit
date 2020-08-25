@@ -1,4 +1,4 @@
-From 0b44fa7d4e5661feffd57b6099adfbf37ab7a525 Mon Sep 17 00:00:00 2001
+From 052d1ab19eaad06f30b0bd5cdfc460195ab99e64 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Thu, 9 Jul 2020 15:59:44 +0100
 Subject: [PATCH] PlayerProfile getProperty
@@ -24,5 +24,5 @@ index 2ef9a7bd5..17f18234b 100644
       * Sets a property. If the property already exists, the previous one will be replaced
       * @param property Property to set.
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 

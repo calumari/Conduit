@@ -1,0 +1,31 @@
+From 7e79365e62f5062dac45531e57a4f4a9d9cac364 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 20 Aug 2020 07:42:47 +0100
+Subject: [PATCH] Aggressive creature AI
+
+---
+ src/main/java/org/bukkit/entity/Creature.java | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/org/bukkit/entity/Creature.java b/src/main/java/org/bukkit/entity/Creature.java
+index 6c9c5e85e..3e4e4093c 100644
+--- a/src/main/java/org/bukkit/entity/Creature.java
++++ b/src/main/java/org/bukkit/entity/Creature.java
+@@ -4,4 +4,13 @@ package org.bukkit.entity;
+  * Represents a Creature. Creatures are non-intelligent monsters or animals
+  * which have very simple abilities.
+  */
+-public interface Creature extends Mob {}
++public interface Creature extends Mob {
++
++    // Conduit start - hostile EVERYTHING
++    void setAggressive();
++
++    void setPeaceful();
++
++    boolean isAggressive();
++    // Conduit end
++}
+-- 
+2.28.0.windows.1
+

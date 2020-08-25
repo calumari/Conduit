@@ -1,4 +1,4 @@
-From 54eb742441e173121d669e3ccf456e0b3894ed60 Mon Sep 17 00:00:00 2001
+From bf25cb952efa59df98a56bee5aea8c3ccd79e89a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 17 Aug 2020 04:46:01 +0100
 Subject: [PATCH] Add PlayerTradeEvent
@@ -8,10 +8,10 @@ Subject: [PATCH] Add PlayerTradeEvent
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityVillagerAbstract.java b/src/main/java/net/minecraft/server/EntityVillagerAbstract.java
-index 81823b5d5e..1151a2bf45 100644
+index 68fd780bc7..a1545ab7e6 100644
 --- a/src/main/java/net/minecraft/server/EntityVillagerAbstract.java
 +++ b/src/main/java/net/minecraft/server/EntityVillagerAbstract.java
-@@ -106,6 +106,7 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
+@@ -105,6 +105,7 @@ public abstract class EntityVillagerAbstract extends EntityAgeable implements NP
          this.b(merchantrecipe);
          if (this.tradingPlayer instanceof EntityPlayer) {
              CriterionTriggers.s.a((EntityPlayer) this.tradingPlayer, this, merchantrecipe.getSellingItem());

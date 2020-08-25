@@ -1,4 +1,4 @@
-From 8e8bf012e63746fb9c22428c147ea9114e0b26b7 Mon Sep 17 00:00:00 2001
+From 6c83df9f94ceaa27cceefc05a2955b0d89769208 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Fri, 7 Aug 2020 08:19:19 +0100
 Subject: [PATCH] Dont tick insomnia in creative
@@ -10,7 +10,7 @@ Subject: [PATCH] Dont tick insomnia in creative
  3 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index 55b3b854a2..72679cec12 100644
+index 803d382a16..d282ca4a77 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
 @@ -171,7 +171,7 @@ public abstract class EntityHuman extends EntityLiving {

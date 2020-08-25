@@ -1,4 +1,4 @@
-From cfb266a889fb3de399b28aafa358ec70b41ace4b Mon Sep 17 00:00:00 2001
+From 483d180196eba748248833042afa1acb6dcddd95 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -6,7 +6,6 @@ Subject: [PATCH] Idle API
 Based on Purpur's AFK API with more focus on idle farm prevention.
 ---
  .../minecraft/server/ChunkProviderServer.java |  2 +-
- .../java/net/minecraft/server/Entity.java     |  1 +
  .../net/minecraft/server/EntityHuman.java     | 10 ++++
  .../net/minecraft/server/EntityPlayer.java    | 33 +++++++++++
  .../net/minecraft/server/IEntityAccess.java   | 58 ++++++++++++-------
@@ -16,13 +15,13 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  .../conduit/config/ConduitWorldConfig.java    | 11 ++++
  .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
  .../java/org/spigotmc/ActivationRange.java    |  1 +
- 11 files changed, 120 insertions(+), 29 deletions(-)
+ 10 files changed, 119 insertions(+), 29 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 3a5a9aba11..8f70e41821 100644
+index 45c142c227..6ffbdacc19 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -763,7 +763,7 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -764,7 +764,7 @@ public class ChunkProviderServer extends IChunkProvider {
              // Paper start - optimize isOutisdeRange
              PlayerChunkMap playerChunkMap = this.playerChunkMap;
              for (EntityPlayer player : this.world.players) {
@@ -31,23 +30,11 @@ index 3a5a9aba11..8f70e41821 100644
                      playerChunkMap.playerMobSpawnMap.remove(player);
                      continue;
                  }
-diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 5a8bcd91dc..0a76654509 100644
---- a/src/main/java/net/minecraft/server/Entity.java
-+++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -1387,6 +1387,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
-         return MathHelper.c(f * f + f1 * f1 + f2 * f2);
-     }
- 
-+    public double distanceSquared(double x, double y, double z) { return g(x, y, z); } // Conduit - OBFHELPER
-     public double g(double d0, double d1, double d2) {
-         double d3 = this.locX() - d0;
-         double d4 = this.locY() - d1;
 diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
-index e411f6280d..e3c77cab10 100644
+index ce4ebc96c0..2355ef8384 100644
 --- a/src/main/java/net/minecraft/server/EntityHuman.java
 +++ b/src/main/java/net/minecraft/server/EntityHuman.java
-@@ -2129,4 +2129,14 @@ public abstract class EntityHuman extends EntityLiving {
+@@ -2128,4 +2128,14 @@ public abstract class EntityHuman extends EntityLiving {
              return this.g;
          }
      }
@@ -63,26 +50,26 @@ index e411f6280d..e3c77cab10 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index b1cbc6715d..beb12ee205 100644
+index 489e53dfb6..3c2961e173 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1753,6 +1753,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1718,6 +1718,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void resetIdleTimer() {
-         this.ch = SystemUtils.getMonotonicMillis();
+         this.ca = SystemUtils.getMonotonicMillis();
 +        setIdle(false); // Conduit
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1864,6 +1865,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1829,6 +1830,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
 +    public long getIdleTimer() { return F(); } // Conduit - OBFHELPER
      public long F() {
-         return this.ch;
+         return this.ca;
      }
-@@ -2152,4 +2154,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2123,4 +2125,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -119,10 +106,10 @@ index b1cbc6715d..beb12ee205 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index 267a6baae8..3cfa58c680 100644
+index 1cb8ba7cd2..2716ea33f5 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
-@@ -143,29 +143,43 @@ public interface IEntityAccess {
+@@ -139,29 +139,43 @@ public interface IEntityAccess {
      }
      // Paper end
  
@@ -144,7 +131,7 @@ index 267a6baae8..3cfa58c680 100644
 -                } while (!IEntitySelector.g.test(entityhuman));
 -            } while (!IEntitySelector.b.test(entityhuman));
 -
--            d4 = entityhuman.g(d0, d1, d2);
+-            d4 = entityhuman.h(d0, d1, d2);
 -        } while (d3 >= 0.0D && d4 >= d3 * d3);
 -
 -        return true;
@@ -177,7 +164,7 @@ index 267a6baae8..3cfa58c680 100644
 +        double d2 = distance * distance;
 +        for (EntityHuman player : this.getPlayers()) {
 +            if (IEntitySelector.isAlive().test(player) && IEntitySelector.notSpectator().test(player) && (player.world.conduitConfig.idleTimeoutSpawnNearbyEntities || IEntitySelector.notIdle.test(player))) {
-+                if (distance < 0.0D || player.distanceSquared(x, y, z) < d2) {
++                if (distance < 0.0D || player.getDistanceSquared(x, y, z) < d2) {
 +                    return true;
 +                }
 +            }
@@ -189,7 +176,7 @@ index 267a6baae8..3cfa58c680 100644
      @Nullable
      default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
 diff --git a/src/main/java/net/minecraft/server/IEntitySelector.java b/src/main/java/net/minecraft/server/IEntitySelector.java
-index a52dd0c021..b9ac5f8bd6 100644
+index 06ce390b64..0264771534 100644
 --- a/src/main/java/net/minecraft/server/IEntitySelector.java
 +++ b/src/main/java/net/minecraft/server/IEntitySelector.java
 @@ -7,6 +7,7 @@ import javax.annotation.Nullable;
@@ -201,7 +188,7 @@ index a52dd0c021..b9ac5f8bd6 100644
      public static final Predicate<Entity> c = (entity) -> {
          return entity.isAlive() && !entity.isVehicle() && !entity.isPassenger();
 @@ -41,6 +42,7 @@ public final class IEntitySelector {
-             return entity != null && entity.g(d0, d1, d2) <= d4;
+             return entity != null && entity.h(d0, d1, d2) <= d4;
          };
      }
 +    public static Predicate<EntityHuman> notIdle = player -> !player.isIdle(); // Conduit - Idle API
@@ -209,10 +196,10 @@ index a52dd0c021..b9ac5f8bd6 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 6259ff4a57..dd65af1291 100644
+index 250ae81b8c..05b743b5b0 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -230,10 +230,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -233,10 +233,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
          if (this.j > 0) {
              --this.j;
          }
@@ -235,10 +222,10 @@ index 6259ff4a57..dd65af1291 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 63c1190729..4e94de264f 100644
+index efe10b7f58..b91fdc7f4e 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -425,7 +425,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+@@ -426,7 +426,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
          // CraftBukkit end
  
          if (this.everyoneSleeping && this.players.stream().noneMatch((entityplayer) -> {
@@ -247,7 +234,7 @@ index 63c1190729..4e94de264f 100644
          })) {
              // CraftBukkit start
              long l = this.worldData.getDayTime() + 24000L;
-@@ -746,7 +746,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+@@ -747,7 +747,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
              while (iterator.hasNext()) {
                  EntityPlayer entityplayer = (EntityPlayer) iterator.next();
  
@@ -277,7 +264,7 @@ index 83ab410b89..834780d671 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index adf918fd75..9057afbc96 100644
+index b97be51c68..d02db446d9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2155,4 +2155,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

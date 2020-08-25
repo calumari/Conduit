@@ -1,0 +1,171 @@
+From e191f936becd08524394dd2f4dae10ac7e9bb054 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Thu, 20 Aug 2020 07:42:16 +0100
+Subject: [PATCH] Aggressive creature AI
+
+---
+ .../java/net/minecraft/server/Entity.java     |  1 +
+ .../net/minecraft/server/EntityCreature.java  |  1 +
+ .../net/minecraft/server/EntityLiving.java    | 12 ++++-
+ .../server/PathfinderGoalSelector.java        |  2 +-
+ .../net/socialhangover/conduit/EntityAI.java  | 47 +++++++++++++++++++
+ .../craftbukkit/entity/CraftCreature.java     | 17 +++++++
+ 6 files changed, 77 insertions(+), 3 deletions(-)
+ create mode 100644 src/main/java/net/socialhangover/conduit/EntityAI.java
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 5dc8f87dae..412c2e6e0a 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -2940,6 +2940,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+         return false;
+     }
+ 
++    public void doEnchantDamageEffects(EntityLiving entityliving, Entity entity) { a(entityliving, entity); } // Conduit - OBFHELPER
+     public void a(EntityLiving entityliving, Entity entity) {
+         if (entity instanceof EntityLiving) {
+             EnchantmentManager.a((EntityLiving) entity, (Entity) entityliving);
+diff --git a/src/main/java/net/minecraft/server/EntityCreature.java b/src/main/java/net/minecraft/server/EntityCreature.java
+index 4757e5a92c..4075c51361 100644
+--- a/src/main/java/net/minecraft/server/EntityCreature.java
++++ b/src/main/java/net/minecraft/server/EntityCreature.java
+@@ -8,6 +8,7 @@ public abstract class EntityCreature extends EntityInsentient {
+ 
+     public org.bukkit.craftbukkit.entity.CraftCreature getBukkitCreature() { return (org.bukkit.craftbukkit.entity.CraftCreature) super.getBukkitEntity(); } // Paper
+     public BlockPosition movingTarget = null; public BlockPosition getMovingTarget() { return movingTarget; } // Paper
++    public boolean aggressive = false; // Conduit - hostile EVERYTHING
+ 
+     protected EntityCreature(EntityTypes<? extends EntityCreature> entitytypes, World world) {
+         super(entitytypes, world);
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 52cb58c1f9..0341108786 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -212,7 +212,7 @@ public abstract class EntityLiving extends Entity {
+     }
+ 
+     public static AttributeProvider.Builder cK() {
+-        return AttributeProvider.a().a(GenericAttributes.MAX_HEALTH).a(GenericAttributes.KNOCKBACK_RESISTANCE).a(GenericAttributes.MOVEMENT_SPEED).a(GenericAttributes.ARMOR).a(GenericAttributes.ARMOR_TOUGHNESS);
++        return AttributeProvider.a().a(GenericAttributes.MAX_HEALTH).a(GenericAttributes.KNOCKBACK_RESISTANCE).a(GenericAttributes.MOVEMENT_SPEED).a(GenericAttributes.ARMOR).a(GenericAttributes.ARMOR_TOUGHNESS).a(GenericAttributes.ATTACK_DAMAGE, 2.0D); // Conduit - hostile EVERYTHING
+     }
+ 
+     @Override
+@@ -534,6 +534,7 @@ public abstract class EntityLiving extends Entity {
+         return this.bt;
+     }
+ 
++    public void setLastHurtMob(Entity entity) { z(entity); } // Conduit OBFHELPER
+     public void z(Entity entity) {
+         if (entity instanceof EntityLiving) {
+             this.bs = (EntityLiving) entity;
+@@ -2410,7 +2411,14 @@ public abstract class EntityLiving extends Entity {
+ 
+     public boolean attackEntity(Entity entity) {
+         this.z(entity);
+-        return false;
++        // Conduit start - hostile EVERYTHING
++        boolean flag = entity.damageEntity(DamageSource.mobAttack(this), (float) getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).getValue());
++        if (flag) {
++            doEnchantDamageEffects(this, entity);
++            setLastHurtMob(entity);
++        }
++        return flag;
++        // Conduit end
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
+index d3f0327a2a..55cc964a3f 100644
+--- a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
++++ b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
+@@ -26,7 +26,7 @@ public class PathfinderGoalSelector {
+             return false;
+         }
+     };
+-    private final Map<PathfinderGoal.Type, PathfinderGoalWrapped> c = new EnumMap(PathfinderGoal.Type.class);
++    private final Map<PathfinderGoal.Type, PathfinderGoalWrapped> c = new EnumMap(PathfinderGoal.Type.class); public final Map<PathfinderGoal.Type, PathfinderGoalWrapped> getLockedFlags() { return c; } // Conduit - OBFHELPER // Conduit - private -> public
+     private final Set<PathfinderGoalWrapped> d = Sets.newLinkedHashSet(); public final Set<PathfinderGoalWrapped> getTasks() { return d; }// Paper - OBFHELPER // Paper - private -> public
+     private final Supplier<GameProfilerFiller> e;
+     private final EnumSet<PathfinderGoal.Type> f = EnumSet.noneOf(PathfinderGoal.Type.class); // Paper unused, but dummy to prevent plugins from crashing as hard. Theyll need to support paper in a special case if this is super important, but really doesn't seem like it would be.
+diff --git a/src/main/java/net/socialhangover/conduit/EntityAI.java b/src/main/java/net/socialhangover/conduit/EntityAI.java
+new file mode 100644
+index 0000000000..5ecd5ddddd
+--- /dev/null
++++ b/src/main/java/net/socialhangover/conduit/EntityAI.java
+@@ -0,0 +1,47 @@
++package net.socialhangover.conduit;
++
++import net.minecraft.server.EntityCreature;
++import net.minecraft.server.EntityHuman;
++import net.minecraft.server.EntityInsentient;
++import net.minecraft.server.PathfinderGoal;
++import net.minecraft.server.PathfinderGoalMeleeAttack;
++import net.minecraft.server.PathfinderGoalNearestAttackableTarget;
++import net.minecraft.server.PathfinderGoalWrapped;
++
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.List;
++
++public class EntityAI {
++
++    public static void setAggressive(EntityCreature handle) {
++        if (!handle.aggressive) {
++            handle.goalSelector.addGoal(2, new net.minecraft.server.PathfinderGoalMeleeAttack(handle, 1.0D, false));
++            handle.targetSelector.addGoal(2, new net.minecraft.server.PathfinderGoalNearestAttackableTarget<>(handle, EntityHuman.class, true));
++            handle.aggressive = true;
++        }
++    }
++
++    public static void setPeaceful(EntityCreature handle) {
++        if (handle.aggressive) {
++            getGoals(handle).forEach(s -> s.removeIf(EntityAI::isHostileGoal));
++            handle.aggressive = false;
++        }
++    }
++
++    private static List<Collection<PathfinderGoalWrapped>> getGoals(EntityInsentient entity) {
++        List<Collection<PathfinderGoalWrapped>> check = new ArrayList<>();
++        check.add(entity.goalSelector.getTasks());
++        check.add(entity.goalSelector.getLockedFlags().values());
++        check.add(entity.targetSelector.getTasks());
++        check.add(entity.targetSelector.getLockedFlags().values());
++        return check;
++    }
++
++    private static boolean isHostileGoal(PathfinderGoal goal) {
++        return goal instanceof PathfinderGoalMeleeAttack || goal instanceof PathfinderGoalNearestAttackableTarget;
++    }
++
++    private EntityAI() {
++    }
++}
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
+index 73db6101bc..7364050b44 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftCreature.java
+@@ -18,4 +18,21 @@ public class CraftCreature extends CraftMob implements Creature {
+     public String toString() {
+         return "CraftCreature";
+     }
++
++    // Conduit start - hostile EVERYTHING
++    @Override
++    public void setAggressive() {
++        net.socialhangover.conduit.EntityAI.setAggressive(getHandle());
++    }
++
++    @Override
++    public void setPeaceful() {
++        net.socialhangover.conduit.EntityAI.setPeaceful(getHandle());
++    }
++
++    @Override
++    public boolean isAggressive() {
++        return getHandle().aggressive;
++    }
++    // Conduit end
+ }
+-- 
+2.28.0.windows.1
+

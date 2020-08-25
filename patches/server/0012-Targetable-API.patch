@@ -1,4 +1,4 @@
-From ca57a3eddcec73799466f88b07ceb83d9603720b Mon Sep 17 00:00:00 2001
+From 26a2c031ac5bd126ccf878c6e17c4bfb81c8c426 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 4 Jul 2020 21:14:12 +0100
 Subject: [PATCH] Targetable API
@@ -11,10 +11,10 @@ Think "soft spectator mode".
  3 files changed, 23 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 39bcc1838d..d3483d114e 100644
+index 00b8c190fc..52cb58c1f9 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -3575,4 +3575,16 @@ public abstract class EntityLiving extends Entity {
+@@ -3596,4 +3596,16 @@ public abstract class EntityLiving extends Entity {
          this.shieldBlockingDelay = shieldBlockingDelay;
      }
      // Paper end
@@ -32,7 +32,7 @@ index 39bcc1838d..d3483d114e 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/PathfinderTargetCondition.java b/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
-index af09e1926f..7521e65f88 100644
+index 253377c623..09293b6e02 100644
 --- a/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
 +++ b/src/main/java/net/minecraft/server/PathfinderTargetCondition.java
 @@ -54,6 +54,7 @@ public class PathfinderTargetCondition {
@@ -63,5 +63,5 @@ index 3777aba5f3..20ae8ae534 100644
 +    // Conduit end
  }
 -- 
-2.24.1.windows.2
+2.28.0.windows.1
 
