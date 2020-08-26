@@ -1,4 +1,4 @@
-From 483d180196eba748248833042afa1acb6dcddd95 Mon Sep 17 00:00:00 2001
+From 373e8576b1ab3e5766c945e3dbf0fd21685216ee Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -50,10 +50,10 @@ index ce4ebc96c0..2355ef8384 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 489e53dfb6..3c2961e173 100644
+index 2aab92eabd..16d6e37447 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1718,6 +1718,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1719,6 +1719,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      public void resetIdleTimer() {
          this.ca = SystemUtils.getMonotonicMillis();
@@ -61,7 +61,7 @@ index 489e53dfb6..3c2961e173 100644
      }
  
      public ServerStatisticManager getStatisticManager() {
-@@ -1829,6 +1830,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1830,6 +1831,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      }
  
@@ -69,7 +69,7 @@ index 489e53dfb6..3c2961e173 100644
      public long F() {
          return this.ca;
      }
-@@ -2123,4 +2125,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2124,4 +2126,35 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -196,7 +196,7 @@ index 06ce390b64..0264771534 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 250ae81b8c..05b743b5b0 100644
+index 1519813d35..9bbea6f224 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -233,10 +233,17 @@ public class PlayerConnection implements PacketListenerPlayIn {

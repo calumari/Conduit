@@ -1,0 +1,27 @@
+From a191bbfe50698534b6d91bb1bad987f1f9473862 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Wed, 26 Aug 2020 21:52:47 +0100
+Subject: [PATCH] Expose HumanEntity dropItem
+
+---
+ .../org/bukkit/craftbukkit/entity/CraftHumanEntity.java     | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+index 98768b5df9..baa00b3c75 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+@@ -633,4 +633,10 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+     public boolean dropItem(boolean dropAll) {
+         return getHandle().dropItem(dropAll);
+     }
++    // Paper start
++    @Override
++    public boolean dropItem(ItemStack itemStack) {
++        return getHandle().drop(CraftItemStack.asNMSCopy(itemStack), true) != null;
++    }
++    // Paper end
+ }
+-- 
+2.28.0.windows.1
+

@@ -1,4 +1,4 @@
-From cd2119fb4672301e46950b3171b8aeb9b46fedcf Mon Sep 17 00:00:00 2001
+From 9917d6a876809edd4de2a39eda2259877e31cd07 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 25 Jul 2020 10:28:01 +0100
 Subject: [PATCH] Use display name in vanilla player related chat messages
@@ -26,10 +26,10 @@ index 2355ef8384..803d382a16 100644
          String s = this.getProfile().getName();
  
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 3c2961e173..b9c20d11f4 100644
+index 16d6e37447..770e322f90 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -2155,5 +2155,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -2156,5 +2156,10 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
          ((WorldServer) world).everyoneSleeping();
      }

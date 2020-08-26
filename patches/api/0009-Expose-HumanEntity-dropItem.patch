@@ -1,0 +1,25 @@
+From b5e4de7b29ae595367b2d48bad40cf07c7f90841 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Wed, 26 Aug 2020 21:52:50 +0100
+Subject: [PATCH] Expose HumanEntity dropItem
+
+---
+ src/main/java/org/bukkit/entity/HumanEntity.java | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
+index b09d12390..b1ab31ae3 100644
+--- a/src/main/java/org/bukkit/entity/HumanEntity.java
++++ b/src/main/java/org/bukkit/entity/HumanEntity.java
+@@ -502,4 +502,8 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder
+      * @return True if item was dropped successfully
+      */
+     public boolean dropItem(boolean dropAll);
++
++    // Paper start
++    public boolean dropItem(ItemStack itemStack);
++    // Paper end
+ }
+-- 
+2.28.0.windows.1
+
