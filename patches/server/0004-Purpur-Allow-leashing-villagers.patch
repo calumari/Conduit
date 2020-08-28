@@ -1,4 +1,4 @@
-From 15e4afbd24ca077495e4c43651e06823f97a0c30 Mon Sep 17 00:00:00 2001
+From bb914394e79eb51c9e520a8c49b5d65cc7ff6a6c Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Thu, 3 Oct 2019 18:08:03 -0500
 Subject: [PATCH] Purpur Allow leashing villagers
@@ -11,10 +11,10 @@ Subject: [PATCH] Purpur Allow leashing villagers
  4 files changed, 24 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
-index 36df27024c..80b0f67d50 100644
+index 9cf496b5e5..fbc5dc2c44 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -1134,6 +1134,11 @@ public abstract class EntityInsentient extends EntityLiving {
+@@ -1135,6 +1135,11 @@ public abstract class EntityInsentient extends EntityLiving {
          if (!this.isAlive()) {
              return EnumInteractionResult.PASS;
          } else if (this.getLeashHolder() == entityhuman) {
