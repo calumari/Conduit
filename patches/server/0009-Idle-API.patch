@@ -1,4 +1,4 @@
-From 0d3f89b6cbd34083ba8a34645971e21157fcb11f Mon Sep 17 00:00:00 2001
+From d330c0901098c543aa029d935f96bc84f357f81d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -6,16 +6,16 @@ Subject: [PATCH] Idle API
 Based on Purpur's AFK API with more focus on idle farm prevention.
 ---
  .../minecraft/server/ChunkProviderServer.java |  2 +-
- .../net/minecraft/server/EntityHuman.java     | 10 ++++
- .../net/minecraft/server/EntityPlayer.java    | 33 +++++++++++
- .../net/minecraft/server/IEntityAccess.java   | 58 ++++++++++++-------
- .../net/minecraft/server/IEntitySelector.java |  2 +
- .../minecraft/server/PlayerConnection.java    | 15 +++--
- .../net/minecraft/server/WorldServer.java     |  4 +-
- .../conduit/config/ConduitWorldConfig.java    | 11 ++++
- .../craftbukkit/entity/CraftPlayer.java       | 12 ++++
+ .../net/minecraft/server/EntityHuman.java     | 10 ++++++
+ .../net/minecraft/server/EntityPlayer.java    | 33 +++++++++++++++++++
+ .../net/minecraft/server/IEntityAccess.java   | 15 +++++++++
+ .../net/minecraft/server/IEntitySelector.java |  3 ++
+ .../minecraft/server/PlayerConnection.java    | 15 ++++++---
+ .../net/minecraft/server/WorldServer.java     |  4 +--
+ .../conduit/config/ConduitWorldConfig.java    | 11 +++++++
+ .../craftbukkit/entity/CraftPlayer.java       | 12 +++++++
  .../java/org/spigotmc/ActivationRange.java    |  1 +
- 10 files changed, 119 insertions(+), 29 deletions(-)
+ 10 files changed, 99 insertions(+), 7 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 index 45c142c227..6ffbdacc19 100644
@@ -106,77 +106,40 @@ index 2aab92eabd..16d6e37447 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index 1cb8ba7cd2..2716ea33f5 100644
+index 1cb8ba7cd2..3747d7ea0f 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
-@@ -139,29 +139,43 @@ public interface IEntityAccess {
+@@ -139,6 +139,8 @@ public interface IEntityAccess {
      }
      // Paper end
  
--    default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
--        Iterator iterator = this.getPlayers().iterator();
--
--        double d4;
--
--        do {
--            EntityHuman entityhuman;
--
--            do {
--                do {
--                    if (!iterator.hasNext()) {
--                        return false;
--                    }
--
--                    entityhuman = (EntityHuman) iterator.next();
--                } while (!IEntitySelector.g.test(entityhuman));
--            } while (!IEntitySelector.b.test(entityhuman));
--
--            d4 = entityhuman.h(d0, d1, d2);
--        } while (d3 >= 0.0D && d4 >= d3 * d3);
--
--        return true;
 +    // Conduit start - Idle API
-+//    default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
-+//        Iterator iterator = this.getPlayers().iterator();
-+//
-+//        double d4;
-+//
-+//        do {
-+//            EntityHuman entityhuman;
-+//
-+//            do {
-+//                do {
-+//                    if (!iterator.hasNext()) {
-+//                        return false;
-+//                    }
-+//
-+//                    entityhuman = (EntityHuman) iterator.next();
-+//                } while (!IEntitySelector.g.test(entityhuman));
-+//            } while (!IEntitySelector.b.test(entityhuman));
-+//
-+//            d4 = entityhuman.g(d0, d1, d2);
-+//        } while (d3 >= 0.0D && d4 >= d3 * d3);
-+//
-+//        return true;
-+//    }
-+
++    /*
+     default boolean isPlayerNearby(double d0, double d1, double d2, double d3) {
+         Iterator iterator = this.getPlayers().iterator();
+ 
+@@ -162,6 +164,19 @@ public interface IEntityAccess {
+ 
+         return true;
+     }
++     */
 +    default boolean isPlayerNearby(double x, double y, double z, double distance) {
 +        double d2 = distance * distance;
 +        for (EntityHuman player : this.getPlayers()) {
-+            if (IEntitySelector.isAlive().test(player) && IEntitySelector.notSpectator().test(player) && (player.world.conduitConfig.idleTimeoutSpawnNearbyEntities || IEntitySelector.notIdle.test(player))) {
++            if (IEntitySelector.isAlive().test(player) && IEntitySelector.isNotSpectator().test(player) && (player.world.conduitConfig.idleTimeoutSpawnNearbyEntities || IEntitySelector.notIdle.test(player))) {
 +                if (distance < 0.0D || player.getDistanceSquared(x, y, z) < d2) {
 +                    return true;
 +                }
 +            }
 +        }
 +        return false;
-     }
++    }
 +    // Conduit end - Idle API
  
      @Nullable
      default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
 diff --git a/src/main/java/net/minecraft/server/IEntitySelector.java b/src/main/java/net/minecraft/server/IEntitySelector.java
-index a9b0c78d6d..f4c1b352c4 100644
+index a9b0c78d6d..b9f0f8861d 100644
 --- a/src/main/java/net/minecraft/server/IEntitySelector.java
 +++ b/src/main/java/net/minecraft/server/IEntitySelector.java
 @@ -7,6 +7,7 @@ import javax.annotation.Nullable;
@@ -187,7 +150,15 @@ index a9b0c78d6d..f4c1b352c4 100644
      public static final Predicate<EntityLiving> b = EntityLiving::isAlive;
      public static final Predicate<Entity> c = (entity) -> {
          return entity.isAlive() && !entity.isVehicle() && !entity.isPassenger();
-@@ -40,6 +41,7 @@ public final class IEntitySelector {
+@@ -22,6 +23,7 @@ public final class IEntitySelector {
+     public static final Predicate<Entity> f = (entity) -> {
+         return !(entity instanceof EntityHuman) || !entity.isSpectator() && !((EntityHuman) entity).isCreative() && entity.world.getDifficulty() != EnumDifficulty.PEACEFUL;
+     };
++    public static Predicate<Entity> isNotSpectator() { return g; } // Conduit - OBFHELPER
+     public static final Predicate<Entity> g = (entity) -> {
+         return !entity.isSpectator();
+     };
+@@ -40,6 +42,7 @@ public final class IEntitySelector {
              return entity != null && entity.h(d0, d1, d2) <= d4;
          };
      }
