@@ -37,9 +37,13 @@ jobs:
           chmod +x ./conduit
           chmod -R +x scripts
           ./conduit jar
-        
+      
+      - run: |
+          mv conduit-paperclip.jar conduit-${{ github.run_number }}.jar
+      
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.1.4
         with:
-          name: conduit-${{ github.run_number }}.jar
-          path: conduit-paperclip.jar
+          name: conduit-JDK${{ matrix.java }}.jar
+          path: conduit-${{ github.run_number }}.jar
+          if-no-files-found: error
