@@ -1,4 +1,4 @@
-From 373e8576b1ab3e5766c945e3dbf0fd21685216ee Mon Sep 17 00:00:00 2001
+From 0d3f89b6cbd34083ba8a34645971e21157fcb11f Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -176,7 +176,7 @@ index 1cb8ba7cd2..2716ea33f5 100644
      @Nullable
      default EntityHuman a(PathfinderTargetCondition pathfindertargetcondition, EntityLiving entityliving) {
 diff --git a/src/main/java/net/minecraft/server/IEntitySelector.java b/src/main/java/net/minecraft/server/IEntitySelector.java
-index 06ce390b64..0264771534 100644
+index a9b0c78d6d..f4c1b352c4 100644
 --- a/src/main/java/net/minecraft/server/IEntitySelector.java
 +++ b/src/main/java/net/minecraft/server/IEntitySelector.java
 @@ -7,6 +7,7 @@ import javax.annotation.Nullable;
@@ -187,7 +187,7 @@ index 06ce390b64..0264771534 100644
      public static final Predicate<EntityLiving> b = EntityLiving::isAlive;
      public static final Predicate<Entity> c = (entity) -> {
          return entity.isAlive() && !entity.isVehicle() && !entity.isPassenger();
-@@ -41,6 +42,7 @@ public final class IEntitySelector {
+@@ -40,6 +41,7 @@ public final class IEntitySelector {
              return entity != null && entity.h(d0, d1, d2) <= d4;
          };
      }
@@ -196,7 +196,7 @@ index 06ce390b64..0264771534 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 1519813d35..9bbea6f224 100644
+index a5f5a985ba..73bdb62af1 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -233,10 +233,17 @@ public class PlayerConnection implements PacketListenerPlayIn {

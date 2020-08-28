@@ -1,4 +1,4 @@
-From 009b709d82a4367f57c6eecffa78fc941c236d34 Mon Sep 17 00:00:00 2001
+From a360320f22e7c6509fdca0d5487ef96d0dcb8265 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <Blake.Galbreath@GMail.com>
 Date: Mon, 17 Aug 2020 17:34:33 -0500
 Subject: [PATCH] Purpur Crying obsidian valid for portal frames
@@ -10,10 +10,10 @@ Subject: [PATCH] Purpur Crying obsidian valid for portal frames
  3 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/BlockBase.java b/src/main/java/net/minecraft/server/BlockBase.java
-index 440c959b1c..56dd00b946 100644
+index 8265ed4da0..102cacb46a 100644
 --- a/src/main/java/net/minecraft/server/BlockBase.java
 +++ b/src/main/java/net/minecraft/server/BlockBase.java
-@@ -617,6 +617,7 @@ public abstract class BlockBase {
+@@ -623,6 +623,7 @@ public abstract class BlockBase {
              return this.getBlock().a(tag) && predicate.test(this);
          }
  
@@ -22,7 +22,7 @@ index 440c959b1c..56dd00b946 100644
              return this.getBlock().a(block);
          }
 diff --git a/src/main/java/net/minecraft/server/BlockPortalShape.java b/src/main/java/net/minecraft/server/BlockPortalShape.java
-index b7635ab162..3fa9f819ca 100644
+index 6ef81aeb4c..65857c0a08 100644
 --- a/src/main/java/net/minecraft/server/BlockPortalShape.java
 +++ b/src/main/java/net/minecraft/server/BlockPortalShape.java
 @@ -14,7 +14,7 @@ import org.bukkit.event.world.PortalCreateEvent;
