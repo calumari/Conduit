@@ -1,4 +1,4 @@
-From d330c0901098c543aa029d935f96bc84f357f81d Mon Sep 17 00:00:00 2001
+From 693c349bb1b7fbdcbeb4b9ec801833522d80f74c Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -167,10 +167,10 @@ index a9b0c78d6d..b9f0f8861d 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index a5f5a985ba..73bdb62af1 100644
+index e0c3eab9ae..4ba036a6c7 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -233,10 +233,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -234,10 +234,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
          if (this.j > 0) {
              --this.j;
          }
@@ -235,7 +235,7 @@ index 83ab410b89..834780d671 100644
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index b97be51c68..d02db446d9 100644
+index 715d2c5e88..5d713d3a3c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2155,4 +2155,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
