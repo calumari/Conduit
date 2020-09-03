@@ -1,4 +1,4 @@
-From 8c9e84afffa9076f581e237f18f88cda70cfbe8e Mon Sep 17 00:00:00 2001
+From 91cf50eb89f4dd44fa188ea9ecbf36a0a5edfbd6 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 4 Jul 2020 21:14:12 +0100
 Subject: [PATCH] Targetable API
@@ -11,10 +11,10 @@ Think "soft spectator mode".
  3 files changed, 23 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 00b8c190fc..52cb58c1f9 100644
+index 8db60e490d..cc69097b68 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -3596,4 +3596,16 @@ public abstract class EntityLiving extends Entity {
+@@ -3607,4 +3607,16 @@ public abstract class EntityLiving extends Entity {
          this.shieldBlockingDelay = shieldBlockingDelay;
      }
      // Paper end
@@ -44,10 +44,10 @@ index 253377c623..09293b6e02 100644
              return false;
          } else if (!entityliving1.isAlive()) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 0819c31979..c493a2682b 100644
+index 22705cda3d..1682be7e6c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -777,4 +777,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -798,4 +798,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().receive(((CraftItem) item).getHandle(), quantity);
      }
      // Paper end
