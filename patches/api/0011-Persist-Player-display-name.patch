@@ -1,0 +1,35 @@
+From abe2dc7f22497c6be1811989a4926a8d0023663e Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 5 Sep 2020 21:59:43 +0100
+Subject: [PATCH] Persist Player display name
+
+---
+ src/main/java/org/bukkit/OfflinePlayer.java | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/OfflinePlayer.java b/src/main/java/org/bukkit/OfflinePlayer.java
+index 3afd5f5c0..0d4ac5db6 100644
+--- a/src/main/java/org/bukkit/OfflinePlayer.java
++++ b/src/main/java/org/bukkit/OfflinePlayer.java
+@@ -434,4 +434,18 @@ public interface OfflinePlayer extends ServerOperator, AnimalTamer, Configuratio
+      *     for the statistic
+      */
+     public void setStatistic(@NotNull Statistic statistic, @NotNull EntityType entityType, int newValue);
++
++    // Conduit start
++    /**
++     * Gets the "friendly" name to display of this player. This may include
++     * color.
++     * <p>
++     * If the player does not have a defined display name, their last known
++     * player name will be returned.
++     *
++     * @return the player's "friendly" name or null if we have not seen a name for this player yet
++     */
++    @Nullable
++    String getDisplayName();
++    // Conduit end
+ }
+-- 
+2.28.0.windows.1
+

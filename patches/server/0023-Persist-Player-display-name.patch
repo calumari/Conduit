@@ -1,0 +1,76 @@
+From 625e29c65348cef92098155e949d0fdb56cd2e7d Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Sat, 5 Sep 2020 21:59:47 +0100
+Subject: [PATCH] Persist Player display name
+
+---
+ .../craftbukkit/CraftOfflinePlayer.java       | 34 +++++++++++++++++++
+ .../craftbukkit/entity/CraftPlayer.java       |  9 +++++
+ 2 files changed, 43 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
+index 5770d4183c..6fbeb25b54 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftOfflinePlayer.java
+@@ -525,4 +525,38 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
+             manager.save();
+         }
+     }
++
++    // Conduit start
++    @javax.annotation.Nullable
++    @Override
++    public String getDisplayName() {
++        Player player = getPlayer();
++        if (player != null) {
++            return player.getDisplayName();
++        }
++
++        NBTTagCompound data = getConduitData();
++
++        if (data != null) {
++            if (data.hasKey("DisplayName")) {
++                return data.getString("DisplayName");
++            }
++        }
++
++        return getName();
++    }
++
++    private NBTTagCompound getConduitData() {
++        NBTTagCompound result = getData();
++
++        if (result != null) {
++            if (!result.hasKey("Conduit")) {
++                result.set("Conduit", new NBTTagCompound());
++            }
++            result = result.getCompound("Conduit");
++        }
++
++        return result;
++    }
++    // Conduit end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 5d713d3a3c..cc99fa05c1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1477,6 +1477,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         paper.setLong("LastLogin", handle.loginTime);
+         paper.setLong("LastSeen", System.currentTimeMillis());
+         // Paper end
++
++        // Conduit start
++        if (!nbttagcompound.hasKey("Conduit")) {
++            nbttagcompound.set("Conduit", new NBTTagCompound());
++        }
++
++        NBTTagCompound conduit = nbttagcompound.getCompound("Conduit");
++        conduit.setString("DisplayName", handle.displayName);
++        // Conduit end
+     }
+ 
+     @Override
+-- 
+2.28.0.windows.1
+
