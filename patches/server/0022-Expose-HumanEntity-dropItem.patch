@@ -1,4 +1,4 @@
-From df2d6046ec96ffdf70d79aee9100fd32ed1267b8 Mon Sep 17 00:00:00 2001
+From 14000136486c3dc481689a24771d4ac82f81d7f4 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Wed, 26 Aug 2020 21:52:47 +0100
 Subject: [PATCH] Expose HumanEntity dropItem
@@ -8,10 +8,10 @@ Subject: [PATCH] Expose HumanEntity dropItem
  1 file changed, 8 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-index 98768b5df9..dbbab5e3f8 100644
+index 53917d3b38..7a37050755 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-@@ -633,4 +633,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -697,4 +697,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
      public boolean dropItem(boolean dropAll) {
          return getHandle().dropItem(dropAll);
      }
