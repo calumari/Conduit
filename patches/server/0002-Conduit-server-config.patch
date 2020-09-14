@@ -1,4 +1,4 @@
-From 18ca5bef894cc8be864716252f93869125abb964 Mon Sep 17 00:00:00 2001
+From df21d57a7635fbe25804b8f84d53a36b0d4c0127 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -17,10 +17,10 @@ Subject: [PATCH] Conduit server config
  create mode 100644 src/main/java/net/socialhangover/conduit/config/ConduitWorldConfig.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 1c878265be..5ddba9afc0 100644
+index f55dc28f3e..d9aec4568b 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -171,6 +171,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -167,6 +167,16 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end
  
@@ -38,7 +38,7 @@ index 1c878265be..5ddba9afc0 100644
          this.setAllowFlight(dedicatedserverproperties.allowFlight);
          this.setResourcePack(dedicatedserverproperties.resourcePack, this.aZ());
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 287db5203f..5fc677fa47 100644
+index eaa2853934..0045a02b94 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -94,6 +94,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -316,7 +316,7 @@ index 0000000000..f22c4ae2f1
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 5f5b39b3b7..30d63ef242 100644
+index fd649a0d2c..c5880ce0ae 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -854,6 +854,7 @@ public final class CraftServer implements Server {
@@ -358,7 +358,7 @@ index 5f5b39b3b7..30d63ef242 100644
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index bac292e6d8..edd4a9eaa2 100644
+index 9118f05424..ec27e695a1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {

@@ -1,4 +1,4 @@
-From 02f9aeb06141bc597b02cf7ff54943be97135699 Mon Sep 17 00:00:00 2001
+From 989da8018247d1d3cbdc619a3e1619a5ee252a43 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sun, 24 May 2020 23:03:59 +0100
 Subject: [PATCH] Conduit POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Conduit POM Changes
  2 files changed, 17 insertions(+), 16 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 838f199b69..82881da02f 100644
+index add3a9c1a9..6255c17cce 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,19 @@
@@ -56,7 +56,7 @@ index 838f199b69..82881da02f 100644
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -164,7 +165,7 @@
+@@ -165,7 +166,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -65,7 +65,7 @@ index 838f199b69..82881da02f 100644
          <defaultGoal>clean install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -172,7 +173,7 @@
+@@ -173,7 +174,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
