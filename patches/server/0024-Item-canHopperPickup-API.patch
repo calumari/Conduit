@@ -1,0 +1,63 @@
+From c4a03457de46c3a17c441dd3c6f201732c9fb7e1 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 14 Sep 2020 22:47:26 +0100
+Subject: [PATCH] Item canHopperPickup API
+
+---
+ src/main/java/net/minecraft/server/EntityItem.java     |  1 +
+ .../java/net/minecraft/server/TileEntityHopper.java    |  5 +++++
+ .../java/org/bukkit/craftbukkit/entity/CraftItem.java  | 10 ++++++++++
+ 3 files changed, 16 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
+index bc4f84c885..4b2af76429 100644
+--- a/src/main/java/net/minecraft/server/EntityItem.java
++++ b/src/main/java/net/minecraft/server/EntityItem.java
+@@ -23,6 +23,7 @@ public class EntityItem extends Entity {
+     public final float b;
+     private int lastTick = MinecraftServer.currentTick - 1; // CraftBukkit
+     public boolean canMobPickup = true; // Paper
++    public boolean canHopperPickup = true; // Paper
+ 
+     public EntityItem(EntityTypes<? extends EntityItem> entitytypes, World world) {
+         super(entitytypes, world);
+diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
+index d432de40eb..bc204f8d34 100644
+--- a/src/main/java/net/minecraft/server/TileEntityHopper.java
++++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
+@@ -513,6 +513,11 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+ 
+     public static boolean a(IInventory iinventory, EntityItem entityitem) {
+         boolean flag = false;
++        // Paper start
++        if (!entityitem.canHopperPickup) {
++            return false;
++        }
++        // Paper end
+         // CraftBukkit start
+         InventoryPickupItemEvent event = new InventoryPickupItemEvent(getInventory(iinventory), (org.bukkit.entity.Item) entityitem.getBukkitEntity()); // Paper - use getInventory() to avoid snapshot creation
+         entityitem.world.getServer().getPluginManager().callEvent(event);
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftItem.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftItem.java
+index cb756b1ba0..d956f058ef 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftItem.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftItem.java
+@@ -83,6 +83,16 @@ public class CraftItem extends CraftEntity implements Item {
+     public void setThrower(@Nullable UUID thrower) {
+         item.setThrower(thrower);
+     }
++
++    @Override
++    public boolean canHopperPickup() {
++        return item.canHopperPickup;
++    }
++
++    @Override
++    public void setCanHopperPickup(boolean canHopperPickup) {
++        item.canHopperPickup = canHopperPickup;
++    }
+     // Paper End
+ 
+     @Override
+-- 
+2.28.0.windows.1
+

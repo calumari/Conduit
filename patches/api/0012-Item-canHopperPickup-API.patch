@@ -1,0 +1,36 @@
+From fccab8aec802c9c3a231ecb69ed73813b357ce40 Mon Sep 17 00:00:00 2001
+From: Callum <38501234+calumari@users.noreply.github.com>
+Date: Mon, 14 Sep 2020 22:47:32 +0100
+Subject: [PATCH] Item canHopperPickup API
+
+---
+ src/main/java/org/bukkit/entity/Item.java | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/Item.java b/src/main/java/org/bukkit/entity/Item.java
+index acd80d812..8960c0fcb 100644
+--- a/src/main/java/org/bukkit/entity/Item.java
++++ b/src/main/java/org/bukkit/entity/Item.java
+@@ -86,5 +86,19 @@ public interface Item extends Entity {
+      * @param thrower The thrower's UUID
+      */
+     public void setThrower(@Nullable UUID thrower);
++
++    /**
++     * Gets if hoppers or hopper minecarts can pick this Item up
++     *
++     * @return True if hoppers or hopper minecarts can pickup
++     */
++    public boolean canHopperPickup();
++
++    /**
++     * Sets if hoppers or hopper minecarts can pick this Item up
++     *
++     * @param canHopperPickup True to allow hoppers or hopper minecarts entity pickup
++     */
++    public void setCanHopperPickup(boolean canHopperPickup);
+     // Paper end
+ }
+-- 
+2.28.0.windows.1
+
