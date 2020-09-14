@@ -1,4 +1,4 @@
-From df21d57a7635fbe25804b8f84d53a36b0d4c0127 Mon Sep 17 00:00:00 2001
+From 14fa7fffd4e6f212eb0dcc2b4a5bd9d1649a4f3d Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Mon, 25 May 2020 00:37:04 +0100
 Subject: [PATCH] Conduit server config
@@ -316,10 +316,10 @@ index 0000000000..f22c4ae2f1
 +
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index fd649a0d2c..c5880ce0ae 100644
+index d8d29d1455..f7b8e202c1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -854,6 +854,7 @@ public final class CraftServer implements Server {
+@@ -856,6 +856,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
@@ -327,7 +327,7 @@ index fd649a0d2c..c5880ce0ae 100644
          for (WorldServer world : console.getWorlds()) {
              world.worldDataServer.setDifficulty(config.difficulty);
              world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
-@@ -888,6 +889,7 @@ public final class CraftServer implements Server {
+@@ -890,6 +891,7 @@ public final class CraftServer implements Server {
              }
              world.spigotConfig.init(); // Spigot
              world.paperConfig.init(); // Paper
@@ -335,7 +335,7 @@ index fd649a0d2c..c5880ce0ae 100644
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -906,6 +908,7 @@ public final class CraftServer implements Server {
+@@ -908,6 +910,7 @@ public final class CraftServer implements Server {
          reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
@@ -343,7 +343,7 @@ index fd649a0d2c..c5880ce0ae 100644
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
          ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2239,6 +2242,13 @@ public final class CraftServer implements Server {
+@@ -2250,6 +2253,13 @@ public final class CraftServer implements Server {
              return com.destroystokyo.paper.PaperConfig.config;
          }
  
