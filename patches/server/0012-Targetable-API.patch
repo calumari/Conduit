@@ -1,4 +1,4 @@
-From 3b14dc6ee4426b9d88d71fa54db47635eba0d718 Mon Sep 17 00:00:00 2001
+From f307225c45d8df061e0c730fedaaba9959cdc85b Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 4 Jul 2020 21:14:12 +0100
 Subject: [PATCH] Targetable API
@@ -44,10 +44,10 @@ index 253377c623..09293b6e02 100644
              return false;
          } else if (!entityliving1.isAlive()) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 7bac6fec57..c4b0b88e42 100644
+index 9e9bdf9bc2..11f8047dd5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -798,4 +798,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -809,4 +809,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().receive(((CraftItem) item).getHandle(), quantity);
      }
      // Paper end

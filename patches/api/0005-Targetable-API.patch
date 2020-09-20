@@ -1,4 +1,4 @@
-From 1c932f01cc60496047a0b597fb70ffc23fb53c52 Mon Sep 17 00:00:00 2001
+From b2538cbdd677eaf1d8b9d9b0a9b93b0e1091f6c3 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 4 Jul 2020 22:01:44 +0100
 Subject: [PATCH] Targetable API
@@ -8,10 +8,10 @@ Subject: [PATCH] Targetable API
  1 file changed, 7 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
-index 5adf75010..35b998572 100644
+index 9bf525b79..568ed06d1 100644
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -815,4 +815,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
+@@ -829,4 +829,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
       */
      void playPickupItemAnimation(@NotNull Item item, int quantity);
      // Paper end

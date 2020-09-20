@@ -1,4 +1,4 @@
-From 693c349bb1b7fbdcbeb4b9ec801833522d80f74c Mon Sep 17 00:00:00 2001
+From 36c36f1facadcb3f2afd5d502e27274334be0388 Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -18,10 +18,10 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  10 files changed, 99 insertions(+), 7 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 45c142c227..6ffbdacc19 100644
+index de5c45ec77..10b63ddaee 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -764,7 +764,7 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -765,7 +765,7 @@ public class ChunkProviderServer extends IChunkProvider {
              // Paper start - optimize isOutisdeRange
              PlayerChunkMap playerChunkMap = this.playerChunkMap;
              for (EntityPlayer player : this.world.players) {
@@ -50,7 +50,7 @@ index ce4ebc96c0..2355ef8384 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 2aab92eabd..16d6e37447 100644
+index 4985dde218..604a4be1ce 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -1719,6 +1719,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -167,7 +167,7 @@ index a9b0c78d6d..b9f0f8861d 100644
      public static Predicate<Entity> a(Entity entity) {
          ScoreboardTeamBase scoreboardteambase = entity.getScoreboardTeam();
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index e0c3eab9ae..4ba036a6c7 100644
+index 05b3a74781..44944d772c 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -234,10 +234,17 @@ public class PlayerConnection implements PacketListenerPlayIn {
@@ -193,7 +193,7 @@ index e0c3eab9ae..4ba036a6c7 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index efe10b7f58..b91fdc7f4e 100644
+index 95da2a5602..df74b405b6 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -426,7 +426,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
@@ -256,7 +256,7 @@ index 715d2c5e88..5d713d3a3c 100644
 +    // Conduit end
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 37e930e0cb..b4356fc876 100644
+index 0b93635ba5..42474a02ac 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -207,6 +207,7 @@ public class ActivationRange
