@@ -1,4 +1,4 @@
-From 36c36f1facadcb3f2afd5d502e27274334be0388 Mon Sep 17 00:00:00 2001
+From b7b9ee973588bc3dac40181ee6c74f8eb07f6d2a Mon Sep 17 00:00:00 2001
 From: Callum <38501234+calumari@users.noreply.github.com>
 Date: Sat, 30 May 2020 18:06:14 +0100
 Subject: [PATCH] Idle API
@@ -18,10 +18,10 @@ Based on Purpur's AFK API with more focus on idle farm prevention.
  10 files changed, 99 insertions(+), 7 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index de5c45ec77..10b63ddaee 100644
+index 45c142c227..6ffbdacc19 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-@@ -765,7 +765,7 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -764,7 +764,7 @@ public class ChunkProviderServer extends IChunkProvider {
              // Paper start - optimize isOutisdeRange
              PlayerChunkMap playerChunkMap = this.playerChunkMap;
              for (EntityPlayer player : this.world.players) {
